@@ -7,8 +7,8 @@ const { createAdministradorSchema, validateLogin } = require('../middleware/vali
 
 administradorRouter.post('/login', validateLogin, administradorController.administradorLogin);
 
-administradorRouter.get('/', administradorController.getAllAdministradores);
-administradorRouter.post('/', createAdministradorSchema, administradorController.createAdministrador);
+administradorRouter.get('/', auth(Role.SuperUser), administradorController.getAllAdministradores);
+administradorRouter.post('/', /*    auth(Role.SuperUser),*/ createAdministradorSchema, administradorController.createAdministrador);
 
 
 module.exports = administradorRouter;

@@ -1,6 +1,5 @@
 const query = require('../db/db-connection');
 const { multipleColumnSet } = require('../utils/common.utils');
-const Role = require('../utils/administradorRoles.utils');
 
 class AdministradorModel {
 
@@ -30,16 +29,23 @@ class AdministradorModel {
         return result[0];
     }
 
-    create = async ({ rol, nombre, correo, id_institucion, clave, estado }) => {
-        const sql = `INSERT INTO ${this.tableName}
-        (rol, nombre, correo, id_institucion, clave, estado) 
-        VALUES (?, ?, ?, ?, ?, ?)`;
+    create = async ({ rol, nombre, correo, clave, estado, id_institucion = null }) => {
+        const columns = ['rol', 'nombre', 'correo', 'clave', 'estado'];
+        const values = [rol, nombre, correo, clave, estado];
+            
+        if (id_institucion !== null) {
+            columns.push('id_institucion');
+            values.push(id_institucion);
+        }
     
-        const result = await query(sql, [rol, nombre, correo, id_institucion, clave, estado]);
+        const sql = `INSERT INTO ${this.tableName} (${columns.join(', ')}) VALUES (${columns.map(() => '?').join(', ')})`;
+    
+        const result = await query(sql, values);
         const affectedRows = result ? result.affectedRows : 0;
     
         return affectedRows;
-    }
+    };
+    
     
 
     update = async (params, id) => {

@@ -27,7 +27,7 @@ class AdministradorController {
 
         this.checkValidation(req);
 
-        await this.hashPassword(req);
+        await this.hashClave(req);
     
         const result = await AdministradorModel.create(req.body);
     
@@ -39,9 +39,9 @@ class AdministradorController {
     };
     
     administradorLogin = async (req, res, next) => {
-
-        this.checkValidation(req);
         console.log(req.body);
+        this.checkValidation(req);
+        
         const { correo, clave } = req.body;
     
         const administrador = await AdministradorModel.findOne({ correo });
@@ -74,7 +74,7 @@ class AdministradorController {
         }
     }
 
-    hashPassword = async (req) => {
+    hashClave = async (req) => {
         if (req.body.clave) {
             req.body.clave = await bcrypt.hash(req.body.clave, 8);
         }
