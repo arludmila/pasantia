@@ -7,25 +7,24 @@ import {
   Tr,
   Th,
   Td,
-  TableCaption,
-  Box,
   TableContainer,
   Button,
   Flex,
   Heading,
   Spacer,
+  Box,
 } from '@chakra-ui/react';
 
-function App() {
+function SuperUserDashboard() {
   const [backendData, setBackendData] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:3050/api/instituciones")
       .then(response => response.json())
-      .then(data => setBackendData(data)); 
+      .then(data => setBackendData(data))
+      .catch(error => console.error('Error fetching data:', error)); // Manejo de errores
   }, []);
   
-
   return (
     <ChakraProvider>
       <Box p={5} m={10}>
@@ -51,22 +50,21 @@ function App() {
               </Tr>
             </Thead>
             <Tbody>
-            {backendData.map((institucion) => (
-              <Tr key={institucion.id}>
-                <Td>{institucion.cue}</Td>
-                <Td>{institucion.cueanexo || 'N/A'}</Td>
-                <Td>{institucion.nombre}</Td>
-                <Td>{institucion.direccion}</Td>
-                <Td>{institucion.tel || 'N/A'}</Td>
-                <Td>{institucion.pagina || 'N/A'}</Td>
-                <Td>{institucion.gestion}</Td>
-                <Td>{institucion.estado}</Td>
-                <Td>
-                  <Button colorScheme="orange" size="sm">Editar</Button>
-                </Td> 
-              </Tr>
-            ))}
-
+              {backendData.map((institucion) => (
+                <Tr key={institucion.id}>
+                  <Td>{institucion.cue}</Td>
+                  <Td>{institucion.cueanexo || 'N/A'}</Td>
+                  <Td>{institucion.nombre}</Td>
+                  <Td>{institucion.direccion}</Td>
+                  <Td>{institucion.tel || 'N/A'}</Td>
+                  <Td>{institucion.pagina || 'N/A'}</Td>
+                  <Td>{institucion.gestion}</Td>
+                  <Td>{institucion.estado}</Td>
+                  <Td>
+                    <Button colorScheme="orange" size="sm">Editar</Button>
+                  </Td> 
+                </Tr>
+              ))}
             </Tbody>
           </Table>
         </TableContainer>
@@ -75,4 +73,4 @@ function App() {
   );
 }
 
-export default SuperUserPanel;
+export default SuperUserDashboard; // Asegúrate de que el nombre del componente coincida

@@ -43,7 +43,7 @@ class AdministradorController {
         this.checkValidation(req);
         
         const { correo, clave } = req.body;
-    
+        
         const administrador = await AdministradorModel.findOne({ correo });
     
         if (!administrador) {
@@ -62,7 +62,7 @@ class AdministradorController {
         });
     
         //const { password, ...userWithoutPassword } = administrador;
-    
+        // TODO: no devolver todo el admin, no la clave!!!!!!!!!!!!!
         res.send({ administrador, token });
     };
     

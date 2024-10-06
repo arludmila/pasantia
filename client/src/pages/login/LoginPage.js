@@ -9,11 +9,13 @@ import {
   Stack,
   useToast,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
     const [correo, setCorreo] = useState('');
     const [clave, setClave] = useState('');
     const toast = useToast(); // Para mostrar notificaciones
+    const navigation = useNavigate();
   
     const handleSubmit = async (event) => {
       event.preventDefault();
@@ -45,7 +47,9 @@ const LoginPage = () => {
             duration: 5000,
             isClosable: true,
           });
-          // Aquí puedes redirigir al usuario o guardar el token
+          const token = result.token; 
+          localStorage.setItem('token', token); 
+          navigation.navigate('/dashboard');
         } else {
           // Si hay un error en la autenticación
           toast({
