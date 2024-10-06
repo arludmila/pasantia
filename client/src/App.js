@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import LoginPage from './pages/login/LoginPage';
 import SuperUserDashboard from './pages/dashboard/SuperUserDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import Home from './pages/public/Home';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -17,10 +18,12 @@ const App = () => {
   return ( 
     <BrowserRouter>
       <Routes>
+      <Route path="/" element={<Home />} />
       <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} />
       <Route path="/dashboard" element={<ProtectedRoute element={<SuperUserDashboard />} isAuthenticated={isAuthenticated} />} />
       </Routes>
     </BrowserRouter>
+
   );
 };
 
