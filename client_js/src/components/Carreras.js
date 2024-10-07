@@ -4,26 +4,7 @@ import {
 } from '@chakra-ui/react';
 import Fetch from '../services/Fetch';
 
-// Placeholder para las carreras, reemplázalo con los datos de tu BBDD
-const carreras = [
-  {
-    id: 1,
-    nombre: "Ingeniería en Sistemas",
-    modalidad: "Presencial",
-    duracion_anios: 5,
-    duracion_meses: 0,
-    institucion: "Universidad Nacional de Goya"
-  },
-  {
-    id: 2,
-    nombre: "Marketing Digital",
-    modalidad: "Virtual",
-    duracion_anios: 3,
-    duracion_meses: 6,
-    institucion: "Universidad de Corrientes"
-  },
-  // Agregar más carreras...
-];
+
 
 const CarrerasPage = () => {
   const [searchTerm, setSearchTerm ] = useState('');

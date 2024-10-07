@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import ApiService from './ApiService';
+import ApiService from './ApiResponse';
 
 const Fetch = ({ endpoint, onSuccess, onError }) => {
   useEffect(() => {
