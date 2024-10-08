@@ -2,14 +2,15 @@ import { useState } from 'react';
 import {
   Box, Heading, Input, Grid, GridItem, VStack, Text, Button, Select
 } from '@chakra-ui/react';
-import useFetch from '../services/ApiResponse'; 
-import Carrera from '../services/models/Carrera'; 
-import NavbarBase from './NavbarHome';
+
+import Carrera from '../../services/models/Carrera'; 
+import NavbarHome from '../../components/NavbarHome';
+import { useFetch } from '../../services/ApiResponse';
 
 const CarrerasPage = () => {
   const endpoint = 'carreras';
   const [searchTerm, setSearchTerm ] = useState('');
-  const { data, error, loading } = useFetch<Carrera[]>(endpoint); 
+  const { responseData, error, loading } = useFetch<Carrera[]>(endpoint); 
 
   if (loading) {
     return <Heading>Cargando...</Heading>;
@@ -19,15 +20,14 @@ const CarrerasPage = () => {
     return <p>Error: {error.message}</p>;
   }
 
-  if (!data) {
+  if (!responseData) {
     return <p>No hay información disponible</p>;
   }
-  const filteredCarreras = data.filter(carrera =>
+  const filteredCarreras = responseData.filter(carrera =>
     carrera.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (
    <div>
-     <NavbarBase/>
     <Box p={5}>
       <Heading mb={5}>Formación Académica en Goya</Heading>
       <Input

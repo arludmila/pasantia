@@ -39,32 +39,42 @@ class AdministradorController {
     };
     
     administradorLogin = async (req, res, next) => {
-        console.log(req.body);
-        this.checkValidation(req);
-        
-        const { correo, clave } = req.body;
-        
-        const administrador = await AdministradorModel.findOne({ correo });
+        console.log(req);
+        try {
+            this.checkValidation(req);  
     
-        if (!administrador) {
-            throw new HttpException(401, 'No se pudo iniciar sesión.');
+            const { correo, clave } = req.body;
+            const administrador = await AdministradorModel.findOne({ correo });
+    
+            if (!administrador) {
+                throw new HttpException(401, 'No se pudo iniciar sesión.');
+            }
+    
+            const isMatch = await bcrypt.compare(clave, administrador.clave);
+    
+            if (!isMatch) {
+                throw new HttpException(401, 'Contraseña incorrecta.');
+            }
+    
+            const secretKey = process.env.SECRET_JWT || "";
+            const token = jwt.sign({ user_id: administrador.id.toString() }, secretKey, {
+                expiresIn: '24h'
+            });
+    
+            const adminData = {
+                id: administrador.id,
+                rol: administrador.rol,
+                nombre: administrador.nombre,
+                correo: administrador.correo,
+                id_institucion: administrador.id_institucion, 
+            };
+    
+            res.send({ administrador: adminData, token });
+        } catch (err) {
+            next(err);
         }
-    
-        const isMatch = await bcrypt.compare(clave, administrador.clave);
-    
-        if (!isMatch) {
-            throw new HttpException(401, 'Contraseña incorrecta.');
-        }
-    
-        const secretKey = process.env.SECRET_JWT || "";
-        const token = jwt.sign({ user_id: administrador.id.toString() }, secretKey, {
-            expiresIn: '24h'
-        });
-    
-        //const { password, ...userWithoutPassword } = administrador;
-        // TODO: no devolver todo el admin, no la clave!!!!!!!!!!!!!
-        res.send({ administrador, token });
     };
+    
     
 
     checkValidation = (req) => {
