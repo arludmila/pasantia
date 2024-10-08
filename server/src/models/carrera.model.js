@@ -7,11 +7,16 @@ class CarreraModel {
     find = async (params = {}) => {
         let sql = `SELECT * FROM ${this.tableName}`;
 
+        if (params.institucion_id) {
+            sql += ` WHERE institucion_id = ?`;
+            return await query(sql, [params.institucion_id]);
+        }
+
         if (!Object.keys(params).length) {
             return await query(sql);
         }
 
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
         sql += ` WHERE ${columnSet}`;
 
         return await query(sql, [...values]);

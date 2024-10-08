@@ -1,4 +1,3 @@
-// TableCRUD.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -16,6 +15,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { IoAdd } from "react-icons/io5";
+import { AddIcon } from '@chakra-ui/icons';
 interface TableCRUDProps {
   tableName: string;          
   headers: string[];          
@@ -28,8 +28,8 @@ const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data }) => {
       <Flex mb={4}>
         <Heading size="lg">{tableName}</Heading>
         <Spacer />
-        <Button as={Link} to="/dashboard/instituciones-crear" colorScheme="green">
-            Agregar<IoAdd />
+        <Button as={Link} to="/dashboard/instituciones-crear" colorScheme="green" leftIcon={<AddIcon />}>
+            Agregar
             </Button>
       </Flex>
       
@@ -40,14 +40,14 @@ const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data }) => {
               {headers.map((header, index) => (
                 <Th key={index}>{header}</Th>
               ))}
-              <Th>Acciones</Th> {/* Actions column */}
+              <Th>Acciones</Th> 
             </Tr>
           </Thead>
           <Tbody>
             {data.map((item, index) => (
               <Tr key={index}>
                 {Object.values(item).map((value, idx) => (
-                  <Td key={idx}>{String(value || 'N/A')}</Td> // Render N/A for undefined values
+                  <Td key={idx}>{String(value || 'N/A')}</Td> 
                 ))}
                 <Td>
                   <Button colorScheme="orange" size="sm">Editar</Button>

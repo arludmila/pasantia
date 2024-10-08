@@ -8,19 +8,20 @@ import { useFetch } from '../../services/ApiResponse';
 
 const InstitucionesPage = () => {
   const endpoint = 'instituciones';
-  const { responseData, error, loading } = useFetch<Institucion[]>(endpoint); 
+  const { data, error, loading } = useFetch<Institucion[]>(endpoint); 
 
   if (loading) {
     return <Heading>Cargando...</Heading>;
   }
 
   if (error) {
-    return <p>Error: {error.message}</p>;
+    return <p>Error: {error}</p>;
   }
 
-  if (!responseData) {
+  if (!data) { 
     return <p>No hay información disponible</p>;
   }
+
   return (
    <div>
      <NavbarHome/>
@@ -28,7 +29,7 @@ const InstitucionesPage = () => {
       <Heading mb={5}>Instituciones en Goya</Heading>
         
       <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
-        {responseData.map((institucion) => (
+        {data.map((institucion) => (
           <GridItem key={institucion.id}>
             <Accordion allowToggle>
               <AccordionItem>

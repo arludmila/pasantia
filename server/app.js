@@ -1,6 +1,6 @@
 const express = require('express');  
 const cors = require('cors');       
-const apiRouter = require('./src/routes/index.routes.js');  // No {} needed for default export
+const apiRouter = require('./src/routes/index.routes.js'); 
 
 const app = express();
 

@@ -17,6 +17,23 @@ class CarreraController{
             next(error);  
         }
     };
+
+    getCarrerasByInstitucionId = async (req, res, next) => {
+        try {
+            const { institucion_id } = req.params;  
+            
+            let carreras = await CarreraModel.find({ institucion_id });  
+            
+            if (!carreras.length) {
+                throw new HttpException(404, `No se encontraron carreras para la institución con ID ${institucion_id}`);
+            }
+
+            res.send(carreras);
+        } catch (error) {
+            next(error);  // Handle errors
+        }
+    };
+
     createCarrera = async (req, res, next) => {
 
         this.checkValidation(req);  

@@ -43,11 +43,10 @@ class DBConnection {
                 }
                 resolve(result);
             }
-            // execute will internally call prepare and query
+          
             this.db.execute(sql, values, callback);
         }).catch(err => {
             const mysqlErrorList = Object.keys(HttpStatusCodes);
-            // convert mysql errors which in the mysqlErrorList list to http status code
             err.status = mysqlErrorList.includes(err.code) ? HttpStatusCodes[err.code] : err.status;
 
             throw err;
@@ -55,7 +54,6 @@ class DBConnection {
     }
 }
 
-// like ENUM
 const HttpStatusCodes = Object.freeze({
     ER_TRUNCATED_WRONG_VALUE_FOR_FIELD: 422,
     ER_DUP_ENTRY: 409

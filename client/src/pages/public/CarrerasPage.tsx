@@ -4,26 +4,26 @@ import {
 } from '@chakra-ui/react';
 
 import Carrera from '../../services/models/Carrera'; 
-import NavbarHome from '../../components/NavbarHome';
 import { useFetch } from '../../services/ApiResponse';
 
 const CarrerasPage = () => {
   const endpoint = 'carreras';
-  const [searchTerm, setSearchTerm ] = useState('');
-  const { responseData, error, loading } = useFetch<Carrera[]>(endpoint); 
+  const [searchTerm, setSearchTerm] = useState('');
+  const { data, error, loading } = useFetch<Carrera[]>(endpoint); 
 
   if (loading) {
     return <Heading>Cargando...</Heading>;
   }
 
   if (error) {
-    return <p>Error: {error.message}</p>;
+    return <p>Error: {error}</p>; 
   }
 
-  if (!responseData) {
+  if (!data) { 
     return <p>No hay información disponible</p>;
   }
-  const filteredCarreras = responseData.filter(carrera =>
+
+  const filteredCarreras = data.filter(carrera => 
     carrera.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (

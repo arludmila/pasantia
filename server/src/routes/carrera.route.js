@@ -8,6 +8,6 @@ const { createCarreraSchema } = require('../middleware/validators/carreraValidat
 
 carreraRouter.get('/', carreraController.getAllCarreras);
 carreraRouter.post('/', auth(Role.SuperUser), createCarreraSchema, carreraController.createCarrera);
-
+carreraRouter.get('/institucion/:institucion_id', carreraController.getCarrerasByInstitucionId);
 
 module.exports = carreraRouter;
