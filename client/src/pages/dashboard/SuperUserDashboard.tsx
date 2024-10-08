@@ -1,4 +1,3 @@
-// SuperUserDashboard.tsx
 import React, { useEffect, useState } from 'react';
 import TableCRUD from '../../components/TableCRUD';
 
@@ -14,14 +13,13 @@ function SuperUserDashboard() {
 
   }, []);
 
-  const headers = ['CUE', 'CUE Anexo', 'Nombre', 'Dirección', 'Teléfono', 'Página', 'Gestión', 'Estado'];
+  const headers = ['ID', 'CUE', 'CUE Anexo', 'Nombre', 'Dirección', 'Ubicación Lat', 'Ubicación Long', 'Teléfono', 'Página', 'Gestión', 'Estado'];
 
   return (
     <TableCRUD
     tableName="Instituciones"
     headers={headers}
     data={backendData}
-    keyField="id"
   />
   );
 }

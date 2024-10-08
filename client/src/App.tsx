@@ -6,6 +6,7 @@ import InstitucionesPage from './pages/public/InstitucionesPage';
 import LoginPage from './pages/login/LoginPage';
 import HomePage from './pages/public/HomePage';
 import SuperUserDashboard from './pages/dashboard/SuperUserDashboard';
+import AddPage from './pages/dashboard/instituciones/AddPage';
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
         <Route path="/instituciones" element={<InstitucionesPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<SuperUserDashboard />} />
-
+        <Route path="/dashboard/instituciones-crear" element={<AddPage />} />
         </Routes>
       </BrowserRouter>
       

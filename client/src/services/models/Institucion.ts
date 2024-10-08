@@ -1,5 +1,5 @@
 interface Institucion {
-    id: number;
+    id?: number;
     cue: number;
     cueanexo?: number;
     nombre: string;

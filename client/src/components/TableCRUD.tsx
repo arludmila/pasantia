@@ -1,4 +1,6 @@
+// TableCRUD.tsx
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   Table,
   Thead,
@@ -13,21 +15,22 @@ import {
   Spacer,
   Box,
 } from '@chakra-ui/react';
-
-interface TableCRUDProps<T> {
-  tableName: string;         
-  headers: Array<keyof T>;    
-  data: T[];                 
-  keyField: keyof T;         
+import { IoAdd } from "react-icons/io5";
+interface TableCRUDProps {
+  tableName: string;          
+  headers: string[];          
+  data: any[];                
 }
 
-const TableCRUD = <T,>({ tableName, headers, data, keyField }: TableCRUDProps<T>) => {
+const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data }) => {
   return (
     <Box p={5} m={10}>
       <Flex mb={4}>
         <Heading size="lg">{tableName}</Heading>
         <Spacer />
-        <Button colorScheme="green">Agregar+</Button>
+        <Button as={Link} to="/dashboard/instituciones-crear" colorScheme="green">
+            Agregar<IoAdd />
+            </Button>
       </Flex>
       
       <TableContainer>
@@ -35,24 +38,23 @@ const TableCRUD = <T,>({ tableName, headers, data, keyField }: TableCRUDProps<T>
           <Thead>
             <Tr>
               {headers.map((header, index) => (
-                <Th key={String(header)}>{String(header)}</Th> 
+                <Th key={index}>{header}</Th>
               ))}
-              <Th>Acciones</Th> 
+              <Th>Acciones</Th> {/* Actions column */}
             </Tr>
           </Thead>
           <Tbody>
-  {data.map((item) => (
-    <Tr key={String(item[keyField])}>
-      {headers.map((header, idx) => (
-        <Td key={idx}>{item[header] !== undefined ? String(item[header]) : 'N/A'}</Td> // Check if item[header] is defined
-      ))}
-      <Td>
-        <Button colorScheme="orange" size="sm">Editar</Button>
-      </Td>
-    </Tr>
-  ))}
-</Tbody>
-
+            {data.map((item, index) => (
+              <Tr key={index}>
+                {Object.values(item).map((value, idx) => (
+                  <Td key={idx}>{String(value || 'N/A')}</Td> // Render N/A for undefined values
+                ))}
+                <Td>
+                  <Button colorScheme="orange" size="sm">Editar</Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
         </Table>
       </TableContainer>
     </Box>
