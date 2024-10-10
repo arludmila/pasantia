@@ -14,7 +14,6 @@ import {
   Spacer,
   Box,
 } from '@chakra-ui/react';
-import { IoAdd } from "react-icons/io5";
 import { AddIcon } from '@chakra-ui/icons';
 interface TableCRUDProps {
   tableName: string;          
@@ -24,7 +23,7 @@ interface TableCRUDProps {
 
 const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data }) => {
   return (
-    <Box p={5} m={10}>
+    <Box p={5} m={0}>
       <Flex mb={4}>
         <Heading size="lg">{tableName}</Heading>
         <Spacer />
@@ -50,7 +49,8 @@ const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data }) => {
                   <Td key={idx}>{String(value || 'N/A')}</Td> 
                 ))}
                 <Td>
-                  <Button colorScheme="orange" size="sm">Editar</Button>
+                  <Button colorScheme="orange" size="sm" mr={2}>Editar</Button>
+                  <Button colorScheme="red" size="sm">Borrar</Button>
                 </Td>
               </Tr>
             ))}
