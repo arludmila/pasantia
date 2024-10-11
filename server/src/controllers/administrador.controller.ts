@@ -38,11 +38,16 @@ export class AdministradorController extends BaseController<Administrador> {
     await super.delete(req, res);
   }
 
+  public async findOne(req:Request, res: Response) {
+    await super.findOne(req,res)
+  }
+
   private hashClave = async (req: Request): Promise<void> => {
     if (req.body.clave) {
       req.body.clave = await bcrypt.hash(req.body.clave, 8);
     }
   };
+
 
   public administradorLogin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -67,25 +72,27 @@ export class AdministradorController extends BaseController<Administrador> {
         }
 
         const secretKey = process.env.SECRET_JWT || "";
-        const token = jwt.sign({ administrador_id: administrador.id.toString() }, secretKey, {
-            expiresIn: '24h',
+
+        const tokenPayload: { administrador_id: string; rol: string; id_institucion?: number } = {
+          administrador_id: administrador.id.toString(),
+          rol: administrador.rol,
+      };
+      if (administrador.id_institucion !== null) {
+        tokenPayload.id_institucion = administrador.id_institucion;
+      }
+
+        const token = jwt.sign(tokenPayload, secretKey, {
+          expiresIn: '1h',
         });
+        
+       
 
         
-        const adminData = {
-            id: administrador.id,
-            rol: administrador.rol,
-            nombre: administrador.nombre,
-            correo: administrador.correo,
-            id_institucion: administrador.id_institucion,
-        };
-
-        
-        res.send({ administrador: adminData, token });
+        res.send({ token });
     } catch (err) {
         console.error('Error en administradorLogin:', err);
         res.status(500).json({ mensaje: 'Error interno del servidor.' });
         next(err); 
     }
-};
+  };
 }

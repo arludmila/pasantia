@@ -2,17 +2,17 @@ import { Request, Response, NextFunction } from 'express';
 import { AdministradorRepository } from '../repositories/administrador.repository';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { Administrador } from '../models/administrador.model'; // Adjust as needed
+import { Administrador } from '../models/administrador.model';
 dotenv.config();
 
-/*const auth = (...roles: Administrador['rol'][]) => {
+const auth = (...roles: Administrador['rol'][]) => {
     return async function (req: Request, res: Response, next: NextFunction) {
         try {
             const authHeader = req.headers.authorization;
             const bearer = 'Bearer ';
 
             if (!authHeader || !authHeader.startsWith(bearer)) {
-                const error = new Error('Access denied. No credentials sent!');
+                const error = new Error('Acceso denegado. No se enviaron credenciales.');
                 (error as any).status = 401;
                 throw error;
             }
@@ -20,30 +20,25 @@ dotenv.config();
             const token = authHeader.replace(bearer, '');
             const secretKey = process.env.SECRET_JWT || '';
 
-            // Verify JWT token
-            const decoded = jwt.verify(token, secretKey) as { user_id: number };
+            const decoded = jwt.verify(token, secretKey) as { administrador_id: string; rol: string; id_institucion?: number };
 
-            // Fetch administrator from repository
             const administradorRepository = new AdministradorRepository();
-            const administrador = await administradorRepository.findAdministrador({ id: decoded.user_id });
+            const administrador = await administradorRepository.findOne(Number(decoded.administrador_id));
 
             if (!administrador) {
-                const error = new Error('Authentication failed!');
+                const error = new Error('Fallo de autenticación.');
                 (error as any).status = 401;
                 throw error;
             }
 
-            // Check if the authenticated user is the owner or has the required role
-            const ownerAuthorized = req.params.id == String(administrador.id);
+            const ownerAuthorized = req.params.id === String(administrador.id);
 
             if (!ownerAuthorized && roles.length && !roles.includes(administrador.rol)) {
-                const error = new Error('Unauthorized');
+                const error = new Error('No autorizado.');
                 (error as any).status = 401;
                 throw error;
             }
 
-            // Attach current user to request object
-            req.currentUser = administrador;
             next();
 
         } catch (e) {
@@ -53,4 +48,4 @@ dotenv.config();
     };
 };
 
-export default auth;*/
+export default auth;

@@ -52,3 +52,4 @@ export const validateLogin = [
     .notEmpty()
     .withMessage('La contraseña no puede estar vacía'),
 ];
+

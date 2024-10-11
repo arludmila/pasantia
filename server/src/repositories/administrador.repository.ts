@@ -33,6 +33,9 @@ export class AdministradorRepository extends BaseRepository<Administrador> {
     } 
 };
 
+  public async findOne(id: number) {
+    return super.findOne(id);
+  }
   public async create(administrador: Administrador) {
     return super.create(administrador);
   }
