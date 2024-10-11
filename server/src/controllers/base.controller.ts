@@ -11,7 +11,7 @@ export class BaseController<T extends object> {
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
     this.delete = this.delete.bind(this);
-    
+    this.findOne = this.findOne.bind(this);
     this.handleError = this.handleError.bind(this);
   }
 
@@ -21,6 +21,20 @@ export class BaseController<T extends object> {
       res.status(200).json(records);
     } catch (error: unknown) {
       this.handleError(res, error, 'Error al obtener registros');
+    }
+  }
+
+  public async findOne(req: Request, res: Response): Promise<void> {
+    try {
+      const id = parseInt(req.params.id);
+      const record = await this.repository.findOne(id);
+      if (record) {
+        res.status(200).json(record);
+      } else {
+        res.status(404).json({ mensaje: 'Registro no encontrado' });
+      }
+    } catch (error: unknown) {
+      this.handleError(res, error, 'Error al obtener el registro');
     }
   }
 

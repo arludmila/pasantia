@@ -38,7 +38,7 @@ CREATE TABLE administrador (
     id INT PRIMARY KEY AUTO_INCREMENT,
     rol ENUM('Admin', 'SuperUser') NOT NULL,
     nombre VARCHAR(45) NOT NULL,
-    correo VARCHAR(45) NOT NULL,
+    correo VARCHAR(45) UNIQUE NOT NULL,
     id_institucion INT,
     clave VARCHAR(60) NOT NULL,
     estado INT,

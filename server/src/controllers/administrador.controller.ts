@@ -1,16 +1,27 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { BaseController } from './base.controller';
 import { Administrador } from '../models/administrador.model';
 import { AdministradorRepository } from '../repositories/administrador.repository';
 import bcrypt from 'bcrypt';
+import validator from 'validator';
+import jwt from 'jsonwebtoken';
 
 export class AdministradorController extends BaseController<Administrador> {
+  private administradorRepository: AdministradorRepository;
+
   constructor() {
-    super(new AdministradorRepository());
+    const repository = new AdministradorRepository();
+    super(repository);
+    this.administradorRepository = repository;
   }
 
   public async getAll(req: Request, res: Response): Promise<void> {
-    await super.getAll(req, res);
+    try {
+      const administradores = await this.administradorRepository.getAllWithoutClave();
+      res.status(200).json(administradores);
+    } catch (error) {
+      res.status(500).json({ mensaje: 'Error al obtener administradores', error });
+    }
   }
 
   public async create(req: Request, res: Response): Promise<void> {
@@ -26,9 +37,55 @@ export class AdministradorController extends BaseController<Administrador> {
   public async delete(req: Request, res: Response): Promise<void> {
     await super.delete(req, res);
   }
-    hashClave = async (req: Request): Promise<void> => {
+
+  private hashClave = async (req: Request): Promise<void> => {
     if (req.body.clave) {
-        req.body.clave = await bcrypt.hash(req.body.clave, 8);
+      req.body.clave = await bcrypt.hash(req.body.clave, 8);
+    }
+  };
+
+  public administradorLogin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const { correo, clave } = req.body;
+
+        if (typeof correo !== 'string' || !validator.isEmail(correo)) {
+            res.status(400).json({ mensaje: 'Correo electrónico inválido.' });
+            return; 
+        }
+
+        const administrador = await this.administradorRepository.findAdministrador(correo);
+
+        if (!administrador) {
+            res.status(401).json({ mensaje: 'No se pudo iniciar sesión.' });
+            return; 
+        }
+
+        const isMatch = await bcrypt.compare(clave, administrador.clave);
+        if (!isMatch) {
+            res.status(401).json({ mensaje: 'Contraseña incorrecta.' });
+            return; 
+        }
+
+        const secretKey = process.env.SECRET_JWT || "";
+        const token = jwt.sign({ administrador_id: administrador.id.toString() }, secretKey, {
+            expiresIn: '24h',
+        });
+
+        
+        const adminData = {
+            id: administrador.id,
+            rol: administrador.rol,
+            nombre: administrador.nombre,
+            correo: administrador.correo,
+            id_institucion: administrador.id_institucion,
+        };
+
+        
+        res.send({ administrador: adminData, token });
+    } catch (err) {
+        console.error('Error en administradorLogin:', err);
+        res.status(500).json({ mensaje: 'Error interno del servidor.' });
+        next(err); 
     }
 };
 }

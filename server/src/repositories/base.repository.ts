@@ -42,4 +42,16 @@ export class BaseRepository<T extends object> {
     const values = [id];
     await DbConnection.query(sql, values);
   }
+
+  public async findOne(id: number): Promise<T | null> {
+    const sql = `SELECT * FROM ${this.tableName} WHERE id = ? LIMIT 1`;
+    const result = await DbConnection.query(sql, [id]);
+
+    if (Array.isArray(result) && result.length > 0) {
+      return result[0] as T;
+    } else {
+      return null;
+    }
+  }
+
 }
