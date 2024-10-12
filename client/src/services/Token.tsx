@@ -1,6 +1,6 @@
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 
-interface TokenPayload{
+export interface TokenPayload{
     administrador_id: string;
     rol: 'Admin' | 'SuperUser'; 
     iss?: string;

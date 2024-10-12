@@ -3,11 +3,11 @@ import { Navigate } from 'react-router-dom';
 import { getDecodedToken } from './Token';
 
 interface ProtectedRouteProps {
-  component: React.FC;
+  children: React.ReactNode; 
   roles?: ('Admin' | 'SuperUser')[];
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ component: Component, roles, ...rest }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, roles }) => {
   const decoded = getDecodedToken();
 
   if (!decoded) {
@@ -17,8 +17,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ component: Component, r
   if (roles && !roles.includes(decoded.rol)) {
     return <Navigate to="/unauthorized" />;
   }
-  // TODO: armar el unautorized???????
-  return <Component {...rest}/>;
+
+  return <>{children}</>; 
 };
 
 export default ProtectedRoute;
