@@ -12,7 +12,7 @@ function InstitucionesTablePage() {
   useEffect(() => {
     const fetchInstituciones = async () => {
       const apiResponse = new ApiResponse<Institucion[]>();
-      await apiResponse.fetchData('/instituciones', 'GET');
+      await apiResponse.useFetch('/instituciones', 'GET');
       setResponse(apiResponse); 
     };
 

@@ -1,43 +1,52 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  Box, Heading, Input, Grid, GridItem, VStack, Text, Button, Select
+  Box, Heading, Input, Grid, GridItem, VStack, Text, Button
 } from '@chakra-ui/react';
 
 import Carrera from '../../services/models/Carrera'; 
-//import { useFetch } from '../../services/ApiResponse';
+import NavbarHome from '../../components/NavbarHome';
+import ApiResponse from '../../services/ApiResponse';
 
 const CarrerasPage = () => {
   const endpoint = 'carreras';
- /*  const [searchTerm, setSearchTerm] = useState('');
-  const { data, error, loading } = useFetch<Carrera[]>(endpoint); 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [response, setResponse] = useState(new ApiResponse<Carrera[]>());
 
-  if (loading) {
-    return <Heading>Cargando...</Heading>;
-  }
+  useEffect(() => {
+    const fetchCarreras = async () => {
+      const apiResponse = new ApiResponse<Carrera[]>();
+      await apiResponse.useFetch(`/${endpoint}`, 'GET');
+      setResponse(apiResponse); 
+    };
 
-  if (error) {
-    return <p>Error: {error}</p>; 
-  }
+    fetchCarreras();
+  }, []);
 
-  if (!data) { 
-    return <p>No hay información disponible</p>;
-  }
+  if (response.loading) return <p>Loading...</p>;
+  if (response.error) return <p>Error: {response.error}</p>;
 
-  const filteredCarreras = data.filter(carrera => 
-    carrera.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-  ); */
+  const normalizeText = (text: string) => {
+    return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  };  
+  const filteredCarreras = response.data
+  ? response.data.filter(carrera => 
+      normalizeText(carrera.nombre).includes(normalizeText(searchTerm))
+    )
+  : [];
+
   return (
    <div>
-    <Box p={5}>
-      <Heading mb={5}>Formación Académica en Goya</Heading>
-     {/*  <Input
-        placeholder="Buscar por nombre de carrera..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        mb={5}
-      /> */}
-        
-    {/*   <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
+     <NavbarHome/>
+     <Box p={5}>
+       <Heading mb={5}>Formación Académica en Goya</Heading>
+       <Input
+         placeholder="Buscar por nombre de carrera..."
+         value={searchTerm}
+         onChange={(e) => setSearchTerm(e.target.value)}
+         mb={5}
+       /> 
+       
+      <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
         {filteredCarreras.map(carrera => (
           <GridItem key={carrera.id} borderWidth="1px" borderRadius="lg" p={4}>
             <VStack align="start">
@@ -49,9 +58,10 @@ const CarrerasPage = () => {
             </VStack>
           </GridItem>
         ))}
-      </Grid> */}
+      </Grid> 
     </Box>
    </div>
   );
 };
+
 export default CarrerasPage;

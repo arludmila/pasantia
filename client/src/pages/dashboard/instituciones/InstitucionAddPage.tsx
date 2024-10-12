@@ -45,7 +45,7 @@ const InstitucionAddPage = () => {
     console.log(formData);
     
     const apiResponse = new ApiResponse<Institucion>();
-    await apiResponse.fetchData('/instituciones', 'POST', formData);
+    await apiResponse.useFetch('/instituciones', 'POST', formData);
     setResponse(apiResponse);
 
     if (response.error == null) { 

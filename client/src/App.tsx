@@ -13,6 +13,7 @@ import DashboardRoutes from './pages/dashboard/DashboardRoutes';
 import InstitucionAddPage from './pages/dashboard/instituciones/InstitucionAddPage';
 import CarrerasTablePage from './pages/dashboard/carreras/CarrerasTablePage';
 import CarreraAddPage from './pages/dashboard/carreras/CarreraAddPage';
+import CarrerasPage from './pages/public/CarrerasPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/carreras" element={<CarrerasPage />} />
           <Route path="/instituciones" element={<InstitucionesPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/unauthorized" element={<div>Acceso no autorizado</div>} />

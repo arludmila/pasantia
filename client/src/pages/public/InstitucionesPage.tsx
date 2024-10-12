@@ -1,83 +1,79 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  Box, Heading, Input, Grid, GridItem, VStack, Text, Button, Select, Image, AccordionPanel, Accordion, Link,AccordionItem, AccordionButton,AccordionIcon
+  Box, Heading, Grid, GridItem, VStack, Text, Button, Image, Accordion, Link,
+  AccordionPanel, AccordionItem, AccordionButton, AccordionIcon
 } from '@chakra-ui/react';
 import Institucion from '../../services/models/Institucion'; 
 import NavbarHome from '../../components/NavbarHome';
-//import { useFetch } from '../../services/ApiResponse';
+import ApiResponse from '../../services/ApiResponse';
 
 const InstitucionesPage = () => {
   const endpoint = 'instituciones';
-  /* const { data, error, loading } = useFetch<Institucion[]>(endpoint); 
+  const [response, setResponse] = useState(new ApiResponse<Institucion[]>());
 
-  if (loading) {
-    return <Heading>Cargando...</Heading>;
-  }
+  useEffect(() => {
+    const fetchInstituciones = async () => {
+      const apiResponse = new ApiResponse<Institucion[]>();
+      await apiResponse.useFetch(`/${endpoint}`, 'GET');
+      setResponse(apiResponse); 
+    };
 
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
+    fetchInstituciones();
+  }, []);
 
-  if (!data) { 
-    return <p>No hay información disponible</p>;
-  } */
+  // Display loading or error message
+  if (response.loading) return <p>Loading...</p>;
+  if (response.error) return <p>Error: {response.error}</p>;
 
   return (
    <div>
      <NavbarHome/>
-    <Box p={5}>
-      <Heading mb={5}>Instituciones en Goya</Heading>
-      {/*   
-      <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
-        {data.map((institucion) => (
-          <GridItem key={institucion.id}>
-            <Accordion allowToggle>
-              <AccordionItem>
-                <h2>
-                  <AccordionButton>
-                    <Box flex="1" textAlign="left">
-                      <VStack align="left" spacing={0}>
-                        <Text fontSize="lg" fontWeight="bold">
-                          {institucion.nombre}
-                        </Text>
-                      </VStack>
-                    </Box>
-                    <Image
-                      src="https://fakeimg.pl/50x50"
-                      alt={institucion.nombre}
-                      boxSize="50px"
-                      mr={3}
-                    />
-                    <AccordionIcon />
-                  </AccordionButton>
-                </h2>
-                <AccordionPanel pb={4}>
-                  <Text><b>Dirección:</b> {institucion.direccion}</Text>
-                  {institucion.tel && <Text><b>Teléfono:</b> {institucion.tel}</Text>}
-                  {institucion.pagina && (
-                    <Text>
-                      <b>Página Web:</b>{' '}
-                      <Link href={`http://${institucion.pagina}`} isExternal color="blue.500">
-                        {institucion.pagina}
-                      </Link>
-                    </Text>
-                  )}
-                  <Button
-                    mt={3}
-                    colorScheme="teal"
-                    width="full"
-                    onClick={() => alert(`Ver carreras de ${institucion.nombre}`)}
-                  >
-                    Ver carreras
-                  </Button>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-          </GridItem>
-        ))}
-      </Grid> */}
-
-
+     <Box p={5}>
+       <Heading mb={5}>Instituciones en Goya</Heading>
+       
+       <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
+         {response.data?.map((institucion) => (
+           <GridItem key={institucion.id}>
+             <Accordion allowToggle>
+               <AccordionItem>
+                 <h2>
+                   <AccordionButton>
+                     <Box flex="1" textAlign="left">
+                       <VStack align="left" spacing={0}>
+                         <Text fontSize="lg" fontWeight="bold">
+                           {institucion.nombre}
+                         </Text>
+                       </VStack>
+                     </Box>
+                     
+                     <AccordionIcon />
+                   </AccordionButton>
+                 </h2>
+                 <AccordionPanel pb={4}>
+                   <Text><b>Dirección:</b> {institucion.direccion}</Text>
+                   {institucion.tel && <Text><b>Teléfono:</b> {institucion.tel}</Text>}
+                   {institucion.pagina && (
+                     <Text>
+                       <b>Página Web:</b>{' '}
+                       <Link href={`http://${institucion.pagina}`} isExternal color="blue.500">
+                         {institucion.pagina}
+                       </Link>
+                     </Text>
+                   )}
+                   <Button
+                     mt={3}
+                     colorScheme="teal"
+                     width="full"
+                     onClick={() => alert(`Ver carreras de ${institucion.nombre}`)}
+                   >
+                     Ver carreras
+                   </Button>
+                 </AccordionPanel>
+               </AccordionItem>
+             </Accordion>
+           </GridItem>
+         ))}
+       </Grid>
     </Box>
    </div>
   );

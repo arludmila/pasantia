@@ -4,7 +4,7 @@ class ApiResponse<T> {
   error: string | null = null;
   loading: boolean = true;
 
-  async fetchData(
+  async useFetch(
     url: string,
     method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
     body: any = null,

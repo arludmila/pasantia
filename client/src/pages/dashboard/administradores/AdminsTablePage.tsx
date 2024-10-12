@@ -12,7 +12,7 @@ function AdminsTablePage() {
   useEffect(() => {
     const fetchAdministradores = async () => {
       const apiResponse = new ApiResponse<Administrador[]>();
-      await apiResponse.fetchData('/administradores', 'GET');
+      await apiResponse.useFetch('/administradores', 'GET');
       setResponse(apiResponse); 
     };
 

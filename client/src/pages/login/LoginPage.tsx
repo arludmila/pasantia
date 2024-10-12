@@ -25,7 +25,7 @@ const LoginPage = () => {
     
     const apiResponse = new ApiResponse<LoginResponse>();
     
-    await apiResponse.fetchData('administradores/login', 'POST', formData);
+    await apiResponse.useFetch('administradores/login', 'POST', formData);
     
     setResponse(apiResponse);
   };

@@ -42,7 +42,7 @@ const AdminAddPage = () => {
     console.log(formData);
 
     const apiResponse = new ApiResponse<Administrador>();
-    await apiResponse.fetchData('/administradores', 'POST', formData);
+    await apiResponse.useFetch('/administradores', 'POST', formData);
     setResponse(apiResponse);
 
     if (response.error == null) {

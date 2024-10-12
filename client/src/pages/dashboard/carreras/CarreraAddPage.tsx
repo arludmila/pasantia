@@ -52,7 +52,7 @@ const CarreraAddPage = () => {
     console.log(formData);
 
     const apiResponse = new ApiResponse<Carrera>();
-    await apiResponse.fetchData('/carreras', 'POST', formData);
+    await apiResponse.useFetch('/carreras', 'POST', formData);
     setResponse(apiResponse);
 
     if (response.error == null) {

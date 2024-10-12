@@ -12,7 +12,7 @@ function CarrerasTablePage() {
   useEffect(() => {
     const fetchInstituciones = async () => {
       const apiResponse = new ApiResponse<Carrera[]>();
-      await apiResponse.fetchData(`/carreras/institucion/${decoded?.id_institucion}`, 'GET');
+      await apiResponse.useFetch(`/carreras/institucion/${decoded?.id_institucion}`, 'GET');
       setResponse(apiResponse); 
     };
 

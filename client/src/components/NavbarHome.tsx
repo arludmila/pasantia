@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 
 const Links = [
-  { name: 'Carreras', path: '/' },
+  { name: 'Carreras', path: '/carreras' },
   { name: 'Instituciones', path: '/instituciones' },
 ];
 

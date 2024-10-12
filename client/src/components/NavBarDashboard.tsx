@@ -15,9 +15,11 @@ import {
   useDisclosure,
   useColorModeValue,
   Link,
+  Icon,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
+import { IoPersonCircle } from "react-icons/io5";
 
 interface NavLink {
   name: string;
@@ -83,12 +85,7 @@ export default function NavbarDashboard({ links }: Props) {
               variant={'link'}
               cursor={'pointer'}
               minW={0}>
-              <Avatar
-                size={'sm'}
-                src={
-                  'https://placehold.co/600x400'
-                }
-              />
+             <IoPersonCircle size={45}/>
             </MenuButton>
             <MenuList>
               <MenuItem>Ajustes</MenuItem>
