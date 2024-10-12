@@ -12,8 +12,14 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-app.use(cors());
-app.options("*", cors());
+const corsOptions = {
+  origin: 'http://localhost:3001', 
+  optionsSuccessStatus: 200 
+};
+
+app.use(cors(corsOptions));
+
+app.options('*', cors(corsOptions));
 
 app.use('/api', ApiRouter);
 

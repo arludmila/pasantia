@@ -27,7 +27,7 @@ const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data }) => {
       <Flex mb={4}>
         <Heading size="lg">{tableName}</Heading>
         <Spacer />
-        <Button as={Link} to="/dashboard/instituciones-crear" colorScheme="green" leftIcon={<AddIcon />}>
+        <Button as={Link} to={`/dashboard/${tableName.toLowerCase()}-crear`} colorScheme="green" leftIcon={<AddIcon />}>
             Agregar
             </Button>
       </Flex>

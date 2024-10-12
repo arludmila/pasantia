@@ -4,11 +4,11 @@ import {
 } from '@chakra-ui/react';
 import Institucion from '../../services/models/Institucion'; 
 import NavbarHome from '../../components/NavbarHome';
-import { useFetch } from '../../services/ApiResponse';
+//import { useFetch } from '../../services/ApiResponse';
 
 const InstitucionesPage = () => {
   const endpoint = 'instituciones';
-  const { data, error, loading } = useFetch<Institucion[]>(endpoint); 
+  /* const { data, error, loading } = useFetch<Institucion[]>(endpoint); 
 
   if (loading) {
     return <Heading>Cargando...</Heading>;
@@ -20,14 +20,14 @@ const InstitucionesPage = () => {
 
   if (!data) { 
     return <p>No hay información disponible</p>;
-  }
+  } */
 
   return (
    <div>
      <NavbarHome/>
     <Box p={5}>
       <Heading mb={5}>Instituciones en Goya</Heading>
-        
+      {/*   
       <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
         {data.map((institucion) => (
           <GridItem key={institucion.id}>
@@ -75,7 +75,7 @@ const InstitucionesPage = () => {
             </Accordion>
           </GridItem>
         ))}
-      </Grid>
+      </Grid> */}
 
 
     </Box>

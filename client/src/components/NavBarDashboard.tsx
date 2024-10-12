@@ -17,6 +17,7 @@ import {
   Link,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { useNavigate } from 'react-router-dom';
 
 interface NavLink {
   name: string;
@@ -47,6 +48,12 @@ const NavLinks = ({ name, path }: NavLink) => {
 
 export default function NavbarDashboard({ links }: Props) { 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate()
+  const handleLogout = () => {
+    localStorage.removeItem('token'); 
+    navigate('/login'); 
+  };
+  
 
   return (
     <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -86,7 +93,7 @@ export default function NavbarDashboard({ links }: Props) {
             <MenuList>
               <MenuItem>Ajustes</MenuItem>
               <MenuDivider />
-              <MenuItem>Cerrar Sesión</MenuItem>
+              <MenuItem onClick={handleLogout} color="red">Cerrar Sesión</MenuItem>
             </MenuList>
           </Menu>
         </Flex>

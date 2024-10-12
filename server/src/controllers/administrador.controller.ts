@@ -82,7 +82,7 @@ export class AdministradorController extends BaseController<Administrador> {
       }
 
         const token = jwt.sign(tokenPayload, secretKey, {
-          expiresIn: '1h',
+          expiresIn: '2h',
         });
         
        

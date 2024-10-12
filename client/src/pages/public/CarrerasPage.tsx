@@ -4,11 +4,11 @@ import {
 } from '@chakra-ui/react';
 
 import Carrera from '../../services/models/Carrera'; 
-import { useFetch } from '../../services/ApiResponse';
+//import { useFetch } from '../../services/ApiResponse';
 
 const CarrerasPage = () => {
   const endpoint = 'carreras';
-  const [searchTerm, setSearchTerm] = useState('');
+ /*  const [searchTerm, setSearchTerm] = useState('');
   const { data, error, loading } = useFetch<Carrera[]>(endpoint); 
 
   if (loading) {
@@ -25,19 +25,19 @@ const CarrerasPage = () => {
 
   const filteredCarreras = data.filter(carrera => 
     carrera.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ); */
   return (
    <div>
     <Box p={5}>
       <Heading mb={5}>Formación Académica en Goya</Heading>
-      <Input
+     {/*  <Input
         placeholder="Buscar por nombre de carrera..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         mb={5}
-      />
+      /> */}
         
-      <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
+    {/*   <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
         {filteredCarreras.map(carrera => (
           <GridItem key={carrera.id} borderWidth="1px" borderRadius="lg" p={4}>
             <VStack align="start">
@@ -49,7 +49,7 @@ const CarrerasPage = () => {
             </VStack>
           </GridItem>
         ))}
-      </Grid>
+      </Grid> */}
     </Box>
    </div>
   );

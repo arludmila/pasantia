@@ -1,35 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import TableCRUD from '../../components/TableCRUD';
+import React from 'react';
 import NavbarDashboard from '../../components/NavBarDashboard';
 
-function SuperUserDashboard() {
-    // TODO: arreglar aca para que use el metodo que arme.
-  const [backendData, setBackendData] = useState([]);
-  
-  useEffect(() => {
-    fetch("http://localhost:3000/api/instituciones")
-      .then(response => response.json())
-      .then(data => setBackendData(data))
-      .catch(error => console.error('Error fetching data:', error));
-      console.log(backendData);
+interface DashboardProps {
+  children?: React.ReactNode;
+}
 
-  }, []);
+function SuperUserDashboard({ children }: DashboardProps) {
   const links = [
     { name: 'Administradores', path: '/dashboard/administradores' },
     { name: 'Instituciones', path: '/dashboard/instituciones' },
   ];
-  const headers = ['ID', 'CUE', 'CUE Anexo', 'Nombre', 'Dirección', 'Ubicación Lat', 'Ubicación Long', 'Teléfono', 'Página', 'Gestión', 'Estado'];
-
+  console.log(localStorage.getItem('token'));
   return (
     <div>
-        <NavbarDashboard links={links} />
-            <TableCRUD
-            tableName="Instituciones"
-            headers={headers}
-            data={backendData}
-        />
+      <NavbarDashboard links={links} />
+      <div className="dashboard-content">
+        {children}
+      </div>
     </div>
   );
 }
 
-export default SuperUserDashboard; 
+export default SuperUserDashboard;

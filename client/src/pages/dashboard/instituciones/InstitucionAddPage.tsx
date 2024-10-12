@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -11,9 +11,11 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import Institucion from '../../../services/models/Institucion';
+import ApiResponse from '../../../services/ApiResponse';
 
-const AddPage = () => {
+const InstitucionAddPage = () => {
   const navigate = useNavigate();
+  const [response, setResponse] = useState(new ApiResponse<Institucion>());
   const [formData, setFormData] = useState<Omit<Institucion, 'id'>>({
     cue: 0,
     cueanexo: undefined,
@@ -37,12 +39,21 @@ const AddPage = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
+    console.log(formData);
     
-  
-    navigate('/instituciones');
+    const apiResponse = new ApiResponse<Institucion>();
+    await apiResponse.fetchData('/instituciones', 'POST', formData);
+    setResponse(apiResponse);
+
+    if (response.error == null) { 
+      navigate('/dashboard/instituciones');
+    } else {
+   
+      console.error(response.error);
+    }
   };
   
   return (
@@ -167,4 +178,4 @@ const AddPage = () => {
   );
 };
 
-export default AddPage;
+export default InstitucionAddPage;
