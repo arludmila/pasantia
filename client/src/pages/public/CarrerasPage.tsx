@@ -1,17 +1,30 @@
 import { useEffect, useState } from 'react';
 import {
-  Box, Heading, Input, Grid, GridItem, VStack, Text, Button
+  Box, Heading, Input, Grid, GridItem, VStack, Text, Button,
+  Flex,
+  RadioGroup,
+  Radio,
+  Select
 } from '@chakra-ui/react';
 
 import Carrera from '../../services/models/Carrera'; 
 import NavbarHome from '../../components/NavbarHome';
 import ApiResponse from '../../services/ApiResponse';
+import { AddIcon } from '@chakra-ui/icons';
 
 const CarrerasPage = () => {
   const endpoint = 'carreras';
   const [searchTerm, setSearchTerm] = useState('');
   const [response, setResponse] = useState(new ApiResponse<Carrera[]>());
-
+  const [selectedModalidad, setSelectedModalidad] = useState('');
+  // TODO: ?? terminar? 
+  const [selectedDuracion, setSelectedDuracion] = useState<{ años: number; meses: number }>({
+    años: 0,
+    meses: 0,
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [resultsPerPage] = useState(10);
+  const modalidadOptions = ['Presencial', 'Virtual', 'Semipresencial'];
   useEffect(() => {
     const fetchCarreras = async () => {
       const apiResponse = new ApiResponse<Carrera[]>();
@@ -28,12 +41,20 @@ const CarrerasPage = () => {
   const normalizeText = (text: string) => {
     return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   };  
+  // TODO: ordenar A-Z
   const filteredCarreras = response.data
   ? response.data.filter(carrera => 
-      normalizeText(carrera.nombre).includes(normalizeText(searchTerm))
+      normalizeText(carrera.nombre).includes(normalizeText(searchTerm)) &&
+      (selectedModalidad ? carrera.modalidad === selectedModalidad : true) &&
+      (selectedDuracion.años > 0 ? carrera.duracion_anios === selectedDuracion.años : true) &&
+      (selectedDuracion.meses > 0 ? carrera.duracion_meses === selectedDuracion.meses : true)
     )
   : [];
-
+    const indexOfLastCarrera = currentPage * resultsPerPage;
+    const indexOfFirstCarrera = indexOfLastCarrera - resultsPerPage;
+    const currentCarreras = filteredCarreras.slice(indexOfFirstCarrera, indexOfLastCarrera);
+    // TODO: terminar paginacion??
+    const totalPages = Math.ceil(filteredCarreras.length / resultsPerPage);
   return (
    <div>
      <NavbarHome/>
@@ -46,19 +67,56 @@ const CarrerasPage = () => {
          mb={5}
        /> 
        
-      <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
-        {filteredCarreras.map(carrera => (
-          <GridItem key={carrera.id} borderWidth="1px" borderRadius="lg" p={4}>
-            <VStack align="start">
-              <Text fontSize="lg" fontWeight="bold">{carrera.nombre}</Text>
-              <Text>Modalidad: {carrera.modalidad}</Text>
-              <Text>Duración: {carrera.duracion_anios} años {carrera.duracion_meses > 0 && `y ${carrera.duracion_meses} meses`}</Text>
-              <Text>Institución: {carrera.institucion_id}</Text>
-              <Button colorScheme="teal" mt={3} width="full">Ver más detalles</Button>
-            </VStack>
-          </GridItem>
-        ))}
-      </Grid> 
+       <Flex mb={5}>
+          <VStack align="start" mr={10}>
+            <Text fontWeight="bold">Filtrar por Modalidad:</Text>
+            <RadioGroup onChange={setSelectedModalidad} value={selectedModalidad}>
+            <Flex direction="column">
+              {modalidadOptions.map(option => (
+                <Radio key={option} value={option} mb={2}>{option}</Radio> 
+              ))}
+            </Flex>
+          </RadioGroup>
+
+
+          </VStack>
+
+          <Flex direction="column" flexGrow={1}>
+          {filteredCarreras.length === 0 ? (
+              <Text fontWeight="medium" color="red.600">No se encontraron resultados.</Text> 
+            ) : (filteredCarreras.map((carrera) => (
+              <Flex
+                key={carrera.id}
+                bg="gray.100"
+                p={4}
+                mb={2}
+                borderRadius="md"
+                alignItems="flex-start"
+                justifyContent="space-between"
+              >
+                <Box>
+                  <Text fontWeight="bold" fontSize="lg">{carrera.nombre}</Text>
+                  <Text fontWeight="medium" color="blue.600">{carrera.institucion_nombre}</Text>
+                  <Text>Tipo de carrera: {carrera.tipo}</Text>
+                  <Text>
+                    Duración:{" "}
+                    {carrera.duracion_anios > 0 && `${carrera.duracion_anios} ${carrera.duracion_anios === 1 ? 'año' : 'años'}`}{' '}
+                    {carrera.duracion_anios > 0 && carrera.duracion_meses > 0 && 'y '}
+                    {carrera.duracion_meses > 0 && `${carrera.duracion_meses} ${carrera.duracion_meses === 1 ? 'mes' : 'meses'}`}
+                  </Text>
+                  <Text>Modalidad: {carrera.modalidad}</Text>
+                  <Text>Inscripción: {new Date(carrera.fecha_inscripcion).toLocaleDateString()}</Text>
+                </Box>
+                <Box>
+                  <Button leftIcon={<AddIcon />} colorScheme="blue" mb={2}>Información</Button>
+                </Box>
+              </Flex>
+            )))}
+          </Flex>
+        </Flex>
+
+
+
     </Box>
    </div>
   );

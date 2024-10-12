@@ -13,6 +13,7 @@ interface Carrera {
     institucion_id: number;
     estado: number;
     prioridad: number;
+    institucion_nombre?: string;
   }
 
   export default Carrera;

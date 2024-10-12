@@ -14,6 +14,7 @@ export class CarreraController extends BaseController<Carrera> {
   public async getAll(req: Request, res: Response): Promise<void> {
     await super.getAll(req, res);
   }
+  
   public getCarrerasFromInstitucion = async (req: Request, res: Response): Promise<void> => {
     const institucionId = parseInt(req.params.id);
   
@@ -24,6 +25,14 @@ export class CarreraController extends BaseController<Carrera> {
   
     try {
       const carreras = await this.carreraRepository.getCarrerasFromInstitucion(institucionId);
+      res.status(200).json(carreras);
+    } catch (error) {
+      res.status(500).json({ mensaje: 'Error al obtener carreras', error: error }); 
+    }
+  };
+  public getAllCarreras = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const carreras = await this.carreraRepository.getAllCarreras();
       res.status(200).json(carreras);
     } catch (error) {
       res.status(500).json({ mensaje: 'Error al obtener carreras', error: error }); 

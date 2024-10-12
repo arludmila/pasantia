@@ -11,11 +11,27 @@ export class CarreraRepository extends BaseRepository<Carrera> {
     return super.getAll();
   }
 
-  public getCarrerasFromInstitucion = async (id: number): Promise<Institucion[]> => {
+  public getAllCarreras = async():Promise<Carrera[]> => {
+    const sql = ` SELECT 
+                      carreras.*, 
+                      institucion.nombre AS institucion_nombre
+                  FROM 
+                      carreras
+                  JOIN 
+                      institucion ON carreras.institucion_id = institucion.id;`
+   try {
+        const result = await DbConnection.query(sql);
+        return result as Carrera[];
+    } catch (error) {
+        throw new Error('Error al realizar la busqueda en la base de datos'); 
+    }
+  }
+
+  public getCarrerasFromInstitucion = async (id: number): Promise<Carrera[]> => {
     const sql = `SELECT * FROM carreras WHERE carreras.institucion_id = ?`;
     try {
         const result = await DbConnection.query(sql, [id]);
-        return result as Institucion[];
+        return result as Carrera[];
     } catch (error) {
         throw new Error('Error al realizar la busqueda en la base de datos'); 
     }

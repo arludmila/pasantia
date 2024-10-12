@@ -7,7 +7,7 @@ import { Rol } from '../models/administrador.model';
 const CarreraRouter = Router();
 const carreraController = new CarreraController();
 
-CarreraRouter.get('/', carreraController.getAll);      
+CarreraRouter.get('/', carreraController.getAllCarreras);      
 CarreraRouter.patch('/:id', auth(Rol.Admin), carreraController.update);  
 CarreraRouter.get('/institucion/:id', auth(Rol.Admin), carreraController.getCarrerasFromInstitucion);  
 
