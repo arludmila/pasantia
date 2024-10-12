@@ -9,6 +9,8 @@ const carreraController = new CarreraController();
 
 CarreraRouter.get('/', carreraController.getAll);      
 CarreraRouter.patch('/:id', auth(Rol.Admin), carreraController.update);  
+CarreraRouter.get('/institucion/:id', auth(Rol.Admin), carreraController.getCarrerasFromInstitucion);  
+
 CarreraRouter.post('/', auth(Rol.Admin), createCarreraSchema, carreraController.create);  
 CarreraRouter.delete('/:id', auth(Rol.Admin), carreraController.delete); 
 

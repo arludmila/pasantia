@@ -11,6 +11,7 @@ import AdminsTablePage from './pages/dashboard/administradores/AdminsTablePage';
 import AdminAddPage from './pages/dashboard/administradores/AdminAddPage';
 import DashboardRoutes from './pages/dashboard/DashboardRoutes';
 import InstitucionAddPage from './pages/dashboard/instituciones/InstitucionAddPage';
+import CarrerasTablePage from './pages/dashboard/carreras/CarrerasTablePage';
 
 function App() {
   return (
@@ -56,6 +57,14 @@ function App() {
             element={
               <ProtectedRoute roles={['SuperUser']}>
                 <AdminAddPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/carreras"
+            element={
+              <ProtectedRoute roles={['Admin']}>
+                <CarrerasTablePage />
               </ProtectedRoute>
             }
           />

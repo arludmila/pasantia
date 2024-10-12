@@ -23,7 +23,7 @@ export class AdministradorController extends BaseController<Administrador> {
       res.status(500).json({ mensaje: 'Error al obtener administradores', error });
     }
   }
-
+  
   public async create(req: Request, res: Response): Promise<void> {
     console.log(req.body);
     await this.hashClave(req);

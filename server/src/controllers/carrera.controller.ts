@@ -4,13 +4,32 @@ import { CarreraRepository } from '../repositories/carrera.repository';
 import { Carrera } from '../models/carrera.model';
 
 export class CarreraController extends BaseController<Carrera> {
+  private carreraRepository: CarreraRepository;
   constructor() {
-    super(new CarreraRepository());
+    const repository = new CarreraRepository();
+    super(repository);
+    this.carreraRepository = repository;
   }
 
   public async getAll(req: Request, res: Response): Promise<void> {
     await super.getAll(req, res);
   }
+  public getCarrerasFromInstitucion = async (req: Request, res: Response): Promise<void> => {
+    const institucionId = parseInt(req.params.id);
+  
+    if (isNaN(institucionId)) {
+      res.status(400).json({ mensaje: 'ID de institución no válido.' });
+      return;
+    }
+  
+    try {
+      const carreras = await this.carreraRepository.getCarrerasFromInstitucion(institucionId);
+      res.status(200).json(carreras);
+    } catch (error) {
+      res.status(500).json({ mensaje: 'Error al obtener carreras', error: error }); 
+    }
+  };
+  
 
   public async create(req: Request, res: Response): Promise<void> {
     await super.create(req, res);

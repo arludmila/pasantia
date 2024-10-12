@@ -9,6 +9,7 @@ const institucionController = new InstitucionController();
 
 InstitucionRouter.get('/', institucionController.getAll);      
 InstitucionRouter.patch('/:id', auth(Rol.SuperUser), institucionController.update); 
+
 InstitucionRouter.post('/', auth(Rol.SuperUser), createInstitucionSchema, institucionController.create);  
 InstitucionRouter.delete('/:id', auth(Rol.SuperUser), institucionController.delete); 
 
