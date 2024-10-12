@@ -30,7 +30,7 @@ export class CarreraController extends BaseController<Carrera> {
     }
   };
   
-
+  // TODO: verificar q sea el mismo id_institucion? token == req.body
   public async create(req: Request, res: Response): Promise<void> {
     await super.create(req, res);
   }

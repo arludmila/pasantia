@@ -12,6 +12,7 @@ import AdminAddPage from './pages/dashboard/administradores/AdminAddPage';
 import DashboardRoutes from './pages/dashboard/DashboardRoutes';
 import InstitucionAddPage from './pages/dashboard/instituciones/InstitucionAddPage';
 import CarrerasTablePage from './pages/dashboard/carreras/CarrerasTablePage';
+import CarreraAddPage from './pages/dashboard/carreras/CarreraAddPage';
 
 function App() {
   return (
@@ -65,6 +66,14 @@ function App() {
             element={
               <ProtectedRoute roles={['Admin']}>
                 <CarrerasTablePage />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/dashboard/carreras-crear"
+            element={
+              <ProtectedRoute roles={['Admin']}>
+                <CarreraAddPage />
               </ProtectedRoute>
             }
           />
