@@ -8,12 +8,14 @@ import {
   Select,
   VStack,
   Heading,
+  InputGroup,
+  InputRightElement,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
 import { Administrador, Rol } from '../../../services/models/Administrador';
 import SuperUserDashboard from '../SuperUserDashboard';
-
+import { IoEye, IoEyeOff } from "react-icons/io5";
 const AdminAddPage = () => {
   const navigate = useNavigate();
   const [response, setResponse] = useState(new ApiResponse<Administrador>());
@@ -26,7 +28,8 @@ const AdminAddPage = () => {
     clave: '',
     estado: 1,
   });
-
+  const [show, setShow] = React.useState(false)
+  const handlePasswordToggle = () => setShow(!show)
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -106,12 +109,21 @@ const AdminAddPage = () => {
 
           <FormControl id="clave" isRequired>
             <FormLabel>Contraseña</FormLabel>
+            <InputGroup>
             <Input
-              type="password"
-              name="clave"
-              value={formData.clave}
-              onChange={handleInputChange}
-            />
+                type={show ? 'text' : 'password'} 
+                name="clave"
+                value={formData.clave}
+                onChange={handleInputChange}
+              />
+
+            <InputRightElement width='4.5rem'>
+        <Button h='1.75rem' size='sm' onClick={handlePasswordToggle}>
+        {show ? <IoEyeOff /> : <IoEye />}
+        </Button>
+      </InputRightElement>
+            </InputGroup>
+            
           </FormControl>
 
           <FormControl id="estado" isRequired>
