@@ -29,9 +29,11 @@ const LoginPage = () => {
     
     setResponse(apiResponse);
   };
-
+  // TODO: arreglar aca los toast, input incorrecto --> dsp sigue tirando el error toast al inputChange...
   useEffect(() => {
     if (response.data) {
+      toast.closeAll();
+  
       toast({
         title: 'Inicio de sesión exitoso.',
         description: `Bienvenido ${formData.correo}`,
@@ -41,18 +43,21 @@ const LoginPage = () => {
       });
       const token = response.data.token;
       localStorage.setItem('token', token);
-      console.log(localStorage.getItem('token'))
+      console.log(localStorage.getItem('token'));
       navigate('/dashboard');
     } else if (response.error) {
+      toast.closeAll();
+  
       toast({
         title: 'Error en el inicio de sesión.',
-        description: response.error,
+        description: 'Credenciales Incorrectas',
         status: 'error',
         duration: 5000,
         isClosable: true,
       });
     }
   }, [response, formData.correo, navigate, toast]);
+  
 
   return (
     <Box maxW="md" mx="auto" mt="100px" p={5} borderWidth={1} borderRadius="lg">

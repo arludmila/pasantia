@@ -1,6 +1,5 @@
 import { BaseRepository } from './base.repository'; 
 import { Carrera } from '../models/carrera.model';
-import { Institucion } from '../models/institucion.model';
 import DbConnection from '../db/db_connection';
 import { RowDataPacket } from 'mysql2';
 
