@@ -14,6 +14,7 @@ function CarrerasTablePage() {
       const apiResponse = new ApiResponse<Carrera[]>();
       await apiResponse.useFetch(`/carreras/institucion/${decoded?.id_institucion}`, 'GET');
       setResponse(apiResponse); 
+      console.log(apiResponse.data);
     };
 
     fetchInstituciones();
