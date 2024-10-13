@@ -5,6 +5,7 @@ import NavbarHome from '../../components/NavbarHome';
 import ApiResponse from '../../services/ApiResponse';
 import Carrera from '../../services/models/Carrera';
 
+
 function CarreraPage() {
   const endpoint = 'carreras';
   const { id } = useParams();
@@ -31,7 +32,7 @@ function CarreraPage() {
       <Box m={5}>
       {data && (
         <Grid templateColumns={{ base: '1fr', md: '2fr 1fr' }} gap={6} p={5}>
-        <Box borderWidth="1px" borderRadius="lg" p={4} boxShadow="md">
+        <Box borderWidth="1px"  borderRadius="lg" p={4} boxShadow="md">
           <Heading as="h1" size="xl" mb={4}>{data.nombre}</Heading>
           <Image src="https://placehold.co/300x200" alt={data.nombre} borderRadius="md" mb={4} />
           <Text fontWeight="bold">Tipo de Carrera:</Text>

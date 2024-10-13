@@ -12,6 +12,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
 import { Administrador, Rol } from '../../../services/models/Administrador';
+import SuperUserDashboard from '../SuperUserDashboard';
 
 const AdminAddPage = () => {
   const navigate = useNavigate();
@@ -53,6 +54,8 @@ const AdminAddPage = () => {
   };
 
   return (
+    <div>
+      <SuperUserDashboard/>
     <Box maxW="md" mx="auto" mt={8} p={6} borderWidth={1} borderRadius="lg">
       <Heading mb={6} textAlign="center" size="lg">
         Crear Administrador
@@ -127,6 +130,7 @@ const AdminAddPage = () => {
         </VStack>
       </form>
     </Box>
+    </div>
   );
 };
 

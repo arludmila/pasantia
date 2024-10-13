@@ -77,7 +77,7 @@ const CarrerasPage = () => {
             <RadioGroup onChange={setSelectedModalidad} value={selectedModalidad}>
             <Flex direction="column">
               {modalidadOptions.map(option => (
-                <Radio key={option} value={option === 'Todas' ? '' : option} mb={2}>{option}</Radio> 
+                <Radio colorScheme='teal' key={option} value={option === 'Todas' ? '' : option} mb={2}>{option}</Radio> 
               ))}
             </Flex>
           </RadioGroup>
@@ -100,7 +100,7 @@ const CarrerasPage = () => {
               >
                 <Box>
                   <Text fontWeight="bold" fontSize="lg">{carrera.nombre}</Text>
-                  <Text fontWeight="medium" color="blue.600">{carrera.institucion_nombre}</Text>
+                  <Text fontWeight="medium" color="teal.500">{carrera.institucion_nombre}</Text>
                   <Text>Tipo de carrera: {carrera.tipo}</Text>
                   <Text>
                     Duración:{" "}
@@ -115,7 +115,7 @@ const CarrerasPage = () => {
                 <Button 
                   onClick={() => handleMasInformacion(carrera.id)} 
                   leftIcon={<AddIcon />} 
-                  colorScheme="blue" 
+                  colorScheme="teal" 
                   mb={2}
                 >
                   Información

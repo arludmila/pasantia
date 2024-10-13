@@ -12,6 +12,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import Institucion from '../../../services/models/Institucion';
 import ApiResponse from '../../../services/ApiResponse';
+import SuperUserDashboard from '../SuperUserDashboard';
 
 const InstitucionAddPage = () => {
   const navigate = useNavigate();
@@ -57,7 +58,9 @@ const InstitucionAddPage = () => {
   };
   
   return (
-    <Box maxW="md" mx="auto" mt={8} p={6} borderWidth={1} borderRadius="lg">
+    <div>
+      <SuperUserDashboard/>
+      <Box maxW="md" mx="auto" mt={8} p={6} borderWidth={1} borderRadius="lg">
       <Heading mb={6} textAlign="center" size="lg">
         Crear Institución
       </Heading>
@@ -175,6 +178,7 @@ const InstitucionAddPage = () => {
         </VStack>
       </form>
     </Box>
+    </div>
   );
 };
 
