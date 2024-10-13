@@ -8,6 +8,7 @@ const CarreraRouter = Router();
 const carreraController = new CarreraController();
 
 CarreraRouter.get('/', carreraController.getAllCarreras);      
+CarreraRouter.get('/:id', carreraController.getCarreraById);      
 CarreraRouter.patch('/:id', auth(Rol.Admin), carreraController.update);  
 CarreraRouter.get('/institucion/:id', auth(Rol.Admin), carreraController.getCarrerasFromInstitucion);  
 

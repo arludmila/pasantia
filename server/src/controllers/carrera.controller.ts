@@ -38,7 +38,27 @@ export class CarreraController extends BaseController<Carrera> {
       res.status(500).json({ mensaje: 'Error al obtener carreras', error: error }); 
     }
   };
-  
+  public getCarreraById = async (req: Request, res: Response): Promise<void> => {
+    const carreraId = parseInt(req.params.id);
+    console.log('carreraId:', carreraId); 
+
+    try {
+        const carrera = await this.carreraRepository.getCarreraById(carreraId);
+        console.log('carrera', carrera); 
+
+        if (!carrera) {
+            res.status(404).json({ mensaje: 'Carrera no encontrada' });
+            return;
+        }
+
+        res.status(200).json(carrera);
+    } catch (error: any) {
+        res.status(500).json({ mensaje: 'Error al obtener carrera', error: error.message || error });
+    }
+};
+
+
+
   // TODO: verificar q sea el mismo id_institucion? token == req.body
   public async create(req: Request, res: Response): Promise<void> {
     await super.create(req, res);

@@ -2,6 +2,7 @@ import { BaseRepository } from './base.repository';
 import { Carrera } from '../models/carrera.model';
 import { Institucion } from '../models/institucion.model';
 import DbConnection from '../db/db_connection';
+import { RowDataPacket } from 'mysql2';
 
 export class CarreraRepository extends BaseRepository<Carrera> {
   constructor() {
@@ -30,12 +31,43 @@ export class CarreraRepository extends BaseRepository<Carrera> {
   public getCarrerasFromInstitucion = async (id: number): Promise<Carrera[]> => {
     const sql = `SELECT * FROM carreras WHERE carreras.institucion_id = ?`;
     try {
-        const result = await DbConnection.query(sql, [id]);
-        return result as Carrera[];
+        const [rows] = await DbConnection.query<RowDataPacket[]>(sql, [id]);
+        return rows as Carrera[];
     } catch (error) {
-        throw new Error('Error al realizar la busqueda en la base de datos'); 
+        throw new Error('Error al realizar la búsqueda en la base de datos');
     }
 };
+
+
+
+
+public getCarreraById = async (id: number): Promise<Carrera | null> => {
+  const sql = `SELECT 
+                  carreras.*, 
+                  institucion.nombre AS institucion_nombre,
+                  institucion.direccion AS institucion_direccion,
+                  institucion.tel AS institucion_tel,
+                  institucion.pagina AS institucion_pagina
+              FROM 
+                  carreras
+              JOIN 
+                  institucion ON carreras.institucion_id = institucion.id
+              WHERE carreras.id = ? LIMIT 1;`;
+
+  try {
+      const [rows] = await DbConnection.query<RowDataPacket[]>(sql, [id]);
+
+      if (rows.length === 0) {
+          return null;  
+      }
+
+      return rows as Carrera;  
+  } catch (error: any) {
+      console.error('Database Error:', error.message || error);
+      throw new Error('Error al realizar la búsqueda en la base de datos');
+  }
+};
+
 
 
 

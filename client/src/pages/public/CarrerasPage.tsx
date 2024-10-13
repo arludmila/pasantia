@@ -11,9 +11,11 @@ import Carrera from '../../services/models/Carrera';
 import NavbarHome from '../../components/NavbarHome';
 import ApiResponse from '../../services/ApiResponse';
 import { AddIcon } from '@chakra-ui/icons';
+import { useNavigate } from 'react-router-dom';
 
 const CarrerasPage = () => {
   const endpoint = 'carreras';
+  const navigator = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [response, setResponse] = useState(new ApiResponse<Carrera[]>());
   const [selectedModalidad, setSelectedModalidad] = useState('');
@@ -24,7 +26,7 @@ const CarrerasPage = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [resultsPerPage] = useState(10);
-  const modalidadOptions = ['Presencial', 'Virtual', 'Semipresencial'];
+  const modalidadOptions = ['Todas', 'Presencial', 'Virtual', 'Semipresencial'];
   useEffect(() => {
     const fetchCarreras = async () => {
       const apiResponse = new ApiResponse<Carrera[]>();
@@ -37,7 +39,9 @@ const CarrerasPage = () => {
 
   if (response.loading) return <p>Loading...</p>;
   if (response.error) return <p>Error: {response.error}</p>;
-
+  const handleMasInformacion = (id: number) => {
+      navigator(`/${endpoint}/${id}`);
+  }
   const normalizeText = (text: string) => {
     return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   };  
@@ -45,7 +49,7 @@ const CarrerasPage = () => {
   const filteredCarreras = response.data
   ? response.data.filter(carrera => 
       normalizeText(carrera.nombre).includes(normalizeText(searchTerm)) &&
-      (selectedModalidad ? carrera.modalidad === selectedModalidad : true) &&
+      (selectedModalidad ? (selectedModalidad === '' || carrera.modalidad === selectedModalidad) : true) &&
       (selectedDuracion.años > 0 ? carrera.duracion_anios === selectedDuracion.años : true) &&
       (selectedDuracion.meses > 0 ? carrera.duracion_meses === selectedDuracion.meses : true)
     )
@@ -73,7 +77,7 @@ const CarrerasPage = () => {
             <RadioGroup onChange={setSelectedModalidad} value={selectedModalidad}>
             <Flex direction="column">
               {modalidadOptions.map(option => (
-                <Radio key={option} value={option} mb={2}>{option}</Radio> 
+                <Radio key={option} value={option === 'Todas' ? '' : option} mb={2}>{option}</Radio> 
               ))}
             </Flex>
           </RadioGroup>
@@ -108,7 +112,14 @@ const CarrerasPage = () => {
                   <Text>Inscripción: {new Date(carrera.fecha_inscripcion).toLocaleDateString()}</Text>
                 </Box>
                 <Box>
-                  <Button leftIcon={<AddIcon />} colorScheme="blue" mb={2}>Información</Button>
+                <Button 
+                  onClick={() => handleMasInformacion(carrera.id)} 
+                  leftIcon={<AddIcon />} 
+                  colorScheme="blue" 
+                  mb={2}
+                >
+                  Información
+                </Button>
                 </Box>
               </Flex>
             )))}

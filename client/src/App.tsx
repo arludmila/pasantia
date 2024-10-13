@@ -14,6 +14,7 @@ import InstitucionAddPage from './pages/dashboard/instituciones/InstitucionAddPa
 import CarrerasTablePage from './pages/dashboard/carreras/CarrerasTablePage';
 import CarreraAddPage from './pages/dashboard/carreras/CarreraAddPage';
 import CarrerasPage from './pages/public/CarrerasPage';
+import CarreraPage from './pages/public/CarreraPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/carreras" element={<CarrerasPage />} />
+          <Route path="/carreras/:id" element={<CarreraPage />} />
           <Route path="/instituciones" element={<InstitucionesPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/unauthorized" element={<div>Acceso no autorizado</div>} />

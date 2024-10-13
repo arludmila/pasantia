@@ -27,12 +27,27 @@ const NavLinks = ({ name, path }: NavLinkProps) => {
       rounded={'md'}
       _hover={{
         textDecoration: 'none',
-        bg: useColorModeValue('gray.200', 'gray.700'),
+        bg: useColorModeValue('green.500', 'gray.700'),
       }}
     >
-      <Link href={path} style={{ textDecoration: 'none' }}>
+    
+
+      <Link
+        href={path}
+        textDecoration="none"
+        color="white"
+        fontWeight="medium" 
+        fontSize="lg" 
+        _hover={{ 
+          color: 'gray.300', 
+        }}
+        px={2} 
+        py={1} 
+        borderRadius="md" 
+      >
         {name}
       </Link>
+
     </Box>
   );
 }
@@ -42,7 +57,7 @@ export default function NavbarHome() {
 
   return (
     <>
-      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+      <Box bg={useColorModeValue('green.400', 'gray.900')} px={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
@@ -53,8 +68,9 @@ export default function NavbarHome() {
           />
           <HStack spacing={8} alignItems={'center'}>
             <Box>
-              <img src="/goya-escudo-municipal.png" alt="Logo Goya" width="40" height="40" />
-            </Box>
+            <Link href={"/"}>
+  <img src="/goya-escudo-municipal.png" alt="Logo Goya" width="40" height="40" />
+</Link>                     </Box>
             <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
               {Links.map((link) => (
                 <NavLinks key={link.name} name={link.name} path={link.path} />
