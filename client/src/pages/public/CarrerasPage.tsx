@@ -4,7 +4,8 @@ import {
   Flex,
   RadioGroup,
   Radio,
-  Select
+  Select,
+  Spinner
 } from '@chakra-ui/react';
 
 import Carrera from '../../services/models/Carrera'; 
@@ -37,8 +38,7 @@ const CarrerasPage = () => {
     fetchCarreras();
   }, []);
 
-  if (response.loading) return <p>Loading...</p>;
-  if (response.error) return <p>Error: {response.error}</p>;
+  
   const handleMasInformacion = (id: number) => {
       navigator(`/${endpoint}/${id}`);
   }
@@ -59,78 +59,89 @@ const CarrerasPage = () => {
     const currentCarreras = filteredCarreras.slice(indexOfFirstCarrera, indexOfLastCarrera);
     // TODO: terminar paginacion??
     const totalPages = Math.ceil(filteredCarreras.length / resultsPerPage);
-  return (
-   <div>
-     <NavbarHome/>
-     <Box p={5}>
-       <Heading mb={5}>Formación Académica en Goya</Heading>
-       <Input
-         placeholder="Buscar por nombre de carrera..."
-         value={searchTerm}
-         onChange={(e) => setSearchTerm(e.target.value)}
-         mb={5}
-       /> 
-       
-       <Flex mb={5}>
-          <VStack align="start" mr={10}>
-            <Text fontWeight="bold">Filtrar por Modalidad:</Text>
-            <RadioGroup onChange={setSelectedModalidad} value={selectedModalidad}>
-            <Flex direction="column">
-              {modalidadOptions.map(option => (
-                <Radio colorScheme='teal' key={option} value={option === 'Todas' ? '' : option} mb={2}>{option}</Radio> 
-              ))}
+    return (
+      <div>
+        <NavbarHome />
+        <Box p={5}>
+          {response.loading ? (
+            <Flex 
+              justify="center" 
+              align="center" 
+              height="100vh"
+            >
+              <Spinner size="xl" thickness="4px" speed="0.65s" color="green.300" />
             </Flex>
-          </RadioGroup>
-
-
-          </VStack>
-
-          <Flex direction="column" flexGrow={1}>
-          {filteredCarreras.length === 0 ? (
-              <Text fontWeight="medium" color="red.600">No se encontraron resultados.</Text> 
-            ) : (filteredCarreras.map((carrera) => (
-              <Flex
-                key={carrera.id}
-                bg="gray.100"
-                p={4}
-                mb={2}
-                borderRadius="md"
-                alignItems="flex-start"
-                justifyContent="space-between"
-              >
-                <Box>
-                  <Text fontWeight="bold" fontSize="lg">{carrera.nombre}</Text>
-                  <Text fontWeight="medium" color="teal.500">{carrera.institucion_nombre}</Text>
-                  <Text>Tipo de carrera: {carrera.tipo}</Text>
-                  <Text>
-                    Duración:{" "}
-                    {carrera.duracion_anios > 0 && `${carrera.duracion_anios} ${carrera.duracion_anios === 1 ? 'año' : 'años'}`}{' '}
-                    {carrera.duracion_anios > 0 && carrera.duracion_meses > 0 && 'y '}
-                    {carrera.duracion_meses > 0 && `${carrera.duracion_meses} ${carrera.duracion_meses === 1 ? 'mes' : 'meses'}`}
-                  </Text>
-                  <Text>Modalidad: {carrera.modalidad}</Text>
-                  <Text>Inscripción: {new Date(carrera.fecha_inscripcion).toLocaleDateString()}</Text>
-                </Box>
-                <Box>
-                <Button 
-                  onClick={() => handleMasInformacion(carrera.id)} 
-                  leftIcon={<AddIcon />} 
-                  colorScheme="teal" 
-                  mb={2}
-                >
-                  Información
-                </Button>
-                </Box>
+          ) : response.error ? (
+            <Text>Error: {response.error}</Text>
+          ) : (
+            <>
+              <Heading mb={5}>Formación Académica en Goya</Heading>
+              <Input
+                placeholder="Buscar por nombre de carrera..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                mb={5}
+              /> 
+              
+              <Flex mb={5}>
+                <VStack align="start" mr={10}>
+                  <Text fontWeight="bold">Filtrar por Modalidad:</Text>
+                  <RadioGroup onChange={setSelectedModalidad} value={selectedModalidad}>
+                    <Flex direction="column">
+                      {modalidadOptions.map(option => (
+                        <Radio colorScheme='teal' key={option} value={option === 'Todas' ? '' : option} mb={2}>
+                          {option}
+                        </Radio> 
+                      ))}
+                    </Flex>
+                  </RadioGroup>
+                </VStack>
+    
+                <Flex direction="column" flexGrow={1}>
+                  {filteredCarreras.length === 0 ? (
+                    <Text fontWeight="medium" color="red.600">No se encontraron resultados.</Text> 
+                  ) : (filteredCarreras.map((carrera) => (
+                    <Flex
+                      key={carrera.id}
+                      bg="gray.100"
+                      p={4}
+                      mb={2}
+                      borderRadius="md"
+                      alignItems="flex-start"
+                      justifyContent="space-between"
+                    >
+                      <Box>
+                        <Text fontWeight="bold" fontSize="lg">{carrera.nombre}</Text>
+                        <Text fontWeight="medium" color="teal.500">{carrera.institucion_nombre}</Text>
+                        <Text>Tipo de carrera: {carrera.tipo}</Text>
+                        <Text>
+                          Duración:{" "}
+                          {carrera.duracion_anios > 0 && `${carrera.duracion_anios} ${carrera.duracion_anios === 1 ? 'año' : 'años'}`}{' '}
+                          {carrera.duracion_anios > 0 && carrera.duracion_meses > 0 && 'y '}
+                          {carrera.duracion_meses > 0 && `${carrera.duracion_meses} ${carrera.duracion_meses === 1 ? 'mes' : 'meses'}`}
+                        </Text>
+                        <Text>Modalidad: {carrera.modalidad}</Text>
+                        <Text>Inscripción: {new Date(carrera.fecha_inscripcion).toLocaleDateString()}</Text>
+                      </Box>
+                      <Box>
+                        <Button 
+                          onClick={() => handleMasInformacion(carrera.id)} 
+                          leftIcon={<AddIcon />} 
+                          colorScheme="teal" 
+                          mb={2}
+                        >
+                          Información
+                        </Button>
+                      </Box>
+                    </Flex>
+                  )))}
+                </Flex>
               </Flex>
-            )))}
-          </Flex>
-        </Flex>
-
-
-
-    </Box>
-   </div>
-  );
+            </>
+          )}
+        </Box>
+      </div>
+    );
 };
 
 export default CarrerasPage;

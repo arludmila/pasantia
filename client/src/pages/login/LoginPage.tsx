@@ -8,11 +8,17 @@ import {
   Heading,
   Stack,
   useToast,
+  useColorModeValue,
+  Flex,
+  IconButton,
+  HStack,
+  Link,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import LoginRequest from '../../services/models/LoginRequest';
 import LoginResponse from '../../services/models/LoginResponse';
 import ApiResponse from '../../services/ApiResponse';
+import NavbarHome from '../../components/NavbarHome';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState<LoginRequest>({ correo: '', clave: '' });
@@ -43,7 +49,6 @@ const LoginPage = () => {
       });
       const token = response.data.token;
       localStorage.setItem('token', token);
-      console.log(localStorage.getItem('token'));
       navigate('/dashboard');
     } else if (response.error) {
       toast.closeAll();
@@ -60,6 +65,24 @@ const LoginPage = () => {
   
 
   return (
+    <div>
+
+      <Box bg={useColorModeValue('green.400', 'gray.900')} px={4}>
+        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+          
+          <HStack spacing={8} alignItems={'center'}>
+            <Box>
+            <Link href={"/"}>
+  <img src="/goya-escudo-municipal.png" alt="Logo Goya" width="40" height="40" />
+</Link>                     </Box>
+            
+          </HStack>
+        </Flex>
+      </Box>
+  
+ 
+
+
     <Box maxW="md" mx="auto" mt="100px" p={5} borderWidth={1} borderRadius="lg">
       <Heading mb={4}>Iniciar Sesión</Heading>
       <form onSubmit={handleSubmit}>
@@ -94,6 +117,7 @@ const LoginPage = () => {
         </Stack>
       </form>
     </Box>
+    </div>
   );
 };
 

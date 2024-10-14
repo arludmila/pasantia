@@ -14,7 +14,6 @@ class ApiResponse<T> {
     try {
 
       const token = localStorage.getItem('token');
-      console.log("Token auth, existe?:"+token);
 
       if (token) {
         headers = {

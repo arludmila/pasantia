@@ -16,6 +16,7 @@ import ApiResponse from '../../../services/ApiResponse';
 import { Administrador, Rol } from '../../../services/models/Administrador';
 import SuperUserDashboard from '../SuperUserDashboard';
 import { IoEye, IoEyeOff } from "react-icons/io5";
+
 const AdminAddPage = () => {
   const navigate = useNavigate();
   const [response, setResponse] = useState(new ApiResponse<Administrador>());
@@ -42,8 +43,6 @@ const AdminAddPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log(formData);
 
     const apiResponse = new ApiResponse<Administrador>();
     await apiResponse.useFetch('/administradores', 'POST', formData);

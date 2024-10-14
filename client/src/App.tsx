@@ -7,7 +7,6 @@ import LoginPage from './pages/login/LoginPage';
 import HomePage from './pages/public/HomePage';
 import ProtectedRoute from './services/ProtectedRoute';
 import InstitucionesTablePage from './pages/dashboard/instituciones/InstitucionesTablePage';
-import AdminsTablePage from './pages/dashboard/administradores/AdminsTablePage';
 import AdminAddPage from './pages/dashboard/administradores/AdminAddPage';
 import DashboardRoutes from './pages/dashboard/DashboardRoutes';
 import InstitucionAddPage from './pages/dashboard/instituciones/InstitucionAddPage';
@@ -17,6 +16,10 @@ import CarrerasPage from './pages/public/CarrerasPage';
 import CarreraPage from './pages/public/CarreraPage';
 import CarreraEditPage from './pages/dashboard/carreras/CarreraEditPage';
 import InstitucionEditPage from './pages/dashboard/instituciones/InstitucionEditPage';
+import AdminEditPage from './pages/dashboard/administradores/AdminEditPage';
+import AdminsTablePage from './pages/dashboard/administradores/AdminsTablePage';
+
+// TODO: revisar todos los forms con handleInputChange xq lagea el input...
 
 function App() {
   return (
@@ -72,6 +75,14 @@ function App() {
             element={
               <ProtectedRoute roles={['SuperUser']}>
                 <AdminAddPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/administradores-editar/:id"
+            element={
+              <ProtectedRoute roles={['SuperUser']}>
+                <AdminEditPage />
               </ProtectedRoute>
             }
           />

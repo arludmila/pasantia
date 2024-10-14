@@ -24,5 +24,5 @@ app.options('*', cors(corsOptions));
 app.use('/api', ApiRouter);
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server: http://localhost:${port}`);
 });

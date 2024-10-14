@@ -10,7 +10,6 @@ function SuperUserDashboard({ children }: DashboardProps) {
     { name: 'Administradores', path: '/dashboard/administradores' },
     { name: 'Instituciones', path: '/dashboard/instituciones' },
   ];
-  console.log(localStorage.getItem('token'));
   return (
     <div>
       <NavbarDashboard links={links} />
