@@ -6,7 +6,7 @@ class ApiResponse<T> {
 
   async useFetch(
     url: string,
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'GET',
     body: any = null,
     headers: HeadersInit = { 'Content-Type': 'application/json' }
   ): Promise<void> {

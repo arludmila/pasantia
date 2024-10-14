@@ -15,6 +15,8 @@ import CarrerasTablePage from './pages/dashboard/carreras/CarrerasTablePage';
 import CarreraAddPage from './pages/dashboard/carreras/CarreraAddPage';
 import CarrerasPage from './pages/public/CarrerasPage';
 import CarreraPage from './pages/public/CarreraPage';
+import CarreraEditPage from './pages/dashboard/carreras/CarreraEditPage';
+import InstitucionEditPage from './pages/dashboard/instituciones/InstitucionEditPage';
 
 function App() {
   return (
@@ -50,6 +52,14 @@ function App() {
             }
           />
           <Route
+            path="/dashboard/instituciones-editar/:id"
+            element={
+              <ProtectedRoute roles={['SuperUser']}>
+                <InstitucionEditPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/dashboard/administradores"
             element={
               <ProtectedRoute roles={['SuperUser']}>
@@ -78,6 +88,14 @@ function App() {
             element={
               <ProtectedRoute roles={['Admin']}>
                 <CarreraAddPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/carreras-editar/:id"
+            element={
+              <ProtectedRoute roles={['Admin']}>
+                <CarreraEditPage />
               </ProtectedRoute>
             }
           />

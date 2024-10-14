@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Table,
   Thead,
@@ -22,6 +22,7 @@ interface TableCRUDProps {
 }
 
 const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data }) => {
+  const navigate = useNavigate();
   return (
     <Box p={5} m={0}>
       <Flex mb={4}>
@@ -43,18 +44,27 @@ const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data }) => {
             </Tr>
           </Thead>
           <Tbody>
-            {data.map((item, index) => (
-              <Tr key={index}>
-                {Object.values(item).map((value, idx) => (
-                  <Td key={idx}>{String(value || 'N/A')}</Td> 
-                ))}
-                <Td>
-                  <Button colorScheme="orange" size="sm" mr={2}>Editar</Button>
-                  <Button colorScheme="red" size="sm">Borrar</Button>
+          {data.map((item, index) => (
+            <Tr key={index}>
+              {Object.values(item).map((value, idx) => (
+                <Td key={idx}>
+                  {
+                    typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/.test(value)
+                      ? new Date(value).toLocaleDateString('es-AR') 
+                      : String(value || 'N/A') 
+                  }
                 </Td>
-              </Tr>
-            ))}
-          </Tbody>
+              ))}
+              <Td>
+                <Button onClick={() => navigate(`/dashboard/${tableName.toLowerCase()}-editar/${item.id}`, { state: item })} colorScheme="orange" size="sm" mr={2}>Editar</Button>
+                <Button colorScheme="red" size="sm">Borrar</Button>
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+
+
+
         </Table>
       </TableContainer>
     </Box>
