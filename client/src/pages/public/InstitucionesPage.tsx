@@ -66,21 +66,19 @@ return (
                       {institucion.tel && <Text><b>Teléfono:</b> {institucion.tel}</Text>}
                       {institucion.pagina && (
                         <Text>
-                          <b>Página Web:</b>{' '}
-                          <Link href={`http://${institucion.pagina}`} isExternal color="blue.500">
-                            {institucion.pagina}
-                          </Link>
+                          <b>Tipo de Gestión:</b> {institucion.gestion}
                         </Text>
                       )}
                       <Button
                         mt={3}
                         colorScheme="teal"
                         width="full"
-                        onClick={() => alert(`Ver carreras de ${institucion.nombre}`)}
+                        onClick={() => window.open(`http://${institucion.pagina}`, '_blank')}
                       >
-                        Ver Carreras
+                        Visitar Página Web
                       </Button>
                     </AccordionPanel>
+
                   </AccordionItem>
                 </Accordion>
               </GridItem>
