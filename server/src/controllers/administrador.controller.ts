@@ -25,7 +25,6 @@ export class AdministradorController extends BaseController<Administrador> {
   }
   
   public async create(req: Request, res: Response): Promise<void> {
-    console.log(req.body);
     await this.hashClave(req);
     await super.create(req, res);
   }

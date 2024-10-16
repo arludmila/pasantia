@@ -29,7 +29,6 @@ export class CarreraRepository extends BaseRepository<Carrera> {
 
   public getCarrerasFromInstitucion = async (id: number): Promise<Carrera[]> => {
     const sql = `SELECT * FROM carreras WHERE carreras.institucion_id = ?`;
-    console.log('sql', sql)
     try {
         const rows = await DbConnection.query(sql, [id]);
         return rows as Carrera[];

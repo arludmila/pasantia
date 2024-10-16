@@ -40,11 +40,9 @@ export class CarreraController extends BaseController<Carrera> {
   };
   public getCarreraById = async (req: Request, res: Response): Promise<void> => {
     const carreraId = parseInt(req.params.id);
-    console.log('carreraId:', carreraId); 
 
     try {
         const carrera = await this.carreraRepository.getCarreraById(carreraId);
-        console.log('carrera', carrera); 
 
         if (!carrera) {
             res.status(404).json({ mensaje: 'Carrera no encontrada' });
