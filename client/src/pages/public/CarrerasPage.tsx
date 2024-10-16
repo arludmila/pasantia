@@ -66,13 +66,6 @@ const CarrerasPage = () => {
   const currentCarreras = filteredCarreras.slice(indexOfFirstCarrera, indexOfLastCarrera);
   const totalPages = Math.ceil(filteredCarreras.length / resultsPerPage);
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      handleSearch();
-    }
-  };
-
   return (
     <div>
       <NavbarHome />
@@ -90,7 +83,11 @@ const CarrerasPage = () => {
               <Input
                 placeholder="Buscar por nombre de carrera..."
                 ref={searchInputRef}
-                onKeyDown={handleKeyDown}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch();
+                  }
+                }}
                 mb={5}
               /> 
               <Button 
