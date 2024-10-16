@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -10,6 +10,7 @@ import {
   Heading,
   InputGroup,
   InputRightElement,
+  useToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
@@ -19,128 +20,113 @@ import { IoEye, IoEyeOff } from "react-icons/io5";
 
 const AdminAddPage = () => {
   const navigate = useNavigate();
-  const [response, setResponse] = useState(new ApiResponse<Administrador>());
+  const toast = useToast();
 
-  const [formData, setFormData] = useState<Omit<Administrador, 'id'>>({
-    rol: Rol.Admin, 
-    nombre: '',
-    correo: '',
-    id_institucion: undefined,
-    clave: '',
-    estado: 1,
-  });
-  const [show, setShow] = React.useState(false)
-  const handlePasswordToggle = () => setShow(!show)
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: name === 'estado' ? Number(value) : value, 
-    }));
-  };
+  const nombreRef = useRef<HTMLInputElement>(null);
+  const correoRef = useRef<HTMLInputElement>(null);
+  const rolRef = useRef<HTMLSelectElement>(null);
+  const idInstitucionRef = useRef<HTMLInputElement>(null);
+  const claveRef = useRef<HTMLInputElement>(null);
+  const estadoRef = useRef<HTMLInputElement>(null);
+  const [show, setShow] = useState(false);
+  const handlePasswordToggle = () => setShow(!show);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const apiResponse = new ApiResponse<Administrador>();
-    await apiResponse.useFetch('/administradores', 'POST', formData);
-    setResponse(apiResponse);
+    const formData: Omit<Administrador, 'id'> = {
+      nombre: nombreRef.current?.value || '',
+      correo: correoRef.current?.value || '',
+      rol: rolRef.current?.value as Rol,
+      id_institucion: idInstitucionRef.current?.value
+        ? parseInt(idInstitucionRef.current.value)
+        : undefined,
+      clave: claveRef.current?.value || '',
+      estado: estadoRef.current?.value ? parseInt(estadoRef.current.value) : 1,
+    };
 
-    if (response.error == null) {
+    const apiResponse = new ApiResponse<Administrador>();
+    await apiResponse.useFetch('administradores', 'POST', formData);
+
+    if (apiResponse.error == null) {
+      toast({
+        title: 'Administrador creado',
+        description: 'El administrador fue creado con éxito.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
       navigate('/dashboard/administradores');
     } else {
-      console.error(response.error);
+      toast({
+        title: 'Error',
+        description: `Ocurrió un error: ${apiResponse.error}`,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
   return (
     <div>
-      <SuperUserDashboard/>
-    <Box maxW="md" mx="auto" mt={8} p={6} borderWidth={1} borderRadius="lg">
-      <Heading mb={6} textAlign="center" size="lg">
-        Crear Administrador
-      </Heading>
-      <form onSubmit={handleSubmit}>
-        <VStack spacing={5}>
-          <FormControl id="nombre" isRequired>
-            <FormLabel>Nombre</FormLabel>
-            <Input
-              type="text"
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleInputChange}
-            />
-          </FormControl>
+      <SuperUserDashboard />
+      <Box maxW="md" mx="auto" mt={8} p={6} borderWidth={1} borderRadius="lg">
+        <Heading mb={6} textAlign="center" size="lg">
+          Crear Administrador
+        </Heading>
+        <form onSubmit={handleSubmit}>
+          <VStack spacing={5}>
+            <FormControl id="nombre" isRequired>
+              <FormLabel>Nombre</FormLabel>
+              <Input type="text" ref={nombreRef} defaultValue="" />
+            </FormControl>
 
-          <FormControl id="correo" isRequired>
-            <FormLabel>Correo Electrónico</FormLabel>
-            <Input
-              type="email"
-              name="correo"
-              value={formData.correo}
-              onChange={handleInputChange}
-            />
-          </FormControl>
+            <FormControl id="correo" isRequired>
+              <FormLabel>Correo Electrónico</FormLabel>
+              <Input type="email" ref={correoRef} defaultValue="" />
+            </FormControl>
 
-          <FormControl id="rol" isRequired>
-            <FormLabel>Rol</FormLabel>
-            <Select
-              name="rol"
-              value={formData.rol}
-              onChange={handleInputChange}
-            >
-              <option value={Rol.Admin}>Admin</option>
-              <option value={Rol.SuperUser}>SuperUser</option>
-            </Select>
-          </FormControl>
+            <FormControl id="rol" isRequired>
+              <FormLabel>Rol</FormLabel>
+              <Select ref={rolRef} defaultValue={Rol.Admin}>
+                <option value={Rol.Admin}>Admin</option>
+                <option value={Rol.SuperUser}>SuperUser</option>
+              </Select>
+            </FormControl>
 
-          <FormControl id="id_institucion">
-            <FormLabel>ID Institución</FormLabel>
-            <Input
-              type="number"
-              name="id_institucion"
-              value={formData.id_institucion || ''}
-              onChange={handleInputChange}
-            />
-          </FormControl>
+            <FormControl id="id_institucion">
+              <FormLabel>ID Institución</FormLabel>
+              <Input type="number" ref={idInstitucionRef} defaultValue="" />
+            </FormControl>
 
-          <FormControl id="clave" isRequired>
-            <FormLabel>Contraseña</FormLabel>
-            <InputGroup>
-            <Input
-                type={show ? 'text' : 'password'} 
-                name="clave"
-                value={formData.clave}
-                onChange={handleInputChange}
-              />
+            <FormControl id="clave" isRequired>
+              <FormLabel>Contraseña</FormLabel>
+              <InputGroup>
+                <Input
+                  type={show ? 'text' : 'password'}
+                  ref={claveRef}
+                  defaultValue=""
+                />
+                <InputRightElement width="4.5rem">
+                  <Button h="1.75rem" size="sm" onClick={handlePasswordToggle}>
+                    {show ? <IoEyeOff /> : <IoEye />}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+            </FormControl>
 
-            <InputRightElement width='4.5rem'>
-        <Button h='1.75rem' size='sm' onClick={handlePasswordToggle}>
-        {show ? <IoEyeOff /> : <IoEye />}
-        </Button>
-      </InputRightElement>
-            </InputGroup>
-            
-          </FormControl>
+            <FormControl id="estado" isRequired>
+              <FormLabel>Estado</FormLabel>
+              <Input type="number" ref={estadoRef} defaultValue="1" />
+            </FormControl>
 
-          <FormControl id="estado" isRequired>
-            <FormLabel>Estado</FormLabel>
-            <Input
-              type="number"
-              name="estado"
-              value={formData.estado}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-
-          <Button type="submit" colorScheme="teal" size="lg" width="full">
-            Crear Administrador
-          </Button>
-        </VStack>
-      </form>
-    </Box>
+            <Button type="submit" colorScheme="teal" size="lg" width="full">
+              Crear Administrador
+            </Button>
+          </VStack>
+        </form>
+      </Box>
     </div>
   );
 };

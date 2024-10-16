@@ -16,7 +16,7 @@ const InstitucionesPage = () => {
   useEffect(() => {
     const fetchInstituciones = async () => {
       const apiResponse = new ApiResponse<Institucion[]>();
-      await apiResponse.useFetch(`/${endpoint}`, 'GET');
+      await apiResponse.useFetch(`${endpoint}`, 'GET');
       setResponse(apiResponse); 
     };
 

@@ -14,7 +14,7 @@ function CarreraPage() {
   useEffect(() => {
     const fetchCarrera = async () => {
       const apiResponse = new ApiResponse<Carrera>();
-      await apiResponse.useFetch(`/${endpoint}/${id}`, 'GET');
+      await apiResponse.useFetch(`${endpoint}/${id}`, 'GET');
       setResponse(apiResponse);
     };
 

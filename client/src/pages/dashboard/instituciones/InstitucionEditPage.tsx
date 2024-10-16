@@ -8,6 +8,7 @@ import {
   VStack,
   Heading,
   Select,
+  useToast,
 } from '@chakra-ui/react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
@@ -18,6 +19,7 @@ const InstitucionEditPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const institucionToEdit = location.state as Institucion;
+  const toast = useToast();
 
   const [formData, setFormData] = useState<Institucion>({
     ...institucionToEdit
@@ -37,12 +39,26 @@ const InstitucionEditPage = () => {
     e.preventDefault();
 
     const apiResponse = new ApiResponse<Institucion>();
-    await apiResponse.useFetch(`/instituciones/${formData.id}`, 'PATCH', formData); 
+    await apiResponse.useFetch(`instituciones/${formData.id}`, 'PATCH', formData); 
 
     if (apiResponse.error == null) {
+      toast({
+        title: 'Guardado correctamente',
+        description: 'La institución fue actualizada con éxito.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+
       navigate('/dashboard/instituciones');
     } else {
-      console.error(apiResponse.error);
+      toast({
+        title: 'Error al guardar',
+        description: `Ocurrió un error: ${apiResponse.error}`,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -64,7 +80,7 @@ const InstitucionEditPage = () => {
               />
             </FormControl>
 
-            <FormControl id="cueanexo" isRequired>
+            <FormControl id="cueanexo">
               <FormLabel>CUE Anexo</FormLabel>
               <Input
                 type="text"
@@ -94,7 +110,7 @@ const InstitucionEditPage = () => {
               />
             </FormControl>
 
-            <FormControl id="ubicacion_lat" isRequired>
+            <FormControl id="ubicacion_lat">
               <FormLabel>Ubicación Lat</FormLabel>
               <Input
                 type="text"
@@ -104,7 +120,7 @@ const InstitucionEditPage = () => {
               />
             </FormControl>
 
-            <FormControl id="ubicacion_long" isRequired>
+            <FormControl id="ubicacion_long">
               <FormLabel>Ubicación Long</FormLabel>
               <Input
                 type="text"
@@ -114,7 +130,7 @@ const InstitucionEditPage = () => {
               />
             </FormControl>
 
-            <FormControl id="tel" isRequired>
+            <FormControl id="tel">
               <FormLabel>Teléfono</FormLabel>
               <Input
                 type="text"
@@ -124,7 +140,7 @@ const InstitucionEditPage = () => {
               />
             </FormControl>
 
-            <FormControl id="pagina" isRequired>
+            <FormControl id="pagina">
               <FormLabel>Página</FormLabel>
               <Input
                 type="text"

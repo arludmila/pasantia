@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import {
   Box,
   Button,
@@ -8,6 +8,7 @@ import {
   Select,
   VStack,
   Heading,
+  useToast,
 } from '@chakra-ui/react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
@@ -18,29 +19,60 @@ const CarreraEditPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const carreraToEdit = location.state as Carrera;
+  const toast = useToast();
 
-  const [formData, setFormData] = useState<Carrera>({
-    ...carreraToEdit 
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: name === 'estado' || name === 'prioridad' ? Number(value) : value,
-    }));
-  };
+  const nombreRef = useRef<HTMLInputElement>(null);
+  const tipoRef = useRef<HTMLInputElement>(null);
+  const descripcionRef = useRef<HTMLInputElement>(null);
+  const planDeEstudioRef = useRef<HTMLInputElement>(null);
+  const modalidadRef = useRef<HTMLSelectElement>(null);
+  const cupoRef = useRef<HTMLInputElement>(null);
+  const duracionAniosRef = useRef<HTMLInputElement>(null);
+  const duracionMesesRef = useRef<HTMLInputElement>(null);
+  const fechaInscripcionRef = useRef<HTMLInputElement>(null);
+  const observacionRef = useRef<HTMLInputElement>(null);
+  const estadoRef = useRef<HTMLInputElement>(null);
+  const prioridadRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const formData = {
+      ...carreraToEdit,
+      nombre: nombreRef.current?.value || '',
+      tipo: tipoRef.current?.value || '',
+      descripcion: descripcionRef.current?.value || '',
+      plan_de_estudio: planDeEstudioRef.current?.value || '',
+      modalidad: modalidadRef.current?.value || '',
+      cupo: cupoRef.current?.value || '',
+      duracion_anios: Number(duracionAniosRef.current?.value) || 0,
+      duracion_meses: Number(duracionMesesRef.current?.value) || 0,
+      fecha_inscripcion: fechaInscripcionRef.current?.value || '',
+      observacion: observacionRef.current?.value || '',
+      estado: Number(estadoRef.current?.value) || 0,
+      prioridad: Number(prioridadRef.current?.value) || 0,
+    };
+
     const apiResponse = new ApiResponse<Carrera>();
-    await apiResponse.useFetch(`/carreras/${formData.id}`, 'PATCH', formData); 
+    await apiResponse.useFetch(`carreras/${formData.id}`, 'PATCH', formData);
 
     if (apiResponse.error == null) {
-      navigate('/dashboard/carreras'); 
+      toast({
+        title: 'Guardado correctamente',
+        description: 'La carrera fue actualizada con éxito.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      navigate('/dashboard/carreras');
     } else {
-      console.error(apiResponse.error);
+      toast({
+        title: 'Error al guardar',
+        description: `Ocurrió un error: ${apiResponse.error}`,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -54,51 +86,27 @@ const CarreraEditPage = () => {
           <VStack spacing={5}>
             <FormControl id="nombre" isRequired>
               <FormLabel>Nombre</FormLabel>
-              <Input
-                type="text"
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleInputChange}
-              />
+              <Input type="text" ref={nombreRef} defaultValue={carreraToEdit.nombre} />
             </FormControl>
 
             <FormControl id="tipo" isRequired>
               <FormLabel>Tipo</FormLabel>
-              <Input
-                type="text"
-                name="tipo"
-                value={formData.tipo}
-                onChange={handleInputChange}
-              />
+              <Input type="text" ref={tipoRef} defaultValue={carreraToEdit.tipo} />
             </FormControl>
 
             <FormControl id="descripcion">
               <FormLabel>Descripción</FormLabel>
-              <Input
-                type="text"
-                name="descripcion"
-                value={formData.descripcion}
-                onChange={handleInputChange}
-              />
+              <Input type="text" ref={descripcionRef} defaultValue={carreraToEdit.descripcion} />
             </FormControl>
 
             <FormControl id="plan_de_estudio">
               <FormLabel>Plan de Estudio</FormLabel>
-              <Input
-                type="text"
-                name="plan_de_estudio"
-                value={formData.plan_de_estudio}
-                onChange={handleInputChange}
-              />
+              <Input type="text" ref={planDeEstudioRef} defaultValue={carreraToEdit.plan_de_estudio} />
             </FormControl>
 
             <FormControl id="modalidad" isRequired>
               <FormLabel>Modalidad</FormLabel>
-              <Select
-                name="modalidad"
-                value={formData.modalidad}
-                onChange={handleInputChange}
-              >
+              <Select ref={modalidadRef} defaultValue={carreraToEdit.modalidad}>
                 <option value="Presencial">Presencial</option>
                 <option value="Virtual">Virtual</option>
                 <option value="Semipresencial">Semipresencial</option>
@@ -107,72 +115,37 @@ const CarreraEditPage = () => {
 
             <FormControl id="cupo">
               <FormLabel>Cupo</FormLabel>
-              <Input
-                type="text"
-                name="cupo"
-                value={formData.cupo}
-                onChange={handleInputChange}
-              />
+              <Input type="text" ref={cupoRef} defaultValue={carreraToEdit.cupo} />
             </FormControl>
 
             <FormControl id="duracion_anios" isRequired>
               <FormLabel>Duración en Años</FormLabel>
-              <Input
-                type="number"
-                name="duracion_anios"
-                value={formData.duracion_anios}
-                onChange={handleInputChange}
-              />
+              <Input type="number" ref={duracionAniosRef} defaultValue={carreraToEdit.duracion_anios} />
             </FormControl>
 
             <FormControl id="duracion_meses" isRequired>
               <FormLabel>Duración en Meses</FormLabel>
-              <Input
-                type="number"
-                name="duracion_meses"
-                value={formData.duracion_meses}
-                onChange={handleInputChange}
-              />
+              <Input type="number" ref={duracionMesesRef} defaultValue={carreraToEdit.duracion_meses} />
             </FormControl>
 
             <FormControl id="fecha_inscripcion" isRequired>
               <FormLabel>Fecha de Inscripción</FormLabel>
-              <Input
-                type="date"
-                name="fecha_inscripcion"
-                value={formData.fecha_inscripcion}
-                onChange={handleInputChange}
-              />
+              <Input type="date"  ref={fechaInscripcionRef} defaultValue={carreraToEdit.fecha_inscripcion} />
             </FormControl>
 
             <FormControl id="observacion">
               <FormLabel>Observación</FormLabel>
-              <Input
-                type="text"
-                name="observacion"
-                value={formData.observacion}
-                onChange={handleInputChange}
-              />
+              <Input type="text" ref={observacionRef} defaultValue={carreraToEdit.observacion} />
             </FormControl>
 
             <FormControl id="estado" isRequired>
               <FormLabel>Estado</FormLabel>
-              <Input
-                type="number"
-                name="estado"
-                value={formData.estado}
-                onChange={handleInputChange}
-              />
+              <Input type="number" ref={estadoRef} defaultValue={carreraToEdit.estado} />
             </FormControl>
 
             <FormControl id="prioridad">
               <FormLabel>Prioridad</FormLabel>
-              <Input
-                type="number"
-                name="prioridad"
-                value={formData.prioridad}
-                onChange={handleInputChange}
-              />
+              <Input type="number" ref={prioridadRef} defaultValue={carreraToEdit.prioridad} />
             </FormControl>
 
             <Button type="submit" colorScheme="teal" size="lg" width="full">

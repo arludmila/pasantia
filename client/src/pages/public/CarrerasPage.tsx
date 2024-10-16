@@ -31,7 +31,7 @@ const CarrerasPage = () => {
   useEffect(() => {
     const fetchCarreras = async () => {
       const apiResponse = new ApiResponse<Carrera[]>();
-      await apiResponse.useFetch(`/${endpoint}`, 'GET');
+      await apiResponse.useFetch(`${endpoint}`, 'GET');
       setResponse(apiResponse); 
     };
 

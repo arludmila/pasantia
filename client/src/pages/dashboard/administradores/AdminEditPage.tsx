@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -10,54 +10,63 @@ import {
   Heading,
   InputGroup,
   InputRightElement,
+  useToast,
 } from '@chakra-ui/react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
 import { Administrador, Rol } from '../../../services/models/Administrador';
 import SuperUserDashboard from '../SuperUserDashboard';
-import { IoEye, IoEyeOff } from "react-icons/io5";
+import { IoEye, IoEyeOff } from 'react-icons/io5';
 
 const AdminEditPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const administradorToEdit = location.state as Administrador; 
+  const administradorToEdit = location.state as Administrador;
+  const toast = useToast();
 
-  const [response, setResponse] = useState(new ApiResponse<Administrador>());
-  
-  const [formData, setFormData] = useState<Omit<Administrador, 'institucion_nombre'>>({
-    id: administradorToEdit.id,
-    nombre: administradorToEdit.nombre,
-    correo: administradorToEdit.correo,
-    id_institucion: administradorToEdit.id_institucion,
-    clave: administradorToEdit.clave,
-    rol: administradorToEdit.rol,
-    estado: administradorToEdit.estado,
-  });
+  const nombreRef = useRef<HTMLInputElement>(null);
+  const correoRef = useRef<HTMLInputElement>(null);
+  const rolRef = useRef<HTMLSelectElement>(null);
+  const idInstitucionRef = useRef<HTMLInputElement>(null);
+  const claveRef = useRef<HTMLInputElement>(null);
+  const estadoRef = useRef<HTMLInputElement>(null);
+
   const [show, setShow] = useState(false);
-  
   const handlePasswordToggle = () => setShow(!show);
-  
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: name === 'estado' ? Number(value) : value,
-    }));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const apiResponse = new ApiResponse<Administrador>();
-    await apiResponse.useFetch(`/administradores/${formData.id}`, 'PATCH', formData); 
-    setResponse(apiResponse);
+    const formData = {
+      id: administradorToEdit.id,
+      nombre: nombreRef.current?.value || '',
+      correo: correoRef.current?.value || '',
+      id_institucion: Number(idInstitucionRef.current?.value) || null,
+      clave: claveRef.current?.value || '',
+      rol: rolRef.current?.value as Rol,
+      estado: Number(estadoRef.current?.value) || 0,
+    };
 
-    if (response.error == null) {
-      navigate('/dashboard/administradores'); 
+    const apiResponse = new ApiResponse<Administrador>();
+    await apiResponse.useFetch(`administradores/${formData.id}`, 'PATCH', formData);
+
+    if (apiResponse.error == null) {
+      toast({
+        title: 'Guardado correctamente',
+        description: 'El administrador fue actualizado con éxito.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      navigate('/dashboard/administradores');
     } else {
-      console.error(response.error);
+      toast({
+        title: 'Error al guardar',
+        description: `Ocurrió un error: ${apiResponse.error}`,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -74,9 +83,8 @@ const AdminEditPage = () => {
               <FormLabel>Nombre</FormLabel>
               <Input
                 type="text"
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleInputChange}
+                defaultValue={administradorToEdit.nombre}
+                ref={nombreRef}
               />
             </FormControl>
 
@@ -84,18 +92,16 @@ const AdminEditPage = () => {
               <FormLabel>Correo Electrónico</FormLabel>
               <Input
                 type="email"
-                name="correo"
-                value={formData.correo}
-                onChange={handleInputChange}
+                defaultValue={administradorToEdit.correo}
+                ref={correoRef}
               />
             </FormControl>
 
             <FormControl id="rol" isRequired>
               <FormLabel>Rol</FormLabel>
               <Select
-                name="rol"
-                value={formData.rol}
-                onChange={handleInputChange}
+                defaultValue={administradorToEdit.rol}
+                ref={rolRef}
               >
                 <option value={Rol.Admin}>Admin</option>
                 <option value={Rol.SuperUser}>SuperUser</option>
@@ -106,9 +112,8 @@ const AdminEditPage = () => {
               <FormLabel>ID Institución</FormLabel>
               <Input
                 type="number"
-                name="id_institucion"
-                value={formData.id_institucion || ''}
-                onChange={handleInputChange}
+                defaultValue={administradorToEdit.id_institucion || ''}
+                ref={idInstitucionRef}
               />
             </FormControl>
 
@@ -117,12 +122,11 @@ const AdminEditPage = () => {
               <InputGroup>
                 <Input
                   type={show ? 'text' : 'password'}
-                  name="clave"
-                  value={formData.clave}
-                  onChange={handleInputChange}
+                  defaultValue={administradorToEdit.clave}
+                  ref={claveRef}
                 />
-                <InputRightElement width='4.5rem'>
-                  <Button h='1.75rem' size='sm' onClick={handlePasswordToggle}>
+                <InputRightElement width="4.5rem">
+                  <Button h="1.75rem" size="sm" onClick={handlePasswordToggle}>
                     {show ? <IoEyeOff /> : <IoEye />}
                   </Button>
                 </InputRightElement>
@@ -133,9 +137,8 @@ const AdminEditPage = () => {
               <FormLabel>Estado</FormLabel>
               <Input
                 type="number"
-                name="estado"
-                value={formData.estado}
-                onChange={handleInputChange}
+                defaultValue={administradorToEdit.estado}
+                ref={estadoRef}
               />
             </FormControl>
 
