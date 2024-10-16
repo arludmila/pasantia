@@ -49,7 +49,7 @@ return (
                 <Accordion allowToggle>
                   <AccordionItem>
                     <h2>
-                      <AccordionButton>
+                      <AccordionButton minHeight="60px" maxHeight="60px">
                         <Box flex="1" textAlign="left">
                           <VStack align="left" spacing={0}>
                             <Text fontSize="lg" fontWeight="bold">

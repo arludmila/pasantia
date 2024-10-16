@@ -13,16 +13,16 @@ INSERT INTO institucion (cue, cueanexo, nombre, direccion, ubicacion_lat, ubicac
 
 INSERT INTO administrador (rol, nombre, correo, id_institucion, clave, estado) VALUES
 ('SuperUser', 'SuperUser', 'super@example.com', null, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
-('Admin', 'Admin 1', 'admin@example.com', 1, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
-('Admin', 'Admin 2', 'admin2@colegioprivado2.com', 2, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
-('Admin', 'Admin 3', 'admin3@escuelasecundaria3.com', 3, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
-('Admin', 'Admin 4', 'admin4@colegiopublico4.com', 4, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
-('Admin', 'Admin 5', 'admin5@institutopublico5.com', 5, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
-('Admin', 'Admin 6', 'admin6@colegiotecnico6.com', 6, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
-('Admin', 'Admin 7', 'admin7@centroseducativo7.com', 7, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
-('Admin', 'Admin 8', 'admin8@universidad8.com', 8, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
-('Admin', 'Admin 9', 'admin9@institutodeformacion9.com', 9, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
-('Admin', 'Admin 10', 'admin10@escueladeartes10.com', 10, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1);
+('Admin', 'Ana Gómez', 'admin@example.com', 1, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
+('Admin', 'Luis Martínez', 'admin2@colegioprivado2.com', 2, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
+('Admin', 'María Rodríguez', 'admin3@escuelasecundaria3.com', 3, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
+('Admin', 'Carlos López', 'admin4@colegiopublico4.com', 4, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
+('Admin', 'Laura Fernández', 'admin5@institutopublico5.com', 5, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
+('Admin', 'Javier Sánchez', 'admin6@colegiotecnico6.com', 6, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
+('Admin', 'Patricia Morales', 'admin7@centroseducativo7.com', 7, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
+('Admin', 'Fernando Díaz', 'admin8@universidad8.com', 8, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
+('Admin', 'Sofía Torres', 'admin9@institutodeformacion9.com', 9, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
+('Admin', 'Diego Herrera', 'admin10@escueladeartes10.com', 10, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1);
 
 INSERT INTO carreras (nombre, tipo, descripcion, plan_de_estudio, modalidad, cupo, duracion_anios, duracion_meses, fecha_inscripcion, observacion, institucion_id, estado, prioridad) VALUES
 ('Ingeniería en Sistemas', 'Licenciatura', 'Carrera enfocada en desarrollo de software', 'Plan 2023', 'Presencial', '30', 4, 0, '2024-01-01 09:00:00', 'Inicio en enero', 1, 1, 1),
