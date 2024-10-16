@@ -16,6 +16,7 @@ import ApiResponse from '../../../services/ApiResponse';
 import SuperUserDashboard from '../SuperUserDashboard';
 
 const InstitucionAddPage = () => {
+  // TODO: aca deberia poder dejarme elegir con un mapita? la direccion? para poner automaticamente la ubicacion lat y long
   const navigate = useNavigate();
   const cueRef = useRef<HTMLInputElement>(null);
   const cueanexoRef = useRef<HTMLInputElement>(null);
