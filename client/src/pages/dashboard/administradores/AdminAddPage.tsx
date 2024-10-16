@@ -21,7 +21,7 @@ import { IoEye, IoEyeOff } from "react-icons/io5";
 const AdminAddPage = () => {
   const navigate = useNavigate();
   const toast = useToast();
-
+  // TODO: en vez de pedir el id de la institucion mostrar lista? select de instituciones? o no (tmb en edit)
   const nombreRef = useRef<HTMLInputElement>(null);
   const correoRef = useRef<HTMLInputElement>(null);
   const rolRef = useRef<HTMLSelectElement>(null);

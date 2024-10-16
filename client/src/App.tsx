@@ -19,7 +19,6 @@ import InstitucionEditPage from './pages/dashboard/instituciones/InstitucionEdit
 import AdminEditPage from './pages/dashboard/administradores/AdminEditPage';
 import AdminsTablePage from './pages/dashboard/administradores/AdminsTablePage';
 
-// TODO: paginado en tablas?? CRUD...
 
 function App() {
   return (
