@@ -14,6 +14,9 @@ function CarrerasTablePage() {
     const fetchInstituciones = async () => {
       const apiResponse = new ApiResponse<Carrera[]>();
       await apiResponse.useFetch(`carreras/institucion/${decoded?.id_institucion}`, 'GET');
+      if (apiResponse.data) {
+        apiResponse.data.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      }
       setResponse(apiResponse); 
     };
 

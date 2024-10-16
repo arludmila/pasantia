@@ -14,6 +14,9 @@ function AdminsTablePage() {
     const fetchAdministradores = async () => {
       const apiResponse = new ApiResponse<Administrador[]>();
       await apiResponse.useFetch('administradores', 'GET');
+      if (apiResponse.data) {
+        apiResponse.data.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      }
       setResponse(apiResponse); 
     };
 
