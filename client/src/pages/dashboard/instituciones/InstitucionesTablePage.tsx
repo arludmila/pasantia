@@ -6,7 +6,7 @@ import SuperUserDashboard from '../SuperUserDashboard';
 import { Flex, Spinner } from '@chakra-ui/react';
 
 function InstitucionesTablePage() {
-  const headers = ['ID', 'CUE', 'CUE Anexo', 'Nombre', 'Dirección', 'Ubicación Lat', 'Ubicación Long', 'Teléfono', 'Página', 'Gestión', 'Estado'];
+  const headers = ['ID', 'CUE', 'CUE Anexo', 'Nombre', 'Dirección', 'Ubicación Lat', 'Ubicación Long', 'Logo', 'Teléfono', 'Página', 'Gestión', 'Estado'];
   
   const [response, setResponse] = useState(new ApiResponse<Institucion[]>());
   useEffect(() => {

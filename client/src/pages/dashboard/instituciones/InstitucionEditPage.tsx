@@ -14,7 +14,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
 import Institucion from '../../../services/models/Institucion';
 import SuperUserDashboard from '../SuperUserDashboard';
-
+// TODO: editar logo?
 const InstitucionEditPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
