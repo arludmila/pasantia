@@ -6,7 +6,7 @@ import { Administrador } from '../../../../../server/src/models/administrador.mo
 import { Flex, Skeleton, Spinner, Stack } from '@chakra-ui/react';
 
 function AdminsTablePage() {
-  const headers = ['ID', 'Rol', 'Nombre', 'Correo', 'ID Institución', 'Estado', 'Nombre Institución'];
+  const headers = ['ID', 'Rol', 'Nombre', 'Correo', 'ID Institución', 'Estado', 'Institución'];
 
   const [response, setResponse] = useState(new ApiResponse<Administrador[]>());
 

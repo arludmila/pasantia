@@ -6,7 +6,7 @@ INSERT INTO institucion (cue, cueanexo, nombre, direccion, ubicacion_lat, ubicac
 (523456, 783, 'Instituto de Educación Superior', 'Calle Nueva 654', -31.427, -64.188, '351-5678901', 'www.institutopublico5.com', 'Publica', 1),
 (623456, 784, 'Colegio Técnico', 'Av. de los Estudiantes 987', -31.4275, -64.189, '351-6789012', 'www.colegiotecnico6.com', 'Privada', 1),
 (723456, 785, 'Centro Educativo', 'Calle 24 de Septiembre 135', -31.428, -64.190, '351-7890123', 'www.centroseducativo7.com', 'Publica', 1),
-(823456, 786, 'Universidad', 'Av. Universitaria 456', -31.4285, -64.191, '351-8901234', 'www.universidad8.com', 'Privada', 1),
+(823456, 786, 'Universidad Cuenca', 'Av. Universitaria 456', -31.4285, -64.191, '351-8901234', 'www.universidad8.com', 'Privada', 1),
 (923456, 787, 'Instituto de Formación', 'Calle de la Educación 789', -31.429, -64.192, '351-9012345', 'www.institutodeformacion9.com', 'Publica', 1),
 (1023456, 788, 'Escuela de Artes', 'Calle del Arte 159', -31.4295, -64.193, '351-0123456', 'www.escueladeartes10.com', 'Privada', 1);
 

@@ -1,4 +1,6 @@
-import React, { useRef, useState } from 'react';
+// TODO: manejar error de si ya existe el mismo mail!!!
+
+import React, { useRef, useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -17,38 +19,67 @@ import ApiResponse from '../../../services/ApiResponse';
 import { Administrador, Rol } from '../../../services/models/Administrador';
 import SuperUserDashboard from '../SuperUserDashboard';
 import { IoEye, IoEyeOff } from "react-icons/io5";
+import Institucion from '../../../services/models/Institucion';
 
 const AdminAddPage = () => {
   const navigate = useNavigate();
   const toast = useToast();
-  // TODO: en vez de pedir el id de la institucion mostrar lista? select de instituciones? o no (tmb en edit)
+
+  const [instituciones, setInstituciones] = useState<Institucion[]>([]);
+  const [rol, setRol] = useState<Rol>(Rol.Admin); 
+  const [loading, setLoading] = useState(true);
+
   const nombreRef = useRef<HTMLInputElement>(null);
   const correoRef = useRef<HTMLInputElement>(null);
   const rolRef = useRef<HTMLSelectElement>(null);
-  const idInstitucionRef = useRef<HTMLInputElement>(null);
+  const idInstitucionRef = useRef<HTMLSelectElement>(null);
   const claveRef = useRef<HTMLInputElement>(null);
   const estadoRef = useRef<HTMLInputElement>(null);
   const [show, setShow] = useState(false);
   const handlePasswordToggle = () => setShow(!show);
 
+  useEffect(() => {
+    const fetchInstituciones = async () => {
+      const apiInstitucionesResponse = new ApiResponse();
+      await apiInstitucionesResponse.useFetch('instituciones', 'GET');
+
+      if (apiInstitucionesResponse.error == null && Array.isArray(apiInstitucionesResponse.data)) {
+        setInstituciones(apiInstitucionesResponse.data);
+      } else {
+        toast({
+          title: 'Error',
+          description: `Ocurrió un error al cargar las instituciones: ${apiInstitucionesResponse.error}`,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+      setLoading(false);
+    };
+
+    fetchInstituciones();
+  }, [toast]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const idInstitucion = rol === Rol.Admin && idInstitucionRef.current?.value
+      ? parseInt(idInstitucionRef.current?.value)
+      : undefined;
 
     const formData: Omit<Administrador, 'id'> = {
       nombre: nombreRef.current?.value || '',
       correo: correoRef.current?.value || '',
-      rol: rolRef.current?.value as Rol,
-      id_institucion: idInstitucionRef.current?.value
-        ? parseInt(idInstitucionRef.current.value)
-        : undefined,
+      rol: rol,
+      id_institucion: idInstitucion,
       clave: claveRef.current?.value || '',
       estado: estadoRef.current?.value ? parseInt(estadoRef.current.value) : 1,
     };
 
-    const apiResponse = new ApiResponse<Administrador>();
-    await apiResponse.useFetch('administradores', 'POST', formData);
+    const apiPostResponse = new ApiResponse<Administrador>();
+    await apiPostResponse.useFetch('administradores', 'POST', formData);
 
-    if (apiResponse.error == null) {
+    if (apiPostResponse.error == null) {
       toast({
         title: 'Administrador creado',
         description: 'El administrador fue creado con éxito.',
@@ -60,7 +91,7 @@ const AdminAddPage = () => {
     } else {
       toast({
         title: 'Error',
-        description: `Ocurrió un error: ${apiResponse.error}`,
+        description: `Ocurrió un error: ${apiPostResponse.error}`,
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -89,15 +120,26 @@ const AdminAddPage = () => {
 
             <FormControl id="rol" isRequired>
               <FormLabel>Rol</FormLabel>
-              <Select ref={rolRef} defaultValue={Rol.Admin}>
+              <Select
+                ref={rolRef}
+                value={rol}
+                onChange={(e) => setRol(e.target.value as Rol)} 
+                defaultValue={Rol.Admin}
+              >
                 <option value={Rol.Admin}>Admin</option>
                 <option value={Rol.SuperUser}>SuperUser</option>
               </Select>
             </FormControl>
 
-            <FormControl id="id_institucion">
-              <FormLabel>ID Institución</FormLabel>
-              <Input type="number" ref={idInstitucionRef} defaultValue="" />
+            <FormControl id="id_institucion" isRequired={rol === Rol.Admin}>
+              <FormLabel>Institución {rol === Rol.Admin}</FormLabel>
+              <Select ref={idInstitucionRef} placeholder="Selecciona una institución" isDisabled={loading}>
+                {instituciones.map((institucion) => (
+                  <option key={institucion.id} value={institucion.id}>
+                    {institucion.nombre}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
 
             <FormControl id="clave" isRequired>
@@ -121,7 +163,7 @@ const AdminAddPage = () => {
               <Input type="number" ref={estadoRef} defaultValue="1" />
             </FormControl>
 
-            <Button type="submit" colorScheme="teal" size="lg" width="full">
+            <Button type="submit" colorScheme="teal" size="lg" width="full" isLoading={loading}>
               Crear Administrador
             </Button>
           </VStack>
