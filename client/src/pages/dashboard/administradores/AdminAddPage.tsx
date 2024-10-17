@@ -1,5 +1,5 @@
-// TODO: manejar error de si ya existe el mismo mail!!!
-
+// TODO: manejar error de si ya existe el mismo mail!!! --> = edit
+// TODO: no mostrar institucion id directamente si es superuser?? --> = edit
 import React, { useRef, useState, useEffect } from 'react';
 import {
   Box,

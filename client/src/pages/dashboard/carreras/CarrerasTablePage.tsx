@@ -39,6 +39,7 @@ function CarrerasTablePage() {
           tableName="Carreras"
           headers={headers}
           data={response.data || []} 
+          infoColumn='nombre'
         />
       )}
     </AdminDashboard>

@@ -39,6 +39,7 @@ function InstitucionesTablePage() {
           tableName="Instituciones"
           headers={headers}
           data={response.data || []} 
+          infoColumn='nombre'
         />
       )}
     </SuperUserDashboard>

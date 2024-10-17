@@ -16,22 +16,36 @@ import {
   IconButton,
   Text,
   Input,
+  useToast,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { AddIcon, ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons';
+import ApiResponse from '../services/ApiResponse';
 
 interface TableCRUDProps {
-  tableName: string;          
-  headers: string[];          
-  data: any[];                
+  tableName: string;
+  headers: string[];
+  data: any[];
+  infoColumn: string; 
 }
 
-const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data }) => {
+const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data, infoColumn }) => {
   const navigate = useNavigate();
-  
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filteredData, setFilteredData] = useState(data); 
-  const rowsPerPage = 10; 
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filteredData, setFilteredData] = useState(data);
+  const [itemToDelete, setItemToDelete] = useState<any>(null);
+
+  const rowsPerPage = 10;
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const filterHeaders = headers.filter(header => !header.toLowerCase().includes('id'));
@@ -49,19 +63,46 @@ const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data }) => {
   };
 
   const handleSearch = () => {
-    const searchTerm = searchInputRef.current?.value || ''; 
+    const searchTerm = searchInputRef.current?.value || '';
     const normalizedSearchTerm = searchTerm.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  
-    const result = data.filter(item => 
-      Object.values(item).some(value => 
-        typeof value === 'string' && 
+
+    const result = data.filter(item =>
+      Object.values(item).some(value =>
+        typeof value === 'string' &&
         value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(normalizedSearchTerm.toLowerCase())
       )
     );
     setFilteredData(result);
     setCurrentPage(1);
   };
-  
+
+  const handleDelete = async () => {
+    if (itemToDelete) {
+      const apiResponse = new ApiResponse();
+      await apiResponse.useFetch(`${tableName.toLocaleLowerCase()}/${itemToDelete.id}`, 'DELETE');
+
+      if (apiResponse.error == null) {
+        setFilteredData(filteredData.filter(item => item.id !== itemToDelete.id));
+        toast({
+          title: "Borrado exitoso.",
+          description: "El elemento ha sido borrado.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "Error al borrar.",
+          description: "No se pudo borrar el elemento.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+      onClose();
+      setItemToDelete(null);
+    }
+  };
 
   return (
     <Box p={5} m={0}>
@@ -74,21 +115,20 @@ const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data }) => {
       </Flex>
 
       <Flex mb={4}>
-        <Input 
-          placeholder="Buscar..." 
+        <Input
+          placeholder="Buscar..."
           ref={searchInputRef}
           mr={4}
-          flex="1" 
+          flex="1"
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               handleSearch();
             }
           }}
         />
-        <Button onClick={handleSearch} colorScheme="blue">Buscar</Button> 
+        <Button onClick={handleSearch} colorScheme="blue">Buscar</Button>
       </Flex>
 
-      
       <TableContainer>
         <Table variant="simple" size="lg">
           <Thead>
@@ -96,27 +136,32 @@ const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data }) => {
               {filterHeaders.map((header, index) => (
                 <Th key={index}>{header}</Th>
               ))}
-              <Th>Acciones</Th> 
+              <Th>Acciones</Th>
             </Tr>
           </Thead>
           <Tbody>
             {currentRows.map((item, index) => (
               <Tr key={index}>
                 {Object.entries(item)
-                  .filter(([key]) => !key.toLowerCase().includes('id')) 
+                  .filter(([key]) => !key.toLowerCase().includes('id'))
                   .map(([key, value], idx) => (
                     <Td key={idx}>
                       {typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/.test(value)
-                        ? new Date(value).toLocaleDateString('es-AR') 
+                        ? new Date(value).toLocaleDateString('es-AR')
                         : String(value || 'N/A')}
                     </Td>
-                ))}
+                  ))}
 
                 <Td>
                   <Button onClick={() => navigate(`/dashboard/${tableName.toLowerCase()}-editar/${item.id}`, { state: item })} colorScheme="orange" size="sm" mr={2}>
                     Editar
                   </Button>
-                  <Button colorScheme="red" size="sm">Borrar</Button>
+                  <Button colorScheme="red" size="sm" onClick={() => {
+                    setItemToDelete(item);
+                    onOpen(); 
+                  }}>
+                    Borrar
+                  </Button>
                 </Td>
               </Tr>
             ))}
@@ -139,6 +184,34 @@ const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data }) => {
           isDisabled={indexOfLastRow >= filteredData.length}
         />
       </Flex>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              Borrar Elemento
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              {`¿Estás seguro de que deseas borrar ${itemToDelete?.[infoColumn]} de ${tableName}?`} {/* Display column info */}
+              No podrás deshacer esta acción.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancelar
+              </Button>
+              <Button colorScheme='red' onClick={handleDelete} ml={3}>
+                Borrar
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };

@@ -40,6 +40,7 @@ function AdminsTablePage() {
           tableName="Administradores"
           headers={headers}
           data={response.data || []} 
+          infoColumn='nombre'
         />
       )}
     </SuperUserDashboard>
