@@ -76,13 +76,10 @@ const InstitucionesPage = () => {
 
                       </h2>
                       <AccordionPanel pb={4}>
-                        <Text><b>Dirección:</b> {institucion.direccion}</Text>
-                        {institucion.tel && <Text><b>Teléfono:</b> {institucion.tel}</Text>}
-                        {institucion.pagina && (
-                          <Text>
-                            <b>Tipo de Gestión:</b> {institucion.gestion}
-                          </Text>
-                        )}
+                       <Text><b>Dirección:</b> {institucion.direccion}</Text>
+                  {institucion.tel && <Text><b>Teléfono:</b> {institucion.tel}</Text>}
+                  {institucion.gestion && <Text><b>Tipo de Gestión:</b> {institucion.gestion}</Text>}
+
                         <Button
                           mt={3}
                           colorScheme="teal"

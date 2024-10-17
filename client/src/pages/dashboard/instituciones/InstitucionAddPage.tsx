@@ -15,6 +15,7 @@ import Institucion from '../../../services/models/Institucion';
 import ApiResponse from '../../../services/ApiResponse';
 import SuperUserDashboard from '../SuperUserDashboard';
 import { LogoUploadResponse } from '../../../services/models/LogoUploadResponse';
+import LogoFileInput from '../../../components/LogoFileInput';
 
 const InstitucionAddPage = () => {
   // TODO: aca deberia poder dejarme elegir con un mapita? la direccion? para poner automaticamente la ubicacion lat y long
@@ -35,7 +36,7 @@ const InstitucionAddPage = () => {
   const uploadLogo = async (file: File, token: string) => {
     const formData = new FormData();
     formData.append('logo', file);
-    // TODO: cambiar a  mi metodo???
+    // TODO: cambiar a  mi fetch???
     try {
       const response = await fetch('http://localhost:3000/api/instituciones/logo', {
         method: 'POST',
@@ -176,10 +177,9 @@ const InstitucionAddPage = () => {
                 <option value="Privada">Privada</option>
               </Select>
             </FormControl>
-            <FormControl id="logo" isRequired>
-              <FormLabel>Logo</FormLabel>
-              <Input type="file" ref={logoRef} accept="image/*" /> 
-            </FormControl>
+           
+
+            <LogoFileInput logoRef={logoRef}></LogoFileInput>
 
             <FormControl id="estado" isRequired>
               <FormLabel>Estado</FormLabel>
