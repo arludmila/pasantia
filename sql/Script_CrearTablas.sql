@@ -10,11 +10,13 @@ CREATE TABLE institucion (
     direccion VARCHAR(100) NOT NULL,
     ubicacion_lat DECIMAL(22, 19),
     ubicacion_long DECIMAL(22, 19),
+    logo MEDIUMTEXT,
     tel VARCHAR(15),
     pagina VARCHAR(45),
     gestion ENUM('Publica', 'Privada'),
     estado INT NOT NULL
 );
+
 CREATE TABLE carreras (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(40) NOT NULL,

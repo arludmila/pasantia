@@ -10,6 +10,8 @@ interface Institucion {
     pagina?: string;
     gestion: 'Publica' | 'Privada';
     estado: number;
-}
-
-export default Institucion;
+    logo?: string | null; 
+  }
+  
+  export default Institucion;
+  

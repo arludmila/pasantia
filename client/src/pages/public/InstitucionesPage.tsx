@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  Box, Heading, Grid, GridItem, VStack, Text, Button, Image, Accordion, Link,
+  Box, Heading, Grid, GridItem, VStack, Text, Button, Image, Accordion, 
   AccordionPanel, AccordionItem, AccordionButton, AccordionIcon,
   Flex,
   Spinner
@@ -23,35 +23,48 @@ const InstitucionesPage = () => {
     fetchInstituciones();
   }, []);
 
-
- 
-return (
-  <div>
-    <NavbarHome />
-    <Box p={5}>
-      {response.loading ? (
-        <Flex 
-          justify="center" 
-          align="center" 
-          height="100vh"
-        >
-          <Spinner size="xl" thickness="4px" speed="0.65s" color="green.300" />
-        </Flex>
-      ) : response.error ? (
-        <Text>Error: {response.error}</Text>
-      ) : (
-        <>
-          <Heading mb={5}>Instituciones en Goya</Heading>
-          
-          <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
-            {response.data?.map((institucion) => (
-              <GridItem key={institucion.id}>
-                <Accordion allowToggle>
-                  <AccordionItem>
-                    <h2>
-                      <AccordionButton minHeight="60px" maxHeight="60px">
-                        <Box flex="1" textAlign="left">
-                          <VStack align="left" spacing={0}>
+  return (
+    <div>
+      <NavbarHome />
+      <Box p={5}>
+        {response.loading ? (
+          <Flex 
+            justify="center" 
+            align="center" 
+            height="100vh"
+          >
+            <Spinner size="xl" thickness="4px" speed="0.65s" color="green.300" />
+          </Flex>
+        ) : response.error ? (
+          <Text>Error: {response.error}</Text>
+        ) : (
+          <>
+            <Heading mb={5}>Instituciones en Goya</Heading>
+            
+            <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
+              {response.data?.map((institucion) => (
+                <GridItem key={institucion.id}>
+                  <Accordion allowToggle>
+                    <AccordionItem>
+                      <h2>
+                      <AccordionButton minHeight="100px" maxHeight="100px">
+                        <Box 
+                          flex="1" 
+                          display="flex"        
+                          alignItems="center"   
+                          justifyContent="center" 
+                          textAlign="left"
+                        >
+                          <VStack align="center" spacing={0}> 
+                            {institucion.logo && ( 
+                              <Image 
+                                src={`http://localhost:3000${institucion.logo}`} 
+                                alt={`Logo de ${institucion.nombre}`} 
+                                boxSize="40px" 
+                                objectFit="cover" 
+                                mt={2} 
+                              />
+                            )}
                             <Text fontSize="lg" fontWeight="bold">
                               {institucion.nombre}
                             </Text>
@@ -60,34 +73,35 @@ return (
                         
                         <AccordionIcon />
                       </AccordionButton>
-                    </h2>
-                    <AccordionPanel pb={4}>
-                      <Text><b>Dirección:</b> {institucion.direccion}</Text>
-                      {institucion.tel && <Text><b>Teléfono:</b> {institucion.tel}</Text>}
-                      {institucion.pagina && (
-                        <Text>
-                          <b>Tipo de Gestión:</b> {institucion.gestion}
-                        </Text>
-                      )}
-                      <Button
-                        mt={3}
-                        colorScheme="teal"
-                        width="full"
-                        onClick={() => window.open(`http://${institucion.pagina}`, '_blank')}
-                      >
-                        Visitar Página Web
-                      </Button>
-                    </AccordionPanel>
 
-                  </AccordionItem>
-                </Accordion>
-              </GridItem>
-            ))}
-          </Grid>
-        </>
-      )}
-    </Box>
-  </div>
-);
+                      </h2>
+                      <AccordionPanel pb={4}>
+                        <Text><b>Dirección:</b> {institucion.direccion}</Text>
+                        {institucion.tel && <Text><b>Teléfono:</b> {institucion.tel}</Text>}
+                        {institucion.pagina && (
+                          <Text>
+                            <b>Tipo de Gestión:</b> {institucion.gestion}
+                          </Text>
+                        )}
+                        <Button
+                          mt={3}
+                          colorScheme="teal"
+                          width="full"
+                          onClick={() => window.open(`http://${institucion.pagina}`, '_blank')}
+                        >
+                          Visitar Página Web
+                        </Button>
+                      </AccordionPanel>
+                    </AccordionItem>
+                  </Accordion>
+                </GridItem>
+              ))}
+            </Grid>
+          </>
+        )}
+      </Box>
+    </div>
+  );
 };
+
 export default InstitucionesPage;

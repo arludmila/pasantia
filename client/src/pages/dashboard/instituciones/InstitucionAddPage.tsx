@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import Institucion from '../../../services/models/Institucion';
 import ApiResponse from '../../../services/ApiResponse';
 import SuperUserDashboard from '../SuperUserDashboard';
+import { LogoUploadResponse } from '../../../services/models/LogoUploadResponse';
 
 const InstitucionAddPage = () => {
   // TODO: aca deberia poder dejarme elegir con un mapita? la direccion? para poner automaticamente la ubicacion lat y long
@@ -28,11 +29,58 @@ const InstitucionAddPage = () => {
   const paginaRef = useRef<HTMLInputElement>(null);
   const gestionRef = useRef<HTMLSelectElement>(null);
   const estadoRef = useRef<HTMLInputElement>(null);
+  const logoRef = useRef<HTMLInputElement>(null);
   const toast = useToast();
+
+  const uploadLogo = async (file: File, token: string) => {
+    const formData = new FormData();
+    formData.append('logo', file);
+    // TODO: cambiar a  mi metodo???
+    try {
+      const response = await fetch('http://localhost:3000/api/instituciones/logo', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text(); 
+        throw new Error(`Error al subir el logo: ${errorText}`);
+      }
+  
+      const data: LogoUploadResponse = await response.json(); 
+      return data.logoUrl; 
+    } catch (error) {
+      console.error('Error al subir el logo:', error);
+      toast({
+        title: 'Error al subir logo',
+        description: `Ocurrió un error: ${error}`,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      return null;
+    }
+  };
+  
+  
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
+    const logoFile = logoRef.current?.files?.[0]; 
+    const token = localStorage.getItem('token');
+    let uploadedLogoUrl: string | null = null; 
+  
+    if (logoFile && token) {
+      uploadedLogoUrl = await uploadLogo(logoFile, token); 
+      if (!uploadedLogoUrl) return; 
+      console.log('uploadedLogoUrl', uploadedLogoUrl);
+    }
+      
     const formData = {
       cue: cueRef.current?.value || 0,
       cueanexo: cueanexoRef.current?.value || undefined,
@@ -44,11 +92,13 @@ const InstitucionAddPage = () => {
       pagina: paginaRef.current?.value || '',
       gestion: gestionRef.current?.value || 'Publica',
       estado: parseInt(estadoRef.current?.value || '1'),
+      logo: uploadedLogoUrl ,
     };
-
+  
+    console.log('formData', formData);
     const apiResponse = new ApiResponse<Institucion>();
     await apiResponse.useFetch('instituciones', 'POST', formData);
-
+  
     if (apiResponse.error == null) {
       toast({
         title: 'Institución creada',
@@ -68,6 +118,7 @@ const InstitucionAddPage = () => {
       });
     }
   };
+  
 
   return (
     <div>
@@ -124,6 +175,10 @@ const InstitucionAddPage = () => {
                 <option value="Publica">Pública</option>
                 <option value="Privada">Privada</option>
               </Select>
+            </FormControl>
+            <FormControl id="logo" isRequired>
+              <FormLabel>Logo</FormLabel>
+              <Input type="file" ref={logoRef} accept="image/*" /> 
             </FormControl>
 
             <FormControl id="estado" isRequired>

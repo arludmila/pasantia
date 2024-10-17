@@ -13,4 +13,6 @@ InstitucionRouter.patch('/:id', auth(Rol.SuperUser), institucionController.updat
 InstitucionRouter.post('/', auth(Rol.SuperUser), createInstitucionSchema, institucionController.create);  
 InstitucionRouter.delete('/:id', auth(Rol.SuperUser), institucionController.delete); 
 
+InstitucionRouter.post('/logo', auth(Rol.SuperUser), institucionController.uploadLogo);
+
 export default InstitucionRouter;
