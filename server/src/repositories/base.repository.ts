@@ -1,6 +1,6 @@
 import DbConnection from '../db/db_connection';
 
-
+// TODO: revisar todo esto, 
 export class BaseRepository<T extends object> {
   private tableName: string;
 

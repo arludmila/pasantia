@@ -20,4 +20,7 @@ export class InstitucionRepository extends BaseRepository<Institucion> {
   public delete(id: number) {
     return super.delete(id);
   }
+  public findOne(id: number) {
+    return super.findOne(id);
+  }
 }

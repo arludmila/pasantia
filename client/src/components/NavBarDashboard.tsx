@@ -57,7 +57,7 @@ const NavLinks = ({ name, path }: NavLink) => {
     </Box>
   );
 }
-
+// TODO:arreglar navbar cuando es mas chico, no se pueden ver las opciones!! = navBarHome
 export default function NavbarDashboard({ links }: Props) { 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate()

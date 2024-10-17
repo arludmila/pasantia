@@ -11,7 +11,7 @@ interface FileInputProps {
   logoRef: React.RefObject<HTMLInputElement>; 
 }
 
-const FileInput = ({ logoRef }: FileInputProps) => {
+const LogoFileInput = ({ logoRef }: FileInputProps) => {
   const [fileName, setFileName] = useState<string>("");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,4 +44,4 @@ const FileInput = ({ logoRef }: FileInputProps) => {
   );
 };
 
-export default FileInput;
+export default LogoFileInput;

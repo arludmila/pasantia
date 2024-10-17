@@ -7,8 +7,11 @@ import path from 'path';
 import fs from 'fs';
 
 export class InstitucionController extends BaseController<Institucion> {
+  private institucionRepository: InstitucionRepository;
   constructor() {
-    super(new InstitucionRepository());
+    const repository = new InstitucionRepository();
+    super(repository);
+    this.institucionRepository = repository;
   }
 
   public async getAll(req: Request, res: Response): Promise<void> {
@@ -36,6 +39,8 @@ export class InstitucionController extends BaseController<Institucion> {
       res.send({ message: 'Logo subido exitosamente', logoUrl });
     });
   }
+  
+  
 
 }
 const storage = multer.diskStorage({
