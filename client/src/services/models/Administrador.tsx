@@ -17,4 +17,12 @@ export type AdministradorSinClave = Omit<Administrador, 'clave'> & {
   institucion_nombre: string;
 };
 
-export type AdministradorCrear = Omit<Administrador, 'id' | 'estado'>;
+export type AdministradorCreate = Omit<Administrador, 'id' | 'estado'>;
+
+export interface AdministradorUpdate {
+  rol?: Roles;                
+  nombre?: string;        
+  correo?: string;          
+  clave?: string;          
+  id_institucion?: number;  
+}

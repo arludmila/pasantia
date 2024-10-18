@@ -14,11 +14,11 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
-import { Administrador, Roles } from '../../../services/models/Administrador';
+import { Administrador, AdministradorUpdate, Roles } from '../../../services/models/Administrador';
 import SuperUserDashboard from '../SuperUserDashboard';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
 import { Institucion } from '../../../services/models/Institucion';
-
+// TODO: cambiar aca para q no sean required los fields. Solo mandar para PATCH lo que se cambio? logica
 const AdminEditPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -35,7 +35,6 @@ const AdminEditPage = () => {
   const rolRef = useRef<HTMLSelectElement>(null);
   const idInstitucionRef = useRef<HTMLSelectElement>(null);
   const claveRef = useRef<HTMLInputElement>(null);
-  const estadoRef = useRef<HTMLInputElement>(null);
 
   const [show, setShow] = useState(false);
   const handlePasswordToggle = () => setShow(!show);
@@ -68,18 +67,16 @@ const AdminEditPage = () => {
     ? parseInt(idInstitucionRef.current?.value)
     : undefined;
 
-    const formData = {
-      id: administradorToEdit.id,
+    const formData: AdministradorUpdate  = {
       nombre: nombreRef.current?.value || '',
       correo: correoRef.current?.value || '',
-      id_institucion: Number(idInstitucionRef.current?.value) || null,
+      id_institucion: Number(idInstitucionRef.current?.value) || undefined,
       clave: claveRef.current?.value || '',
       rol: rolRef.current?.value as Roles,
-      estado: Number(estadoRef.current?.value) || 0,
     };
 
     const apiPatchResponse = new ApiResponse<Administrador>();
-    await apiPatchResponse.useFetch(`administradores/${formData.id}`, 'PATCH', formData);
+    await apiPatchResponse.useFetch(`administradores/${administradorToEdit.id}`, 'PATCH', formData);
 
     if (apiPatchResponse.error == null) {
       toast({
@@ -143,7 +140,7 @@ const AdminEditPage = () => {
 
             <FormControl id="id_institucion" isRequired={rol === Roles.Admin}>
               <FormLabel>Institución {rol === Roles.Admin}</FormLabel>
-              <Select ref={idInstitucionRef} placeholder="Selecciona una institución" isDisabled={loading}>
+              <Select ref={idInstitucionRef} defaultValue={administradorToEdit.id_institucion} isDisabled={loading}>
                 {instituciones.map((institucion) => (
                   <option key={institucion.id} value={institucion.id}>
                     {institucion.nombre}
@@ -166,15 +163,6 @@ const AdminEditPage = () => {
                   </Button>
                 </InputRightElement>
               </InputGroup>
-            </FormControl>
-
-            <FormControl id="estado" isRequired>
-              <FormLabel>Estado</FormLabel>
-              <Input
-                type="number"
-                defaultValue={administradorToEdit.estado}
-                ref={estadoRef}
-              />
             </FormControl>
 
             <Button type="submit" colorScheme="teal" size="lg" width="full">

@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
-import { Administrador, AdministradorCrear, Roles } from '../../../services/models/Administrador';
+import { Administrador, AdministradorCreate, Roles } from '../../../services/models/Administrador';
 import SuperUserDashboard from '../SuperUserDashboard';
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { Institucion } from '../../../services/models/Institucion';
@@ -34,7 +34,6 @@ const AdminAddPage = () => {
   const rolRef = useRef<HTMLSelectElement>(null);
   const idInstitucionRef = useRef<HTMLSelectElement>(null);
   const claveRef = useRef<HTMLInputElement>(null);
-  const estadoRef = useRef<HTMLInputElement>(null);
   const [show, setShow] = useState(false);
   const handlePasswordToggle = () => setShow(!show);
 
@@ -67,7 +66,7 @@ const AdminAddPage = () => {
       ? parseInt(idInstitucionRef.current?.value)
       : undefined;
 
-      const formData: AdministradorCrear = {
+      const formData: AdministradorCreate = {
         nombre: nombreRef.current?.value || '',
         correo: correoRef.current?.value || '',
         rol: rol,
