@@ -40,15 +40,28 @@ const InstitucionAddPage = () => {
   
    
     const formData = new FormData();
-    formData.append('cue', cueRef.current?.value || '0');
-    formData.append('cueanexo', cueanexoRef.current?.value || '');
-    formData.append('nombre', nombreRef.current?.value || '');
-    formData.append('direccion', direccionRef.current?.value || '');
-    formData.append('ubicacion_lat', ubicacionLatRef.current?.value || '');
-    formData.append('ubicacion_long', ubicacionLongRef.current?.value || '');
-    formData.append('tel', telRef.current?.value || '');
-    formData.append('pagina', paginaRef.current?.value || '');
-    formData.append('gestion', gestionRef.current?.value || 'Publica');
+      formData.append('cue', cueRef.current?.value || '0');
+
+      if (cueanexoRef.current?.value) {
+        formData.append('cueanexo', cueanexoRef.current.value);
+      }
+      formData.append('nombre', nombreRef.current?.value || '');
+      formData.append('direccion', direccionRef.current?.value || '');
+      if (ubicacionLatRef.current?.value) {
+        formData.append('ubicacion_lat', ubicacionLatRef.current.value);
+      }
+      if (ubicacionLongRef.current?.value) {
+        formData.append('ubicacion_long', ubicacionLongRef.current.value);
+      }
+      if (telRef.current?.value) {
+        formData.append('tel', telRef.current.value);
+      }
+      if (paginaRef.current?.value) {
+        formData.append('pagina', paginaRef.current.value);
+      }
+
+      formData.append('gestion', gestionRef.current?.value || 'Publica');
+
     
     if (logoFile) {
       formData.append('logo', logoFile);
