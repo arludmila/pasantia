@@ -20,6 +20,9 @@ export class BaseRepository<T extends object> {
     this.tableName = tableName;
   }
 
+    // TODO: no mandar nunca el 'estado'? excluirlo nomas?
+
+
   public async getAll(): Promise<T[]> {
     try {
       const sql = `SELECT * FROM ${this.tableName} WHERE estado = 1`; 

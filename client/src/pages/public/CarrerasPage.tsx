@@ -7,11 +7,11 @@ import {
   Spinner,
   IconButton
 } from '@chakra-ui/react';
-import Carrera from '../../services/models/Carrera'; 
 import NavbarHome from '../../components/NavbarHome';
 import ApiResponse from '../../services/ApiResponse';
 import { AddIcon, ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
+import { Carrera } from '../../services/models/Carrera';
 
 const CarrerasPage = () => {
   const endpoint = 'carreras';

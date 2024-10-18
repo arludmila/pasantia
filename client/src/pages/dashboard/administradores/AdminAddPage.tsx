@@ -16,17 +16,17 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
-import { Administrador, Rol } from '../../../services/models/Administrador';
+import { Administrador, AdministradorCrear, Roles } from '../../../services/models/Administrador';
 import SuperUserDashboard from '../SuperUserDashboard';
 import { IoEye, IoEyeOff } from "react-icons/io5";
-import Institucion from '../../../services/models/Institucion';
+import { Institucion } from '../../../services/models/Institucion';
 
 const AdminAddPage = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
   const [instituciones, setInstituciones] = useState<Institucion[]>([]);
-  const [rol, setRol] = useState<Rol>(Rol.Admin); 
+  const [rol, setRol] = useState<Roles>(Roles.Admin); 
   const [loading, setLoading] = useState(true);
 
   const nombreRef = useRef<HTMLInputElement>(null);
@@ -63,18 +63,17 @@ const AdminAddPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const idInstitucion = rol === Rol.Admin && idInstitucionRef.current?.value
+    const idInstitucion = rol === Roles.Admin && idInstitucionRef.current?.value
       ? parseInt(idInstitucionRef.current?.value)
       : undefined;
 
-    const formData: Omit<Administrador, 'id'> = {
-      nombre: nombreRef.current?.value || '',
-      correo: correoRef.current?.value || '',
-      rol: rol,
-      id_institucion: idInstitucion,
-      clave: claveRef.current?.value || '',
-      estado: estadoRef.current?.value ? parseInt(estadoRef.current.value) : 1,
-    };
+      const formData: AdministradorCrear = {
+        nombre: nombreRef.current?.value || '',
+        correo: correoRef.current?.value || '',
+        rol: rol,
+        id_institucion: idInstitucion,
+        clave: claveRef.current?.value || '',
+      };
 
     const apiPostResponse = new ApiResponse<Administrador>();
     await apiPostResponse.useFetch('administradores', 'POST', formData);
@@ -123,24 +122,26 @@ const AdminAddPage = () => {
               <Select
                 ref={rolRef}
                 value={rol}
-                onChange={(e) => setRol(e.target.value as Rol)} 
-                defaultValue={Rol.Admin}
+                onChange={(e) => setRol(e.target.value as Roles)} 
+                defaultValue={Roles.Admin}
               >
-                <option value={Rol.Admin}>Admin</option>
-                <option value={Rol.SuperUser}>SuperUser</option>
+                <option value={Roles.Admin}>Admin</option>
+                <option value={Roles.SuperUser}>SuperUser</option>
               </Select>
             </FormControl>
 
-            <FormControl id="id_institucion" isRequired={rol === Rol.Admin}>
-              <FormLabel>Institución {rol === Rol.Admin}</FormLabel>
-              <Select ref={idInstitucionRef} placeholder="Selecciona una institución" isDisabled={loading}>
-                {instituciones.map((institucion) => (
-                  <option key={institucion.id} value={institucion.id}>
-                    {institucion.nombre}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
+            {rol === Roles.Admin && (
+          <FormControl id="id_institucion" isRequired>
+            <FormLabel>Institución</FormLabel>
+            <Select ref={idInstitucionRef} placeholder="Selecciona una institución" isDisabled={loading}>
+              {instituciones.map((institucion) => (
+                <option key={institucion.id} value={institucion.id}>
+                  {institucion.nombre}
+                </option>
+              ))}
+            </Select>
+          </FormControl>
+        )}
 
             <FormControl id="clave" isRequired>
               <FormLabel>Contraseña</FormLabel>
@@ -158,10 +159,7 @@ const AdminAddPage = () => {
               </InputGroup>
             </FormControl>
 
-            <FormControl id="estado" isRequired>
-              <FormLabel>Estado</FormLabel>
-              <Input type="number" ref={estadoRef} defaultValue="1" />
-            </FormControl>
+           
 
             <Button type="submit" colorScheme="teal" size="lg" width="full" isLoading={loading}>
               Crear Administrador

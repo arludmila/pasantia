@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
-import Institucion from '../../../services/models/Institucion';
+import {Institucion} from '../../../services/models/Institucion';
 import SuperUserDashboard from '../SuperUserDashboard';
 import LogoFileInput from '../../../components/LogoFileInput';
 // TODO: editar logo?

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TableCRUD from '../../../components/TableCRUD';
-import Institucion from '../../../services/models/Institucion';
+import {Institucion} from '../../../services/models/Institucion';
 import ApiResponse from '../../../services/ApiResponse';
 import SuperUserDashboard from '../SuperUserDashboard';
 import { Flex, Spinner } from '@chakra-ui/react';

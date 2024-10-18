@@ -12,8 +12,8 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
-import Carrera from '../../../services/models/Carrera';
 import AdminDashboard from '../AdminDashboard ';
+import { Carrera } from '../../../services/models/Carrera';
 
 const CarreraEditPage = () => {
   const navigate = useNavigate();
@@ -33,6 +33,10 @@ const CarreraEditPage = () => {
   const observacionRef = useRef<HTMLInputElement>(null);
   const estadoRef = useRef<HTMLInputElement>(null);
   const prioridadRef = useRef<HTMLInputElement>(null);
+
+  const formatDate = (date: Date): string => {
+    return date.toISOString().split('T')[0]; 
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,7 +134,7 @@ const CarreraEditPage = () => {
 
             <FormControl id="fecha_inscripcion" isRequired>
               <FormLabel>Fecha de Inscripción</FormLabel>
-              <Input type="date"  ref={fechaInscripcionRef} defaultValue={carreraToEdit.fecha_inscripcion} />
+              <Input type="date"  ref={fechaInscripcionRef} defaultValue={formatDate(carreraToEdit.fecha_inscripcion)}  />
             </FormControl>
 
             <FormControl id="observacion">

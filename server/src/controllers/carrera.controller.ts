@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { BaseController } from './base.controller';
 import { CarreraRepository } from '../repositories/carrera.repository';
 import { Carrera } from '../models/carrera.model';
-
+// TODO: IMPORTANTE --> borrar console logs... todos, si hay
 export class CarreraController extends BaseController<Carrera> {
   private carreraRepository: CarreraRepository;
 
@@ -42,7 +42,6 @@ export class CarreraController extends BaseController<Carrera> {
     }
   }
   
-  // TODO: arreglar todos los errores para que sean como este, aca funciona para mandar los mensajitos de 'error:'
   public async getAllCarreras(req: Request, res: Response): Promise<void> {
     try {
         const carreras = await this.carreraRepository.getAllCarreras();

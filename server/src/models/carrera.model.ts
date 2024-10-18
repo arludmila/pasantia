@@ -11,14 +11,14 @@ export interface Carrera {
   descripcion?: string;           
   plan_de_estudio?: string;      
   modalidad: Modalidad; 
-  cupo?: string;                  
+  cupo?: number;                  
   duracion_anios: number;          
   duracion_meses: number;          
-  fecha_inscripcion: Date;        
+  fecha_inscripcion: Date; // TODO: revisar! carrera edit y add        
   observacion?: string;           
   institucion_id: number;        
   estado: number;                  
-  prioridad?: number;              
+  prioridad: number;              
   institucion_nombre?: string;    
   institucion_direccion?: string; 
   institucion_tel?: string;      

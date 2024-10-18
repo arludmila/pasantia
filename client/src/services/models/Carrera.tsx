@@ -1,24 +1,28 @@
-interface Carrera {
+export enum Modalidad {
+  Presencial = 'Presencial',
+  Virtual = 'Virtual',
+  Semipresencial = 'Semipresencial',
+}
+
+export interface Carrera {
   id: number;                       
   nombre: string;                  
   tipo: string;                
   descripcion?: string;           
   plan_de_estudio?: string;      
-  modalidad: 'Presencial' | 'Virtual' | 'Semipresencial'; 
-  cupo?: string;                  
+  modalidad: Modalidad; 
+  cupo?: number;                  
   duracion_anios: number;          
   duracion_meses: number;          
-  fecha_inscripcion: string;        
+  fecha_inscripcion: Date;        
   observacion?: string;           
   institucion_id: number;        
   estado: number;                  
-  prioridad?: number;              
+  prioridad: number;              
   institucion_nombre?: string;    
   institucion_direccion?: string; 
   institucion_tel?: string;      
   institucion_pagina?: string;   
 }
 
-
-  export default Carrera;
-  
+export type CarreraCrear = Omit<Carrera, 'id' | 'estado'>;

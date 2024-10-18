@@ -5,9 +5,9 @@ import {
   Flex,
   Spinner
 } from '@chakra-ui/react';
-import Institucion from '../../services/models/Institucion'; 
 import NavbarHome from '../../components/NavbarHome';
 import ApiResponse from '../../services/ApiResponse';
+import { Institucion } from '../../services/models/Institucion';
 
 const InstitucionesPage = () => {
   const endpoint = 'instituciones';

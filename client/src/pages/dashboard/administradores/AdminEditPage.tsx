@@ -14,17 +14,17 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
-import { Administrador, Rol } from '../../../services/models/Administrador';
+import { Administrador, Roles } from '../../../services/models/Administrador';
 import SuperUserDashboard from '../SuperUserDashboard';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
-import Institucion from '../../../services/models/Institucion';
+import { Institucion } from '../../../services/models/Institucion';
 
 const AdminEditPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [instituciones, setInstituciones] = useState<Institucion[]>([]);
-  const [rol, setRol] = useState<Rol>(Rol.Admin); 
+  const [rol, setRol] = useState<Roles>(Roles.Admin); 
   const [loading, setLoading] = useState(true);
 
   const administradorToEdit = location.state as Administrador;
@@ -64,7 +64,7 @@ const AdminEditPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const idInstitucion = rol === Rol.Admin && idInstitucionRef.current?.value
+    const idInstitucion = rol === Roles.Admin && idInstitucionRef.current?.value
     ? parseInt(idInstitucionRef.current?.value)
     : undefined;
 
@@ -74,7 +74,7 @@ const AdminEditPage = () => {
       correo: correoRef.current?.value || '',
       id_institucion: Number(idInstitucionRef.current?.value) || null,
       clave: claveRef.current?.value || '',
-      rol: rolRef.current?.value as Rol,
+      rol: rolRef.current?.value as Roles,
       estado: Number(estadoRef.current?.value) || 0,
     };
 
@@ -133,16 +133,16 @@ const AdminEditPage = () => {
               <Select
                 defaultValue={administradorToEdit.rol}
                 ref={rolRef}
-                onChange={(e) => setRol(e.target.value as Rol)} 
+                onChange={(e) => setRol(e.target.value as Roles)} 
                 
               >
-                <option value={Rol.Admin}>Admin</option>
-                <option value={Rol.SuperUser}>SuperUser</option>
+                <option value={Roles.Admin}>Admin</option>
+                <option value={Roles.SuperUser}>SuperUser</option>
               </Select>
             </FormControl>
 
-            <FormControl id="id_institucion" isRequired={rol === Rol.Admin}>
-              <FormLabel>Institución {rol === Rol.Admin}</FormLabel>
+            <FormControl id="id_institucion" isRequired={rol === Roles.Admin}>
+              <FormLabel>Institución {rol === Roles.Admin}</FormLabel>
               <Select ref={idInstitucionRef} placeholder="Selecciona una institución" isDisabled={loading}>
                 {instituciones.map((institucion) => (
                   <option key={institucion.id} value={institucion.id}>

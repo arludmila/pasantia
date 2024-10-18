@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Box, Heading, Text, Link, Spinner, VStack, HStack, Grid, Image } from '@chakra-ui/react';
 import NavbarHome from '../../components/NavbarHome';
 import ApiResponse from '../../services/ApiResponse';
-import Carrera from '../../services/models/Carrera';
+import {Carrera} from '../../services/models/Carrera';
 
 
 function CarreraPage() {

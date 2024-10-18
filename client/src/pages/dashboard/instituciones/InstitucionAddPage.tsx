@@ -11,11 +11,11 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import Institucion from '../../../services/models/Institucion';
 import ApiResponse from '../../../services/ApiResponse';
 import SuperUserDashboard from '../SuperUserDashboard';
 import { LogoUploadResponse } from '../../../services/models/LogoUploadResponse';
 import LogoFileInput from '../../../components/LogoFileInput';
+import { Institucion } from '../../../services/models/Institucion';
 
 const InstitucionAddPage = () => {
   // TODO: aca deberia poder dejarme elegir con un mapita? la direccion? para poner automaticamente la ubicacion lat y long

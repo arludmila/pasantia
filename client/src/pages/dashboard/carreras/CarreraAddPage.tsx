@@ -12,9 +12,9 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
-import Carrera from '../../../services/models/Carrera';
 import AdminDashboard from '../AdminDashboard ';
 import { getDecodedToken } from '../../../services/Token';
+import { Carrera } from '../../../services/models/Carrera';
 
 const CarreraAddPage = () => {
   const navigate = useNavigate();
