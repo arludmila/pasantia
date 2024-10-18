@@ -38,11 +38,5 @@ export interface CarreraUpdate {
   duracion_meses?: number;          
   fecha_inscripcion?: Date;        
   observacion?: string;           
-  institucion_id?: number;        
-  estado?: number;                  
   prioridad?: number;              
-  institucion_nombre?: string;    
-  institucion_direccion?: string; 
-  institucion_tel?: string;      
-  institucion_pagina?: string;   
 }

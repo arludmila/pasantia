@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { Institucion } from '../models/institucion.model';
 import { InstitucionRepository } from '../repositories/institucion.repository';
 import { BaseController } from './base.controller';
-import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
@@ -27,14 +26,18 @@ export class InstitucionController extends BaseController<Institucion> {
 
   public async create(req: Request, res: Response): Promise<void> {
     const institucionData: Institucion = req.body;
-    
+
+    const newInstitution = await this.institucionRepository.create(institucionData);
+
     if (req.file) {
-      const logoUrl = this.handleLogoUpload(req.file, institucionData.id); 
-      institucionData.logo = logoUrl; 
+      const logoUrl = this.handleLogoUpload(req.file, newInstitution.id); 
+      newInstitution.logo = logoUrl; 
+      await this.institucionRepository.update(newInstitution.id, { logo: logoUrl }); 
     }
 
-    await super.create(req, res);
-  }
+    res.status(201).json(newInstitution); 
+}
+
 
   public async update(req: Request, res: Response): Promise<void> {
     const institucionId = parseInt(req.params.id);
@@ -72,17 +75,6 @@ export class InstitucionController extends BaseController<Institucion> {
   }
 }
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = 'uploads/logos';
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); 
-  },
-});
 
-const upload = multer({ storage: storage });
+
+

@@ -15,7 +15,7 @@ import ApiResponse from '../../../services/ApiResponse';
 import SuperUserDashboard from '../SuperUserDashboard';
 import { LogoUploadResponse } from '../../../services/models/LogoUploadResponse';
 import LogoFileInput from '../../../components/LogoFileInput';
-import { Institucion } from '../../../services/models/Institucion';
+import { Institucion, InstitucionCrear } from '../../../services/models/Institucion';
 
 const InstitucionAddPage = () => {
   // TODO: aca deberia poder dejarme elegir con un mapita? la direccion? para poner automaticamente la ubicacion lat y long
@@ -29,78 +29,46 @@ const InstitucionAddPage = () => {
   const telRef = useRef<HTMLInputElement>(null);
   const paginaRef = useRef<HTMLInputElement>(null);
   const gestionRef = useRef<HTMLSelectElement>(null);
-  const estadoRef = useRef<HTMLInputElement>(null);
   const logoRef = useRef<HTMLInputElement>(null);
   const toast = useToast();
-
-  const uploadLogo = async (file: File, token: string) => {
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+    const logoFile = logoRef.current?.files?.[0];
+    const token = localStorage.getItem('token');
+  
+   
     const formData = new FormData();
-    formData.append('logo', file);
-    // TODO: cambiar a  mi fetch???
+    formData.append('cue', cueRef.current?.value || '0');
+    formData.append('cueanexo', cueanexoRef.current?.value || '');
+    formData.append('nombre', nombreRef.current?.value || '');
+    formData.append('direccion', direccionRef.current?.value || '');
+    formData.append('ubicacion_lat', ubicacionLatRef.current?.value || '');
+    formData.append('ubicacion_long', ubicacionLongRef.current?.value || '');
+    formData.append('tel', telRef.current?.value || '');
+    formData.append('pagina', paginaRef.current?.value || '');
+    formData.append('gestion', gestionRef.current?.value || 'Publica');
+    
+    if (logoFile) {
+      formData.append('logo', logoFile);
+    }
+    for (var pair of formData.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]); 
+  }
     try {
-      const response = await fetch('http://localhost:3000/api/instituciones/logo', {
+      const response = await fetch('http://localhost:3000/api/instituciones', {
         method: 'POST',
-        body: formData,
+        body: formData, 
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
   
       if (!response.ok) {
-        const errorText = await response.text(); 
-        throw new Error(`Error al subir el logo: ${errorText}`);
+        throw new Error('Error creating institution');
       }
   
-      const data: LogoUploadResponse = await response.json(); 
-      return data.logoUrl; 
-    } catch (error) {
-      console.error('Error al subir el logo:', error);
-      toast({
-        title: 'Error al subir logo',
-        description: `Ocurrió un error: ${error}`,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-      return null;
-    }
-  };
-  
-  
-
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-  
-    const logoFile = logoRef.current?.files?.[0]; 
-    const token = localStorage.getItem('token');
-    let uploadedLogoUrl: string | null = null; 
-  
-    if (logoFile && token) {
-      uploadedLogoUrl = await uploadLogo(logoFile, token); 
-      if (!uploadedLogoUrl) return; 
-      console.log('uploadedLogoUrl', uploadedLogoUrl);
-    }
-      
-    const formData = {
-      cue: cueRef.current?.value || 0,
-      cueanexo: cueanexoRef.current?.value || undefined,
-      nombre: nombreRef.current?.value || '',
-      direccion: direccionRef.current?.value || '',
-      ubicacion_lat: ubicacionLatRef.current?.value || undefined,
-      ubicacion_long: ubicacionLongRef.current?.value || undefined,
-      tel: telRef.current?.value || '',
-      pagina: paginaRef.current?.value || '',
-      gestion: gestionRef.current?.value || 'Publica',
-      estado: parseInt(estadoRef.current?.value || '1'),
-      logo: uploadedLogoUrl ,
-    };
-  
-    console.log('formData', formData);
-    const apiResponse = new ApiResponse<Institucion>();
-    await apiResponse.useFetch('instituciones', 'POST', formData);
-  
-    if (apiResponse.error == null) {
       toast({
         title: 'Institución creada',
         description: 'La institución fue creada con éxito.',
@@ -108,17 +76,19 @@ const InstitucionAddPage = () => {
         duration: 3000,
         isClosable: true,
       });
+  
       navigate('/dashboard/instituciones');
-    } else {
+    } catch (error) {
       toast({
         title: 'Error al crear',
-        description: `Ocurrió un error: ${apiResponse.error}`,
+        description: `Ocurrió un error: ${error}`,
         status: 'error',
         duration: 3000,
         isClosable: true,
       });
     }
   };
+  
   
 
   return (
@@ -181,10 +151,6 @@ const InstitucionAddPage = () => {
 
             <LogoFileInput logoRef={logoRef}></LogoFileInput>
 
-            <FormControl id="estado" isRequired>
-              <FormLabel>Estado</FormLabel>
-              <Input type="number" ref={estadoRef} defaultValue={1} />
-            </FormControl>
 
             <Button type="submit" colorScheme="teal" size="lg" width="full">
               Crear Institución

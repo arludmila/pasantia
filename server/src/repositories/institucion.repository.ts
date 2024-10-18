@@ -1,5 +1,5 @@
 import { BaseRepository } from './base.repository'; 
-import { Institucion } from '../models/institucion.model';
+import { Institucion, InstitucionUpdate } from '../models/institucion.model';
 
 export class InstitucionRepository extends BaseRepository<Institucion> {
   constructor() {
@@ -14,7 +14,7 @@ export class InstitucionRepository extends BaseRepository<Institucion> {
     return super.create(institucion);
   }
 
-  public async update(id: number, institucion: Institucion): Promise<void> {
+  public async update(id: number, institucion: InstitucionUpdate): Promise<void> {
     return super.update(id, institucion);
   }
 
