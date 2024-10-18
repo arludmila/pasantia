@@ -134,7 +134,7 @@ const CarreraEditPage = () => {
 
             <FormControl id="fecha_inscripcion" isRequired>
               <FormLabel>Fecha de Inscripción</FormLabel>
-              <Input type="date"  ref={fechaInscripcionRef} defaultValue={formatDate(carreraToEdit.fecha_inscripcion)}  />
+              <Input type="date"  ref={fechaInscripcionRef} defaultValue={carreraToEdit.fecha_inscripcion}  />
             </FormControl>
 
             <FormControl id="observacion">

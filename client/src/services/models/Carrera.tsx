@@ -14,7 +14,7 @@ export interface Carrera {
   cupo?: number;                  
   duracion_anios: number;          
   duracion_meses: number;          
-  fecha_inscripcion: Date;        
+  fecha_inscripcion: string;        
   observacion?: string;           
   institucion_id: number;        
   estado: number;                  
@@ -25,4 +25,24 @@ export interface Carrera {
   institucion_pagina?: string;   
 }
 
-export type CarreraCrear = Omit<Carrera, 'id' | 'estado'>;
+export type CarreraCreate = Omit<Carrera, 'id' | 'estado'>;
+
+export interface CarreraUpdate {
+  nombre?: string;                  
+  tipo?: string;                
+  descripcion?: string;           
+  plan_de_estudio?: string;      
+  modalidad?: Modalidad; 
+  cupo?: number;                  
+  duracion_anios?: number;          
+  duracion_meses?: number;          
+  fecha_inscripcion?: Date;        
+  observacion?: string;           
+  institucion_id?: number;        
+  estado?: number;                  
+  prioridad?: number;              
+  institucion_nombre?: string;    
+  institucion_direccion?: string; 
+  institucion_tel?: string;      
+  institucion_pagina?: string;   
+}

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
 import AdminDashboard from '../AdminDashboard ';
 import { getDecodedToken } from '../../../services/Token';
-import { Carrera } from '../../../services/models/Carrera';
+import { Carrera, CarreraCreate, CarreraUpdate, Modalidad } from '../../../services/models/Carrera';
 
 const CarreraAddPage = () => {
   const navigate = useNavigate();
@@ -31,28 +31,50 @@ const CarreraAddPage = () => {
   const duracionAniosRef = useRef<HTMLInputElement>(null);
   const duracionMesesRef = useRef<HTMLInputElement>(null);
   const fechaInscripcionRef = useRef<HTMLInputElement>(null);
+  const horaInscripcionRef = useRef<HTMLInputElement>(null);
   const observacionRef = useRef<HTMLInputElement>(null);
-  const estadoRef = useRef<HTMLInputElement>(null);
   const prioridadRef = useRef<HTMLInputElement>(null);
+
+  const [modalidad, setModalidad] = useState<Modalidad>(Modalidad.Presencial);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const formData = {
+    const fecha = fechaInscripcionRef.current?.value; 
+    const hora = horaInscripcionRef.current?.value || "00:00";
+    const fechaHora =  new Date(`${fecha}T${hora}`);
+
+    const formattedFechaHora = `${fechaHora.getFullYear()}-${(fechaHora.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${fechaHora
+      .getDate()
+      .toString()
+      .padStart(2, '0')} ${fechaHora
+      .getHours()
+      .toString()
+      .padStart(2, '0')}:${fechaHora
+      .getMinutes()
+      .toString()
+      .padStart(2, '0')}:${fechaHora
+      .getSeconds()
+      .toString()
+      .padStart(2, '0')}`;
+
+    const formData: CarreraCreate = {
       nombre: nombreRef.current?.value || '',
       tipo: tipoRef.current?.value || '',
-      descripcion: descripcionRef.current?.value || '',
-      plan_de_estudio: planDeEstudioRef.current?.value || '',
-      modalidad: modalidadRef.current?.value || 'Presencial',
-      cupo: cupoRef.current?.value || '',
-      duracion_anios: duracionAniosRef.current?.value || 1,
-      duracion_meses: duracionMesesRef.current?.value || 1,
-      fecha_inscripcion: fechaInscripcionRef.current?.value || '',
-      observacion: observacionRef.current?.value || '',
-      institucion_id: decoded && decoded.id_institucion !== undefined ? decoded.id_institucion : 0,
-      estado: estadoRef.current?.value || 1,
-      prioridad: prioridadRef.current?.value || 0,
+      descripcion: descripcionRef.current?.value || undefined,  
+      plan_de_estudio: planDeEstudioRef.current?.value || undefined,  
+      modalidad: modalidad,  
+      cupo: cupoRef.current?.value ? parseInt(cupoRef.current.value) : undefined,  
+      duracion_anios: duracionAniosRef.current?.value ? parseInt(duracionAniosRef.current.value) : 0, 
+      duracion_meses: duracionMesesRef.current?.value ? parseInt(duracionMesesRef.current.value) : 0,  
+      fecha_inscripcion: formattedFechaHora,      
+      observacion: observacionRef.current?.value || undefined, 
+      institucion_id: decoded && decoded.id_institucion !== undefined ? decoded.id_institucion : 0, 
+      prioridad: prioridadRef.current?.value ? parseInt(prioridadRef.current.value) : 0, 
     };
+    
 
     const apiResponse = new ApiResponse<Carrera>();
     await apiResponse.useFetch('carreras', 'POST', formData);
@@ -107,41 +129,53 @@ const CarreraAddPage = () => {
 
             <FormControl id="modalidad" isRequired>
               <FormLabel>Modalidad</FormLabel>
-              <Select ref={modalidadRef} defaultValue="Presencial">
-                <option value="Presencial">Presencial</option>
-                <option value="Virtual">Virtual</option>
-                <option value="Semipresencial">Semipresencial</option>
+              <Select 
+              ref={modalidadRef} 
+              value={modalidad} 
+              defaultValue={Modalidad.Presencial} 
+              onChange={(e) => setModalidad(e.target.value as Modalidad)}>
+                <option value={Modalidad.Presencial}>Presencial</option>
+                <option value={Modalidad.Virtual}>Virtual</option>
+                <option value={Modalidad.Semipresencial}>Semipresencial</option>
               </Select>
             </FormControl>
 
             <FormControl id="cupo">
               <FormLabel>Cupo</FormLabel>
-              <Input ref={cupoRef} defaultValue="" />
+              <Input ref={cupoRef} type="number" defaultValue={0} />
             </FormControl>
 
             <FormControl id="duracion_anios" isRequired>
               <FormLabel>Duración en Años</FormLabel>
-              <Input type="number" ref={duracionAniosRef} defaultValue={1} />
+              <Input type="number" ref={duracionAniosRef} defaultValue={0} />
             </FormControl>
 
             <FormControl id="duracion_meses" isRequired>
               <FormLabel>Duración en Meses</FormLabel>
-              <Input type="number" ref={duracionMesesRef} defaultValue={1} />
+              <Input type="number" ref={duracionMesesRef} defaultValue={0} />
             </FormControl>
 
             <FormControl id="fecha_inscripcion" isRequired>
               <FormLabel>Fecha de Inscripción</FormLabel>
-              <Input type="date" ref={fechaInscripcionRef} defaultValue="" />
+              <VStack align="start">
+                <Input 
+                  type="date" 
+                  ref={fechaInscripcionRef} 
+                  defaultValue="" 
+                  min={new Date().toISOString().split('T')[0]} 
+                />
+                <Input 
+                  type="time" 
+                  ref={horaInscripcionRef} 
+                  defaultValue="00:00"
+                />
+              </VStack>
             </FormControl>
+
 
             <FormControl id="observacion">
               <FormLabel>Observación</FormLabel>
               <Input ref={observacionRef} defaultValue="" />
-            </FormControl>
-
-            <FormControl id="estado" isRequired>
-              <FormLabel>Estado</FormLabel>
-              <Input type="number" ref={estadoRef} defaultValue={1} />
             </FormControl>
 
             <FormControl id="prioridad">
