@@ -5,22 +5,24 @@ export class InstitucionRepository extends BaseRepository<Institucion> {
   constructor() {
     super('institucion'); 
   }
-  public async getAll(){
+
+  public async getAll(): Promise<Institucion[]> {
     return super.getAll();
   }
   
-  public async create(institucion: Institucion) {
+  public async create(institucion: Institucion): Promise<Institucion> {
     return super.create(institucion);
   }
 
-  public update(id: number, institucion: Institucion) {
-    return super.update(id,institucion);
+  public async update(id: number, institucion: Institucion): Promise<void> {
+    return super.update(id, institucion);
   }
 
-  public delete(id: number) {
+  public async delete(id: number): Promise<void> {
     return super.delete(id);
   }
-  public findOne(id: number) {
+
+  public async findOne(id: number): Promise<Institucion | null> {
     return super.findOne(id);
   }
 }

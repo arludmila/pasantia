@@ -13,8 +13,8 @@ CREATE TABLE institucion (
     logo MEDIUMTEXT,
     tel VARCHAR(15),
     pagina VARCHAR(45),
-    gestion ENUM('Publica', 'Privada'),
-    estado INT NOT NULL
+    gestion ENUM('Publica', 'Privada', 'Mixta'),
+    estado TINYINT(1) NOT NULL DEFAULT 1
 );
 
 CREATE TABLE carreras (
@@ -24,14 +24,14 @@ CREATE TABLE carreras (
     descripcion VARCHAR(100),
     plan_de_estudio VARCHAR(100),
     modalidad ENUM('Presencial', 'Virtual', 'Semipresencial'),
-    cupo VARCHAR(45),
+    cupo INT,
     duracion_anios INT NOT NULL,
     duracion_meses INT NOT NULL,
     fecha_inscripcion DATETIME  NOT NULL,
     observacion VARCHAR(45),
     institucion_id INT NOT NULL,
-    estado INT NOT NULL,
     prioridad INT,
+     estado TINYINT(1) NOT NULL DEFAULT 1,
     FOREIGN KEY (institucion_id) REFERENCES institucion(id)
 );
 
@@ -43,6 +43,6 @@ CREATE TABLE administrador (
     correo VARCHAR(45) UNIQUE NOT NULL,
     id_institucion INT,
     clave VARCHAR(60) NOT NULL,
-    estado INT,
+	estado TINYINT(1) NOT NULL DEFAULT 1,
     FOREIGN KEY (id_institucion) REFERENCES institucion(id)
 );

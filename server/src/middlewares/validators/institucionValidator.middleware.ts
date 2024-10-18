@@ -1,4 +1,5 @@
 import { body } from 'express-validator';
+import { Gestion } from '../../models/institucion.model';
 
 export const createInstitucionSchema = [
   body('cue')
@@ -47,14 +48,10 @@ export const createInstitucionSchema = [
   body('gestion')
     .exists({ checkFalsy: true })
     .withMessage('La gestión es requerida')
-    .isIn(['Publica', 'Privada'])
+    .isIn(Object.values(Gestion))
     .withMessage('La gestión debe ser "Publica" o "Privada"'),
 
-  body('estado')
-    .exists({ checkFalsy: true })
-    .withMessage('El estado es requerido')
-    .isInt()
-    .withMessage('El estado debe ser un número entero'),
+ 
 ];
 
 export const updateInstitucionSchema = [
@@ -100,13 +97,8 @@ export const updateInstitucionSchema = [
 
   body('gestion')
     .optional()
-    .isIn(['Publica', 'Privada'])
+    .isIn(Object.values(Gestion))
     .withMessage('La gestión debe ser "Publica" o "Privada"'),
-
-  body('estado')
-    .optional()
-    .isInt()
-    .withMessage('El estado debe ser un número entero'),
 
   body()
     .custom((value) => !!Object.keys(value).length)
@@ -115,7 +107,7 @@ export const updateInstitucionSchema = [
   body()
     .custom((value) => {
       const updates = Object.keys(value);
-      const allowedUpdates = ['cue', 'cueanexo', 'nombre', 'direccion', 'ubicacion_lat', 'ubicacion_long', 'tel', 'pagina', 'gestion', 'estado'];
+      const allowedUpdates = ['cue', 'cueanexo', 'nombre', 'direccion', 'ubicacion_lat', 'ubicacion_long', 'tel', 'pagina', 'gestion'];
       return updates.every((update) => allowedUpdates.includes(update));
     })
     .withMessage('Actualizaciones inválidas!'),

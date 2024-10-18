@@ -1,10 +1,16 @@
+export enum Modalidad {
+  Presencial = 'Presencial',
+  Virtual = 'Virtual',
+  Semipresencial = 'Semipresencial',
+}
+
 export interface Carrera {
   id: number;                       
   nombre: string;                  
   tipo: string;                
   descripcion?: string;           
   plan_de_estudio?: string;      
-  modalidad: 'Presencial' | 'Virtual' | 'Semipresencial'; 
+  modalidad: Modalidad; 
   cupo?: string;                  
   duracion_anios: number;          
   duracion_meses: number;          

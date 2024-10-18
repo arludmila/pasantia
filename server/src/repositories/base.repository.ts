@@ -1,57 +1,93 @@
 import DbConnection from '../db/db_connection';
 
 // TODO: revisar todo esto, 
+
+export class DatabaseError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "DatabaseError";
+  }
+}
+
 export class BaseRepository<T extends object> {
   private tableName: string;
 
   constructor(tableName: string) {
+    const allowedTables = ['institucion', 'carreras', 'administrador'];
+    if (!allowedTables.includes(tableName)) {
+      throw new DatabaseError('Nombre de tabla no valido.');
+    }
     this.tableName = tableName;
   }
 
   public async getAll(): Promise<T[]> {
-    const sql = `SELECT * FROM ${this.tableName}`;
-    const result = await DbConnection.query(sql);
-    return result as T[];
+    try {
+      const sql = `SELECT * FROM ${this.tableName} WHERE estado = 1`; 
+      const result = await DbConnection.query(sql);
+      return result as T[];
+    } catch (error) {
+      console.error("Error in getAll method:", error);
+      throw new DatabaseError("Error al obtener los registros.");
+    }
   }
 
   public async create(item: T): Promise<T> {
-    const columns = Object.keys(item).join(', ');
-    const placeholders = Object.keys(item).map(() => '?').join(', ');
-    const sql = `INSERT INTO ${this.tableName} (${columns}) VALUES (${placeholders})`;
-    const values = Object.values(item);
-    
-    const result = await DbConnection.query(sql, values);
+    try {
+      const columns = Object.keys(item).join(', ');
+      const placeholders = Object.keys(item).map(() => '?').join(', ');
+      const sql = `INSERT INTO ${this.tableName} (${columns}) VALUES (${placeholders})`;
+      const values = Object.values(item);
+      
+      const result = await DbConnection.query(sql, values);
 
-    if ('insertId' in result) {
+      if (result && 'insertId' in result) {
         return { id: result.insertId, ...item };
-    } else {
-        throw new Error("Error al obtener el id de la inserción");
+      } else {
+        console.error("Unexpected result from query:", result);
+        throw new DatabaseError("Error al obtener el id de la inserción");
+      }
+    } catch (error) {
+      console.error("Error in create method:", error);
+      throw new DatabaseError("Error al crear el elemento.");
     }
-}
-
+  }
 
   public async update(id: number, item: Partial<T>): Promise<void> {
-    const updates = Object.keys(item).map(key => `${key} = ?`).join(', ');
-    const sql = `UPDATE ${this.tableName} SET ${updates} WHERE id = ?`;
-    const values = [...Object.values(item), id];
-    await DbConnection.query(sql, values);
+    try {
+      const updates = Object.keys(item).map(key => `${key} = ?`).join(', ');
+      const sql = `UPDATE ${this.tableName} SET ${updates} WHERE id = ? AND estado = 1`; 
+      const values = [...Object.values(item), id];
+      await DbConnection.query(sql, values);
+    } catch (error) {
+      console.error("Error in update method:", error);
+      throw new DatabaseError("Error al actualizar el elemento.");
+    }
   }
 
   public async delete(id: number): Promise<void> {
-    const sql = `DELETE FROM ${this.tableName} WHERE id = ?`;
-    const values = [id];
-    await DbConnection.query(sql, values);
-  }
-
-  public async findOne(id: number): Promise<T | null> {
-    const sql = `SELECT * FROM ${this.tableName} WHERE id = ? LIMIT 1`;
-    const result = await DbConnection.query(sql, [id]);
-
-    if (Array.isArray(result) && result.length > 0) {
-      return result[0] as T;
-    } else {
-      return null;
+    try {
+      const sql = `UPDATE ${this.tableName} SET estado = 0 WHERE id = ?`; 
+      const values = [id];
+      await DbConnection.query(sql, values);
+    } catch (error) {
+      console.error("Error in delete method:", error);
+      throw new DatabaseError("Error al eliminar el elemento.");
     }
   }
 
+  public async findOne(id: number): Promise<T | null> {
+    try {
+      const sql = `SELECT * FROM ${this.tableName} WHERE id = ? AND estado = 1 LIMIT 1`;
+      const result = await DbConnection.query(sql, [id]);
+
+      if (Array.isArray(result) && result.length > 0) {
+        return result[0] as T;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error("Error in findOne method:", error);
+      throw new DatabaseError("Error al encontrar el elemento.");
+    }
+  }
 }

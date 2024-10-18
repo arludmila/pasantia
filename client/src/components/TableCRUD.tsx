@@ -48,7 +48,7 @@ const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data, infoCol
   const rowsPerPage = 10;
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const filterHeaders = headers.filter(header => !header.toLowerCase().includes('id'));
+  const filterHeaders = headers.filter(header => !header.toLowerCase().includes('estado') && !header.toLowerCase().includes('id'));
 
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
@@ -143,7 +143,7 @@ const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data, infoCol
             {currentRows.map((item, index) => (
               <Tr key={index}>
                 {Object.entries(item)
-                  .filter(([key]) => !key.toLowerCase().includes('id'))
+                  .filter(([key]) => !key.toLowerCase().includes('estado') && !key.toLowerCase().includes('id'))
                   .map(([key, value], idx) => (
                     <Td key={idx}>
                       {typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/.test(value)
@@ -197,8 +197,7 @@ const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data, infoCol
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              {`¿Estás seguro de que deseas borrar ${itemToDelete?.[infoColumn]} de ${tableName}?`} {/* Display column info */}
-              No podrás deshacer esta acción.
+              {`¿Estás seguro de que deseas borrar ${itemToDelete?.[infoColumn]} de ${tableName}?`} 
             </AlertDialogBody>
 
             <AlertDialogFooter>

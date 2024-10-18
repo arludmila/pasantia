@@ -67,24 +67,17 @@ export class BaseController<T extends object> {
     }
   }
 
-  private handleError(res: Response, error: unknown, message: string): void {
+  public handleError(res: Response, error: unknown, message: string): void {
     console.error(message, error);
-
-    if (error instanceof Error) {
-      res.status(500).json({
-        mensaje: message,
-        error: {
-          message: error.message,
-          stack: error.stack || 'Sin stack trace',
-        },
-      });
-    } else {
-      res.status(500).json({
-        mensaje: message,
-        error: {
-          message: 'Error desconocido',
-        },
-      });
-    }
+  
+    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+  
+    const response = {
+      mensaje: message,
+      error: errorMessage,
+    };
+  
+    res.status(500).json(response);
   }
+  
 }

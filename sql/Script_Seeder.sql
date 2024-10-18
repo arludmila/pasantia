@@ -10,7 +10,6 @@ INSERT INTO institucion (cue, cueanexo, nombre, direccion, ubicacion_lat, ubicac
 (923456, 787, 'Instituto de Formación', 'Calle de la Educación 789', -31.429, -64.192, '351-9012345', 'www.institutodeformacion9.com', 'Publica', 1, '/uploads/logos/ph.png'),
 (1023456, 788, 'Escuela de Artes', 'Calle del Arte 159', -31.4295, -64.193, '351-0123456', 'www.escueladeartes10.com', 'Privada', 1, '/uploads/logos/ph.png');
 
-
 INSERT INTO administrador (rol, nombre, correo, id_institucion, clave, estado) VALUES
 ('SuperUser', 'SuperUser', 'super@example.com', null, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
 ('Admin', 'Ana Gómez', 'admin@example.com', 1, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),

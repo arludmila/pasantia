@@ -1,4 +1,5 @@
 import { body } from 'express-validator';
+import { Modalidad } from '../../models/carrera.model';
 
 export const createCarreraSchema = [
   body('nombre')
@@ -23,16 +24,16 @@ export const createCarreraSchema = [
     .isLength({ max: 100 })
     .withMessage('El plan de estudio debe tener un máximo de 100 caracteres'),
 
-  body('modalidad')
+    body('modalidad')
     .exists({ checkFalsy: true })
     .withMessage('La modalidad es requerida')
-    .isIn(['Presencial', 'Virtual', 'Semipresencial'])
+    .isIn(Object.values(Modalidad))  
     .withMessage('La modalidad debe ser "Presencial", "Virtual" o "Semipresencial"'),
 
   body('cupo')
     .optional()
-    .isLength({ max: 45 })
-    .withMessage('El cupo debe tener un máximo de 45 caracteres'),
+    .isInt({ min: 0 })
+    .withMessage('El cupo debe ser un número entero'),
 
   body('duracion_anios')
     .exists({ checkFalsy: true })
@@ -73,4 +74,91 @@ export const createCarreraSchema = [
     .optional()
     .isInt()
     .withMessage('La prioridad debe ser un número entero si se proporciona'),
+];
+
+export const updateCarreraSchema = [
+  body('nombre')
+    .optional()
+    .isLength({ min: 1, max: 40 })
+    .withMessage('El nombre debe tener entre 1 y 40 caracteres'),
+
+  body('tipo')
+    .optional()
+    .isLength({ min: 1, max: 60 })
+    .withMessage('El tipo debe tener entre 1 y 60 caracteres'),
+
+  body('descripcion')
+    .optional()
+    .isLength({ max: 100 })
+    .withMessage('La descripción debe tener un máximo de 100 caracteres'),
+
+  body('plan_de_estudio')
+    .optional()
+    .isLength({ max: 100 })
+    .withMessage('El plan de estudio debe tener un máximo de 100 caracteres'),
+
+  body('modalidad')
+    .optional()
+    .isIn(Object.values(Modalidad))
+    .withMessage('La modalidad debe ser "Presencial", "Virtual" o "Semipresencial"'),
+
+  body('cupo')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('El cupo debe ser un número entero'),
+
+  body('duracion_anios')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('La duración en años debe ser un número entero positivo'),
+
+  body('duracion_meses')
+    .optional()
+    .isInt({ min: 1, max: 12 })
+    .withMessage('La duración en meses debe ser un número entero entre 1 y 12'),
+
+  body('fecha_inscripcion')
+    .optional()
+    .isISO8601()
+    .withMessage('La fecha de inscripción debe ser una fecha válida en formato ISO 8601'),
+
+  body('observacion')
+    .optional()
+    .isLength({ max: 45 })
+    .withMessage('La observación debe tener un máximo de 45 caracteres'),
+
+  body('institucion_id')
+    .optional()
+    .isInt()
+    .withMessage('El ID de la institución debe ser un número entero'),
+
+  body('prioridad')
+    .optional()
+    .isInt()
+    .withMessage('La prioridad debe ser un número entero si se proporciona'),
+
+  body()
+    .custom((value) => !!Object.keys(value).length)
+    .withMessage('Por favor, proporcione al menos un campo para actualizar'),
+
+  body()
+    .custom((value) => {
+      const updates = Object.keys(value);
+      const allowedUpdates = [
+        'nombre',
+        'tipo',
+        'descripcion',
+        'plan_de_estudio',
+        'modalidad',
+        'cupo',
+        'duracion_anios',
+        'duracion_meses',
+        'fecha_inscripcion',
+        'observacion',
+        'institucion_id',
+        'prioridad',
+      ];
+      return updates.every((update) => allowedUpdates.includes(update));
+    })
+    .withMessage('Actualizaciones inválidas!'),
 ];

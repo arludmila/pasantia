@@ -80,6 +80,7 @@ const InstitucionesPage = () => {
                   {institucion.tel && <Text><b>Teléfono:</b> {institucion.tel}</Text>}
                   {institucion.gestion && <Text><b>Tipo de Gestión:</b> {institucion.gestion}</Text>}
 
+                  {institucion.pagina && (
                         <Button
                           mt={3}
                           colorScheme="teal"
@@ -88,6 +89,8 @@ const InstitucionesPage = () => {
                         >
                           Visitar Página Web
                         </Button>
+                      )}
+
                       </AccordionPanel>
                     </AccordionItem>
                   </Accordion>

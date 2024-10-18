@@ -1,18 +1,17 @@
 import { Router } from 'express';
 import { InstitucionController } from '../controllers/institucion.controller';
-import { createInstitucionSchema } from '../middlewares/validators/institucionValidator.middleware';
+import { createInstitucionSchema, updateInstitucionSchema } from '../middlewares/validators/institucionValidator.middleware';
 import auth from '../middlewares/auth.middleware';
-import { Rol } from '../models/administrador.model'; 
+import { Roles } from '../models/administrador.model'; 
 
 const InstitucionRouter = Router();
 const institucionController = new InstitucionController();
 
 InstitucionRouter.get('/', institucionController.getAll);      
-InstitucionRouter.patch('/:id', auth(Rol.SuperUser), institucionController.update); 
+InstitucionRouter.patch('/:id', auth(Roles.SuperUser), updateInstitucionSchema, institucionController.update); 
 
-InstitucionRouter.post('/', auth(Rol.SuperUser), createInstitucionSchema, institucionController.create);  
-InstitucionRouter.delete('/:id', auth(Rol.SuperUser), institucionController.delete); 
+InstitucionRouter.post('/', auth(Roles.SuperUser), createInstitucionSchema, institucionController.create);  
+InstitucionRouter.delete('/:id', auth(Roles.SuperUser), institucionController.delete); 
 
-InstitucionRouter.post('/logo', auth(Rol.SuperUser), institucionController.uploadLogo);
 
 export default InstitucionRouter;
