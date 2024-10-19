@@ -56,7 +56,13 @@ export class InstitucionController extends BaseController<Institucion> {
   }
 
   public async delete(req: Request, res: Response): Promise<void> {
-    await super.delete(req, res);
+    try {
+      const id = parseInt(req.params.id);
+      await this.institucionRepository.deleteInstitucion(id);
+      res.status(200).json({ mensaje: 'Registro eliminado correctamente' });
+    } catch (error: unknown) {
+      this.handleError(res, error, 'Error al eliminar el registro');
+    }
   }
 
   private handleLogoUpload(file: Express.Multer.File, id: number): string {
@@ -67,9 +73,8 @@ export class InstitucionController extends BaseController<Institucion> {
   private deleteExistingLogo(logoPath: string): void {
     fs.unlink(logoPath, (err) => {
       if (err) {
-        console.error('Error deleting existing logo:', err);
+        console.error('Error al borrar el logo actual:', err);
       } else {
-        console.log('Existing logo deleted successfully');
       }
     });
   }

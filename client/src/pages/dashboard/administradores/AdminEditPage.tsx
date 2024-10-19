@@ -72,7 +72,6 @@ const AdminEditPage = () => {
       clave: claveRef.current?.value || '',
       rol: rolRef.current?.value as Roles,
     };
-    console.log('formData', formData);
     const apiPatchResponse = new ApiResponse<Administrador>();
     await apiPatchResponse.useFetch(`administradores/${administradorToEdit.id}`, 'PATCH', formData);
 

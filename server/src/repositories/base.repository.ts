@@ -29,7 +29,6 @@ export class BaseRepository<T extends object> {
       const result = await DbConnection.query(sql);
       return result as T[];
     } catch (error) {
-      console.error("Error in getAll method:", error);
       throw new DatabaseError("Error al obtener los registros.");
     }
   }
@@ -46,11 +45,9 @@ export class BaseRepository<T extends object> {
         if (result && 'insertId' in result) {
             return { id: result.insertId, ...item } as T; 
         } else {
-            console.error("Unexpected result from query:", result);
             throw new DatabaseError("Error al obtener el id de la inserción");
         }
     } catch (error) {
-        console.error("Error in create method:", error);
         throw new DatabaseError("Error al crear el elemento.");
     }
 }
@@ -63,7 +60,6 @@ export class BaseRepository<T extends object> {
       const values = [...Object.values(item), id];
       await DbConnection.query(sql, values);
     } catch (error) {
-      console.error("Error in update method:", error);
       throw new DatabaseError("Error al actualizar el elemento.");
     }
   }
@@ -74,7 +70,6 @@ export class BaseRepository<T extends object> {
       const values = [id];
       await DbConnection.query(sql, values);
     } catch (error) {
-      console.error("Error in delete method:", error);
       throw new DatabaseError("Error al eliminar el elemento.");
     }
   }
@@ -90,7 +85,6 @@ export class BaseRepository<T extends object> {
         return null;
       }
     } catch (error) {
-      console.error("Error in findOne method:", error);
       throw new DatabaseError("Error al encontrar el elemento.");
     }
   }

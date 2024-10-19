@@ -33,50 +33,78 @@ const InstitucionEditPage = () => {
   const telRef = useRef<HTMLInputElement>(null);
   const paginaRef = useRef<HTMLInputElement>(null);
   const gestionRef = useRef<HTMLSelectElement>(null);
-  const estadoRef = useRef<HTMLInputElement>(null);
   const logoRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const formData = {
-      cue: Number(cueRef.current?.value || 0),
-      cueanexo: Number(cueanexoRef.current?.value || undefined),
-      nombre: nombreRef.current?.value || '',
-      direccion: direccionRef.current?.value || '',
-      ubicacion_lat: Number(ubicacionLatRef.current?.value || undefined),
-      ubicacion_long: Number(ubicacionLongRef.current?.value || undefined),
-      tel: telRef.current?.value || '',
-      pagina: paginaRef.current?.value || '',
-      gestion: gestionRef.current?.value || 'Publica',
-      estado: Number(estadoRef.current?.value || '1'),
-      id: institucionToEdit.id,
-      logo: institucionToEdit.logo,
-    };
-
-    const apiResponse = new ApiResponse<Institucion>();
-    await apiResponse.useFetch(`instituciones/${formData.id}`, 'PATCH', formData); 
-
-    if (apiResponse.error == null) {
+  
+    const logoFile = logoRef.current?.files?.[0];
+    const token = localStorage.getItem('token');
+    
+    // Crear un FormData para el envío del PATCH
+    const formData = new FormData();
+    
+    formData.append('cue', cueRef.current?.value || '0');
+    
+    if (cueanexoRef.current?.value) {
+      formData.append('cueanexo', cueanexoRef.current.value);
+    }
+    formData.append('nombre', nombreRef.current?.value || '');
+    formData.append('direccion', direccionRef.current?.value || '');
+    
+    if (ubicacionLatRef.current?.value) {
+      formData.append('ubicacion_lat', ubicacionLatRef.current.value);
+    }
+    if (ubicacionLongRef.current?.value) {
+      formData.append('ubicacion_long', ubicacionLongRef.current.value);
+    }
+    if (telRef.current?.value) {
+      formData.append('tel', telRef.current.value);
+    }
+    if (paginaRef.current?.value) {
+      formData.append('pagina', paginaRef.current.value);
+    }
+    
+    formData.append('gestion', gestionRef.current?.value || 'Publica');
+    
+    // Si hay un nuevo archivo de logo, agregarlo
+    if (logoFile) {
+      formData.append('logo', logoFile);
+    }
+    
+    try {
+      const response = await fetch(`http://localhost:3000/api/instituciones/${institucionToEdit.id}`, {
+        method: 'PATCH',
+        body: formData,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error updating institution');
+      }
+  
       toast({
-        title: 'Guardado correctamente',
+        title: 'Institución actualizada',
         description: 'La institución fue actualizada con éxito.',
         status: 'success',
         duration: 3000,
         isClosable: true,
       });
-
+  
       navigate('/dashboard/instituciones');
-    } else {
+    } catch (error) {
       toast({
-        title: 'Error al guardar',
-        description: `Ocurrió un error: ${apiResponse.error}`,
+        title: 'Error al actualizar',
+        description: `Ocurrió un error: ${error}`,
         status: 'error',
         duration: 3000,
         isClosable: true,
       });
     }
   };
+  
   
 
   return (
@@ -153,11 +181,6 @@ const InstitucionEditPage = () => {
                             
                           </VStack>
             <LogoFileInput logoRef={logoRef}></LogoFileInput>
-
-            <FormControl id="estado" isRequired>
-              <FormLabel>Estado</FormLabel>
-              <Input type="number" ref={estadoRef} defaultValue={institucionToEdit.estado.toString()} />
-            </FormControl>
 
             <Button type="submit" colorScheme="teal" size="lg" width="full">
               Guardar Cambios

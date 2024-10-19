@@ -66,9 +66,6 @@ const InstitucionAddPage = () => {
     if (logoFile) {
       formData.append('logo', logoFile);
     }
-    for (var pair of formData.entries()) {
-      console.log(pair[0]+ ', ' + pair[1]); 
-  }
     try {
       const response = await fetch('http://localhost:3000/api/instituciones', {
         method: 'POST',

@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { BaseController } from './base.controller';
 import { CarreraRepository } from '../repositories/carrera.repository';
 import { Carrera } from '../models/carrera.model';
-// TODO: IMPORTANTE --> borrar console logs... todos, si hay
 export class CarreraController extends BaseController<Carrera> {
   private carreraRepository: CarreraRepository;
 
@@ -37,7 +36,6 @@ export class CarreraController extends BaseController<Carrera> {
       res.status(200).json(carreras);
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || 'Error desconocido';
-      console.error('Error in getCarrerasFromInstitucion:', error);
       res.status(500).json({ mensaje: 'Error al obtener carreras', error: errorMessage });
     }
   }
@@ -48,8 +46,6 @@ export class CarreraController extends BaseController<Carrera> {
         res.status(200).json(carreras);
     } catch (error: unknown) {
         const errorMessage = (error as Error).message || 'Error desconocido';
-
-        console.error('Error in getAllCarreras:', error);
 
         res.status(500).json({
             mensaje: 'Error al obtener carreras',
@@ -74,7 +70,6 @@ public async getCarreraById(req: Request, res: Response): Promise<void> {
     res.status(200).json(carrera);
   } catch (error: unknown) {
     const errorMessage = (error as Error).message || 'Error desconocido';
-    console.error('Error in getCarreraById:', error);
     res.status(500).json({ mensaje: 'Error al obtener carrera', error: errorMessage });
   }
 }

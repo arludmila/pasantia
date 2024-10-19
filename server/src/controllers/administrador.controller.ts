@@ -94,7 +94,6 @@ export class AdministradorController extends BaseController<Administrador> {
   
       res.send({ token });
     } catch (error: unknown) {
-      console.error('Error en administradorLogin:', error);
       const errorMessage = (error as Error).message || 'Error interno del servidor.';
       res.status(500).json({ mensaje: 'Error interno del servidor.', error: errorMessage });
       next(error); 

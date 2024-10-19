@@ -29,7 +29,13 @@ const InstitucionRouter = Router();
 const institucionController = new InstitucionController();
 
 InstitucionRouter.get('/', institucionController.getAll);      
-InstitucionRouter.patch('/:id', auth(Roles.SuperUser), updateInstitucionSchema, institucionController.update); 
+InstitucionRouter.patch(
+  '/:id', 
+  auth(Roles.SuperUser), 
+  upload.single('logo'),  
+  updateInstitucionSchema, 
+  institucionController.update
+);
 
 InstitucionRouter.post(
     '/',

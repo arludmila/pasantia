@@ -28,7 +28,6 @@ export class AdministradorRepository extends BaseRepository<Administrador> {
       const result = await DbConnection.query(sql);
       return result as AdministradorSinClave[];
     } catch (error) {
-      console.error("Error in getAllWithoutClave method:", error);
       throw new DatabaseError("Error al obtener los administradores.");
     }
   }
@@ -44,7 +43,6 @@ export class AdministradorRepository extends BaseRepository<Administrador> {
         return null;
       } 
     } catch (error) {
-      console.error("Error in findAdministrador method:", error);
       throw new DatabaseError("Error al encontrar el administrador.");
     }
   }
