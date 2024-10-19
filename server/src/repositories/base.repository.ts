@@ -34,26 +34,27 @@ export class BaseRepository<T extends object> {
     }
   }
 
-  public async create(item: T): Promise<T> {
+  public async create(item: Partial<T>): Promise<T> {
     try {
-      const columns = Object.keys(item).join(', ');
-      const placeholders = Object.keys(item).map(() => '?').join(', ');
-      const sql = `INSERT INTO ${this.tableName} (${columns}) VALUES (${placeholders})`;
-      const values = Object.values(item);
-      
-      const result = await DbConnection.query(sql, values);
+        const columns = Object.keys(item).join(', ');
+        const placeholders = Object.keys(item).map(() => '?').join(', ');
+        const sql = `INSERT INTO ${this.tableName} (${columns}) VALUES (${placeholders})`;
+        const values = Object.values(item);
+        
+        const result = await DbConnection.query(sql, values);
 
-      if (result && 'insertId' in result) {
-        return { id: result.insertId, ...item };
-      } else {
-        console.error("Unexpected result from query:", result);
-        throw new DatabaseError("Error al obtener el id de la inserción");
-      }
+        if (result && 'insertId' in result) {
+            return { id: result.insertId, ...item } as T; 
+        } else {
+            console.error("Unexpected result from query:", result);
+            throw new DatabaseError("Error al obtener el id de la inserción");
+        }
     } catch (error) {
-      console.error("Error in create method:", error);
-      throw new DatabaseError("Error al crear el elemento.");
+        console.error("Error in create method:", error);
+        throw new DatabaseError("Error al crear el elemento.");
     }
-  }
+}
+
 
   public async update(id: number, item: Partial<T>): Promise<void> {
     try {
@@ -66,7 +67,7 @@ export class BaseRepository<T extends object> {
       throw new DatabaseError("Error al actualizar el elemento.");
     }
   }
-
+  // TODO: deberia aca tambien setear estado a 0 por ejemplo a las carreras de una institucion si la 'borro'?
   public async delete(id: number): Promise<void> {
     try {
       const sql = `UPDATE ${this.tableName} SET estado = 0 WHERE id = ?`; 

@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
 import AdminDashboard from '../AdminDashboard ';
 import { getDecodedToken } from '../../../services/Token';
-import { Carrera, CarreraCreate, CarreraUpdate, Modalidad } from '../../../services/models/Carrera';
+import { Carrera, CarreraCreate, Modalidad } from '../../../services/models/Carrera';
 
 const CarreraAddPage = () => {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import { BaseRepository } from './base.repository'; 
-import { Administrador, AdministradorSinClave } from '../models/administrador.model';
+import { Administrador, AdministradorCreate, AdministradorSinClave, AdministradorUpdate } from '../models/administrador.model';
 import DbConnection from '../db/db_connection';
 import { DatabaseError } from './base.repository';
 
@@ -53,11 +53,11 @@ export class AdministradorRepository extends BaseRepository<Administrador> {
     return super.findOne(id);
   }
 
-  public async create(administrador: Administrador): Promise<Administrador> {
+  public async create(administrador: AdministradorCreate): Promise<Administrador> {
     return super.create(administrador);
   }
 
-  public async update(id: number, administrador: Administrador): Promise<void> {
+  public async update(id: number, administrador: AdministradorUpdate): Promise<void> {
     return super.update(id, administrador);
   }
 

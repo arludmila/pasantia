@@ -38,6 +38,7 @@ export class AdministradorController extends BaseController<Administrador> {
   }
 
   public async update(req: Request, res: Response): Promise<void> {
+    await this.hashClave(req);
     await super.update(req, res);
   }
 

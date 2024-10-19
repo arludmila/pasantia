@@ -1,5 +1,5 @@
 import { BaseRepository } from './base.repository'; 
-import { Carrera } from '../models/carrera.model';
+import { Carrera, CarreraCreate, CarreraUpdate } from '../models/carrera.model';
 import DbConnection from '../db/db_connection';
 import { RowDataPacket } from 'mysql2';
 
@@ -77,11 +77,11 @@ export class CarreraRepository extends BaseRepository<Carrera> {
     }
   }
 
-  public async create(carrera: Carrera): Promise<Carrera> {
+  public async create(carrera: CarreraCreate): Promise<Carrera> {
     return super.create(carrera);
   }
 
-  public async update(id: number, carrera: Carrera): Promise<void> {
+  public async update(id: number, carrera: CarreraUpdate): Promise<void> {
     return super.update(id, carrera);
   }
 

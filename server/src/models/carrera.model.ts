@@ -24,3 +24,19 @@ export interface Carrera {
   institucion_tel?: string;      
   institucion_pagina?: string;   
 }
+
+export type CarreraCreate = Omit<Carrera, 'id' | 'estado'>;
+
+export interface CarreraUpdate {
+  nombre?: string;                  
+  tipo?: string;                
+  descripcion?: string;           
+  plan_de_estudio?: string;      
+  modalidad?: Modalidad; 
+  cupo?: number;                  
+  duracion_anios?: number;          
+  duracion_meses?: number;          
+  fecha_inscripcion?: Date;        
+  observacion?: string;           
+  prioridad?: number;              
+}

@@ -18,7 +18,6 @@ import { Administrador, AdministradorUpdate, Roles } from '../../../services/mod
 import SuperUserDashboard from '../SuperUserDashboard';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
 import { Institucion } from '../../../services/models/Institucion';
-// TODO: cambiar aca para q no sean required los fields. Solo mandar para PATCH lo que se cambio? logica
 const AdminEditPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -63,9 +62,8 @@ const AdminEditPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const idInstitucion = rol === Roles.Admin && idInstitucionRef.current?.value
-    ? parseInt(idInstitucionRef.current?.value)
-    : undefined;
+
+
 
     const formData: AdministradorUpdate  = {
       nombre: nombreRef.current?.value || '',
@@ -74,7 +72,7 @@ const AdminEditPage = () => {
       clave: claveRef.current?.value || '',
       rol: rolRef.current?.value as Roles,
     };
-
+    console.log('formData', formData);
     const apiPatchResponse = new ApiResponse<Administrador>();
     await apiPatchResponse.useFetch(`administradores/${administradorToEdit.id}`, 'PATCH', formData);
 

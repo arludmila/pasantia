@@ -19,6 +19,9 @@ export interface Institucion {
   logo?: string | null; 
 }
 
+export type InstitucionCrear = Omit<Institucion, 'id' | 'estado'>;
+
+
 export interface InstitucionUpdate {
   cue?: number;               
   cueanexo?: number | null;  

@@ -19,7 +19,7 @@ import InstitucionEditPage from './pages/dashboard/instituciones/InstitucionEdit
 import AdminEditPage from './pages/dashboard/administradores/AdminEditPage';
 import AdminsTablePage from './pages/dashboard/administradores/AdminsTablePage';
 // TODO: IMPORTANTE --> arreglar todos los forms EDIT Y ADD, mandar formData con el model correspondiente y arreglar forms en general (sacar estado x ej)
-// hecho ✅ --> AdminAddPage, CarreraAddPage
+// hecho ✅ --> AdminAddPage, CarreraAddPage, InstitucionesAddPage, AdminEditPage
 function App() {
   return (
     <ChakraProvider>

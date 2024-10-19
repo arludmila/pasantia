@@ -27,19 +27,44 @@ const CarreraEditPage = () => {
   const planDeEstudioRef = useRef<HTMLInputElement>(null);
   const modalidadRef = useRef<HTMLSelectElement>(null);
   const cupoRef = useRef<HTMLInputElement>(null);
+  const horaInscripcionRef = useRef<HTMLInputElement>(null);
   const duracionAniosRef = useRef<HTMLInputElement>(null);
   const duracionMesesRef = useRef<HTMLInputElement>(null);
   const fechaInscripcionRef = useRef<HTMLInputElement>(null);
   const observacionRef = useRef<HTMLInputElement>(null);
-  const estadoRef = useRef<HTMLInputElement>(null);
   const prioridadRef = useRef<HTMLInputElement>(null);
 
-  const formatDate = (date: Date): string => {
-    return date.toISOString().split('T')[0]; 
-  };
+  const storedDate = carreraToEdit.fecha_inscripcion
+  ? carreraToEdit.fecha_inscripcion.split('T')[0]
+  : ''; 
+
+const storedTime = carreraToEdit.fecha_inscripcion
+  ? carreraToEdit.fecha_inscripcion.split('T')[1].substring(0, 5)
+  : '00:00'; 
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const fecha = fechaInscripcionRef.current?.value; 
+    const hora = horaInscripcionRef.current?.value || "00:00";
+    const fechaHora =  new Date(`${fecha}T${hora}`);
+
+    const formattedFechaHora = `${fechaHora.getFullYear()}-${(fechaHora.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${fechaHora
+      .getDate()
+      .toString()
+      .padStart(2, '0')} ${fechaHora
+      .getHours()
+      .toString()
+      .padStart(2, '0')}:${fechaHora
+      .getMinutes()
+      .toString()
+      .padStart(2, '0')}:${fechaHora
+      .getSeconds()
+      .toString()
+      .padStart(2, '0')}`;
 
     const formData = {
       ...carreraToEdit,
@@ -51,9 +76,8 @@ const CarreraEditPage = () => {
       cupo: cupoRef.current?.value || '',
       duracion_anios: Number(duracionAniosRef.current?.value) || 0,
       duracion_meses: Number(duracionMesesRef.current?.value) || 0,
-      fecha_inscripcion: fechaInscripcionRef.current?.value || '',
+      fecha_inscripcion: formattedFechaHora,
       observacion: observacionRef.current?.value || '',
-      estado: Number(estadoRef.current?.value) || 0,
       prioridad: Number(prioridadRef.current?.value) || 0,
     };
 
@@ -134,17 +158,24 @@ const CarreraEditPage = () => {
 
             <FormControl id="fecha_inscripcion" isRequired>
               <FormLabel>Fecha de Inscripción</FormLabel>
-              <Input type="date"  ref={fechaInscripcionRef} defaultValue={carreraToEdit.fecha_inscripcion}  />
+              <VStack align="start">
+                <Input 
+                  type="date" 
+                  ref={fechaInscripcionRef} 
+                  defaultValue={storedDate} 
+                  min={new Date().toISOString().split('T')[0]} 
+                />
+                <Input 
+                  type="time" 
+                  defaultValue={storedTime} 
+                  ref={horaInscripcionRef} 
+                />
+              </VStack>
             </FormControl>
 
             <FormControl id="observacion">
               <FormLabel>Observación</FormLabel>
               <Input type="text" ref={observacionRef} defaultValue={carreraToEdit.observacion} />
-            </FormControl>
-
-            <FormControl id="estado" isRequired>
-              <FormLabel>Estado</FormLabel>
-              <Input type="number" ref={estadoRef} defaultValue={carreraToEdit.estado} />
             </FormControl>
 
             <FormControl id="prioridad">

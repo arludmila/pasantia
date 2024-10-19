@@ -1,5 +1,5 @@
 import { BaseRepository } from './base.repository'; 
-import { Institucion, InstitucionUpdate } from '../models/institucion.model';
+import { Institucion, InstitucionCrear, InstitucionUpdate } from '../models/institucion.model';
 
 export class InstitucionRepository extends BaseRepository<Institucion> {
   constructor() {
@@ -10,7 +10,7 @@ export class InstitucionRepository extends BaseRepository<Institucion> {
     return super.getAll();
   }
   
-  public async create(institucion: Institucion): Promise<Institucion> {
+  public async create(institucion: InstitucionCrear): Promise<Institucion> {
     return super.create(institucion);
   }
 
