@@ -112,7 +112,7 @@ const InstitucionAddPage = () => {
           <VStack spacing={5}>
             <FormControl id="cue" isRequired>
               <FormLabel>CUE</FormLabel>
-              <Input type="number" ref={cueRef} defaultValue={0} />
+              <Input type="number" ref={cueRef} defaultValue={undefined} />
             </FormControl>
 
             <FormControl id="cueanexo">

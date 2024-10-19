@@ -142,17 +142,17 @@ const CarreraAddPage = () => {
 
             <FormControl id="cupo">
               <FormLabel>Cupo</FormLabel>
-              <Input ref={cupoRef} type="number" defaultValue={0} />
+              <Input ref={cupoRef} type="number"  />
             </FormControl>
 
             <FormControl id="duracion_anios" isRequired>
               <FormLabel>Duración en Años</FormLabel>
-              <Input type="number" ref={duracionAniosRef} defaultValue={0} />
+              <Input type="number" ref={duracionAniosRef} />
             </FormControl>
 
             <FormControl id="duracion_meses" isRequired>
               <FormLabel>Duración en Meses</FormLabel>
-              <Input type="number" ref={duracionMesesRef} defaultValue={0} />
+              <Input type="number" ref={duracionMesesRef} />
             </FormControl>
 
             <FormControl id="fecha_inscripcion" isRequired>
@@ -180,7 +180,7 @@ const CarreraAddPage = () => {
 
             <FormControl id="prioridad">
               <FormLabel>Prioridad</FormLabel>
-              <Input type="number" ref={prioridadRef} defaultValue={0} />
+              <Input type="number" ref={prioridadRef} />
             </FormControl>
 
             <Button type="submit" colorScheme="teal" size="lg" width="full">

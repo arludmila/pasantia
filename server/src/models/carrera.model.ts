@@ -23,6 +23,7 @@ export interface Carrera {
   institucion_direccion?: string; 
   institucion_tel?: string;      
   institucion_pagina?: string;   
+  institucion_logo?: string;
 }
 
 export type CarreraCreate = Omit<Carrera, 'id' | 'estado'>;
@@ -38,5 +39,5 @@ export interface CarreraUpdate {
   duracion_meses?: number;          
   fecha_inscripcion?: Date;        
   observacion?: string;           
-  prioridad?: number;              
+  prioridad?: number;           
 }

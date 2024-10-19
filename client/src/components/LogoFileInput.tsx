@@ -27,7 +27,7 @@ const LogoFileInput = ({ logoRef }: FileInputProps) => {
   };
 
   return (
-    <FormControl id="logo" isRequired>
+    <FormControl id="logo">
       <FormLabel>Logo</FormLabel>
       <Input
         type="file"

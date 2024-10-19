@@ -147,9 +147,13 @@ const TableCRUD: React.FC<TableCRUDProps> = ({ tableName, headers, data, infoCol
                   .map(([key, value], idx) => (
                     <Td key={idx}>
                       {typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/.test(value)
-                        ? new Date(value).toLocaleDateString('es-AR')
+                        ? new Date(value).toLocaleString('es-AR', {
+                            dateStyle: 'short', 
+                            timeStyle: 'short', 
+                          })
                         : String(value || 'N/A')}
                     </Td>
+
                   ))}
 
                 <Td>

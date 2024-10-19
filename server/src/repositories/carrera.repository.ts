@@ -56,7 +56,8 @@ export class CarreraRepository extends BaseRepository<Carrera> {
         institucion.nombre AS institucion_nombre,
         institucion.direccion AS institucion_direccion,
         institucion.tel AS institucion_tel,
-        institucion.pagina AS institucion_pagina
+        institucion.pagina AS institucion_pagina, 
+        institucion.logo AS institucion_logo
       FROM 
         carreras
       JOIN 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Heading, Text, Link, Spinner, VStack, HStack, Grid, Image } from '@chakra-ui/react';
+import { Box, Heading, Text, Link, Spinner, VStack, HStack, Grid, Image, Flex } from '@chakra-ui/react';
 import NavbarHome from '../../components/NavbarHome';
 import ApiResponse from '../../services/ApiResponse';
 import {Carrera} from '../../services/models/Carrera';
@@ -34,7 +34,6 @@ function CarreraPage() {
         <Grid templateColumns={{ base: '1fr', md: '2fr 1fr' }} gap={6} p={5}>
         <Box borderWidth="1px"  borderRadius="lg" p={4} boxShadow="md">
           <Heading as="h1" size="xl" mb={4}>{data.nombre}</Heading>
-          <Image src="https://placehold.co/300x200" alt={data.nombre} borderRadius="md" mb={4} />
           <Text fontWeight="bold">Tipo de Carrera:</Text>
           <Text>{data.tipo}</Text>
           
@@ -61,22 +60,39 @@ function CarreraPage() {
           <Text>{new Date(data.fecha_inscripcion).toLocaleDateString()}</Text>
         </Box>
       
-        <Box borderWidth="1px" borderRadius="lg" p={4} boxShadow="md">
-          <Image src="https://placehold.co/300x200" alt={data.institucion_nombre} borderRadius="md" mb={4} />
-          <Text fontWeight="bold">Institución:</Text>
-          <Text>{data.institucion_nombre}</Text>
-      
-          <Text fontWeight="bold">Dirección:</Text>
-          <Text>{data.institucion_direccion}</Text>
-      
-          <Text fontWeight="bold">Teléfono:</Text>
-          <Text>{data.institucion_tel}</Text>
-      
-          <Text fontWeight="bold">Página Web:</Text>
-          <Link href={`https://${data.institucion_pagina}`} isExternal color="blue.500">
-            {data.institucion_pagina}
-          </Link>
+        <Box 
+          borderWidth="1px" 
+          borderRadius="lg" 
+          p={4} 
+          boxShadow="md" 
+        >
+          <Flex direction="column" align="center" textAlign="center">
+            {data.institucion_logo && ( 
+              <Image 
+                src={`http://localhost:3000${data.institucion_logo}`}  
+                alt={data.institucion_nombre} 
+                borderRadius="md" 
+                mb={4} 
+                boxSize="200px" 
+                objectFit="contain" 
+              />
+            )}
+            <Text fontWeight="bold">Institución:</Text>
+            <Text>{data.institucion_nombre}</Text>
+
+            <Text fontWeight="bold">Dirección:</Text>
+            <Text>{data.institucion_direccion}</Text>
+
+            <Text fontWeight="bold">Teléfono:</Text>
+            <Text>{data.institucion_tel}</Text>
+
+            <Text fontWeight="bold">Página Web:</Text>
+            <Link href={`https://${data.institucion_pagina}`} isExternal color="blue.500">
+              {data.institucion_pagina}
+            </Link>
+          </Flex>
         </Box>
+
       </Grid>
       )}
       </Box>
