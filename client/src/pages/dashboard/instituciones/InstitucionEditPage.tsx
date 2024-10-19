@@ -13,11 +13,10 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import ApiResponse from '../../../services/ApiResponse';
 import {Institucion} from '../../../services/models/Institucion';
 import SuperUserDashboard from '../SuperUserDashboard';
 import LogoFileInput from '../../../components/LogoFileInput';
-// TODO: editar logo?
+
 const InstitucionEditPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -41,7 +40,6 @@ const InstitucionEditPage = () => {
     const logoFile = logoRef.current?.files?.[0];
     const token = localStorage.getItem('token');
     
-    // Crear un FormData para el envío del PATCH
     const formData = new FormData();
     
     formData.append('cue', cueRef.current?.value || '0');
@@ -67,7 +65,6 @@ const InstitucionEditPage = () => {
     
     formData.append('gestion', gestionRef.current?.value || 'Publica');
     
-    // Si hay un nuevo archivo de logo, agregarlo
     if (logoFile) {
       formData.append('logo', logoFile);
     }

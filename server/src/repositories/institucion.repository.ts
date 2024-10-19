@@ -1,7 +1,6 @@
 import { BaseRepository, DatabaseError } from './base.repository'; 
 import { Institucion, InstitucionCrear, InstitucionUpdate } from '../models/institucion.model';
 import DbConnection from '../db/db_connection';
-import { ExecutableBase } from 'mysql2/typings/mysql/lib/protocol/sequences/ExecutableBase';
 
 export class InstitucionRepository extends BaseRepository<Institucion> {
   constructor() {
@@ -28,6 +27,7 @@ export class InstitucionRepository extends BaseRepository<Institucion> {
         await DbConnection.query(`UPDATE institucion SET estado = 0 WHERE id = ?`, [id]);
 
     } catch (error) {
+      console.error("Database Error:", error);
         throw new DatabaseError("Error al borrar la institución.");
     } 
 }

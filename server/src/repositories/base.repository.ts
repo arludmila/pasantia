@@ -1,7 +1,5 @@
 import DbConnection from '../db/db_connection';
 
-// TODO: revisar todo esto, 
-
 export class DatabaseError extends Error {
   constructor(message: string) {
     super(message);
@@ -29,6 +27,7 @@ export class BaseRepository<T extends object> {
       const result = await DbConnection.query(sql);
       return result as T[];
     } catch (error) {
+      console.error("Database Error:", error);
       throw new DatabaseError("Error al obtener los registros.");
     }
   }
@@ -48,6 +47,7 @@ export class BaseRepository<T extends object> {
             throw new DatabaseError("Error al obtener el id de la inserción");
         }
     } catch (error) {
+      console.error("Database Error:", error);
         throw new DatabaseError("Error al crear el elemento.");
     }
 }
@@ -60,16 +60,18 @@ export class BaseRepository<T extends object> {
       const values = [...Object.values(item), id];
       await DbConnection.query(sql, values);
     } catch (error) {
+      console.error("Database Error:", error);
       throw new DatabaseError("Error al actualizar el elemento.");
     }
   }
-  // TODO: deberia aca tambien setear estado a 0 por ejemplo a las carreras de una institucion si la 'borro'?
+
   public async delete(id: number): Promise<void> {
     try {
       const sql = `UPDATE ${this.tableName} SET estado = 0 WHERE id = ?`; 
       const values = [id];
       await DbConnection.query(sql, values);
     } catch (error) {
+      console.error("Database Error:", error);
       throw new DatabaseError("Error al eliminar el elemento.");
     }
   }
@@ -85,6 +87,7 @@ export class BaseRepository<T extends object> {
         return null;
       }
     } catch (error) {
+      console.error("Database Error:", error);
       throw new DatabaseError("Error al encontrar el elemento.");
     }
   }

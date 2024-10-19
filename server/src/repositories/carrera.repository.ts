@@ -29,6 +29,7 @@ export class CarreraRepository extends BaseRepository<Carrera> {
       const result = await DbConnection.query(sql);
       return result as Carrera[];
     } catch (error) {
+      console.error("Database Error:", error);
       throw new Error('Error al realizar la búsqueda en la base de datos');
     }
   }
@@ -43,6 +44,7 @@ export class CarreraRepository extends BaseRepository<Carrera> {
       const rows = await DbConnection.query(sql, [id]);
       return rows as Carrera[];
     } catch (error) {
+      console.error("Database Error:", error);
       throw new Error('Error al realizar la búsqueda en la base de datos');
     }
   }
