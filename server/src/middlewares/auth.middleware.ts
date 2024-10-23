@@ -3,11 +3,13 @@ import { AdministradorRepository } from '../repositories/administrador.repositor
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { Administrador } from '../models/administrador.model';
+import DBConnection from '../db/db_connection';
 dotenv.config();
 
-const auth = (...roles: Administrador['rol'][]) => {
+const auth = (dbConnection: DBConnection, ...roles: Administrador['rol'][]) => {
     return async function (req: Request, res: Response, next: NextFunction) {
         try {
+            console.log('req', req)
             const authHeader = req.headers.authorization;
             const bearer = 'Bearer ';
 
@@ -22,7 +24,7 @@ const auth = (...roles: Administrador['rol'][]) => {
 
             const decoded = jwt.verify(token, secretKey) as { administrador_id: string; rol: string; id_institucion?: number };
 
-            const administradorRepository = new AdministradorRepository();
+            const administradorRepository = new AdministradorRepository(dbConnection);
             const administrador = await administradorRepository.findOne(Number(decoded.administrador_id));
 
             if (!administrador) {

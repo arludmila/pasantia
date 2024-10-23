@@ -1,11 +1,12 @@
 import { BaseRepository } from './base.repository'; 
 import { Administrador, AdministradorCreate, AdministradorSinClave, AdministradorUpdate } from '../models/administrador.model';
-import DbConnection from '../db/db_connection';
 import { DatabaseError } from './base.repository';
+import DBConnection from '../db/db_connection';
 
 export class AdministradorRepository extends BaseRepository<Administrador> {
-  constructor() {
-    super('administrador'); 
+
+  constructor(dbConnection:  DBConnection) {
+    super(dbConnection,'administrador'); 
   }
 
   public async getAllWithoutClave(): Promise<AdministradorSinClave[]> {
@@ -25,7 +26,7 @@ export class AdministradorRepository extends BaseRepository<Administrador> {
           institucion i ON a.id_institucion = i.id
         WHERE
           a.estado = 1`;
-      const result = await DbConnection.query(sql);
+      const result = await this.dbConnection.query(sql);
       return result as AdministradorSinClave[];
     } catch (error) {
       console.error("Database Error:", error);
@@ -36,7 +37,7 @@ export class AdministradorRepository extends BaseRepository<Administrador> {
   public async findAdministrador(correo: string): Promise<Administrador | null> {
     try {
       const sql = `SELECT * FROM administrador WHERE correo = ? AND estado = 1 LIMIT 1`;
-      const result = await DbConnection.query(sql, [correo]);
+      const result = await this.dbConnection.query(sql, [correo]);
 
       if (Array.isArray(result) && result.length > 0) {
         return result[0] as Administrador;

@@ -7,12 +7,10 @@ import validator from 'validator';
 import jwt from 'jsonwebtoken';
 
 export class AdministradorController extends BaseController<Administrador> {
-  private administradorRepository: AdministradorRepository;
+  
 
-  constructor() {
-    const repository = new AdministradorRepository();
-    super(repository);
-    this.administradorRepository = repository;
+  constructor(private administradorRepository: AdministradorRepository) {
+    super(administradorRepository);
 
     this.getAll = this.getAll.bind(this);
     this.create = this.create.bind(this);
@@ -25,29 +23,31 @@ export class AdministradorController extends BaseController<Administrador> {
   public async getAll(req: Request, res: Response): Promise<void> {
     try {
       const administradores = await this.administradorRepository.getAllWithoutClave();
-      res.status(200).json(administradores);
+       res.status(200).json(administradores);
+       return;
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || 'Error desconocido';
-      res.status(500).json({ mensaje: 'Error al obtener administradores', error: errorMessage });
+       res.status(500).json({ mensaje: 'Error al obtener administradores', error: errorMessage });
+       return;
     }
   }
 
   public async create(req: Request, res: Response): Promise<void> {
     await this.hashClave(req);
-    await super.create(req, res);
+    return await super.create(req, res);
   }
 
   public async update(req: Request, res: Response): Promise<void> {
     await this.hashClave(req);
-    await super.update(req, res);
+    return await super.update(req, res);
   }
 
   public async delete(req: Request, res: Response): Promise<void> {
-    await super.delete(req, res);
+    return await super.delete(req, res);
   }
 
   public async findOne(req: Request, res: Response): Promise<void> {
-    await super.findOne(req, res);
+    return await super.findOne(req, res);
   }
 
   private async hashClave(req: Request): Promise<void> {
@@ -74,8 +74,8 @@ export class AdministradorController extends BaseController<Administrador> {
   
       const isMatch = await bcrypt.compare(clave, administrador.clave);
       if (!isMatch) {
-        res.status(401).json({ mensaje: 'Contraseña incorrecta.' });
-        return;
+       res.status(401).json({ mensaje: 'Contraseña incorrecta.' });
+       return;
       }
   
       const secretKey = process.env.SECRET_JWT || '';
@@ -93,10 +93,12 @@ export class AdministradorController extends BaseController<Administrador> {
       });
   
       res.send({ token });
+      return;
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || 'Error interno del servidor.';
-      res.status(500).json({ mensaje: 'Error interno del servidor.', error: errorMessage });
-      next(error); 
+     res.status(500).json({ mensaje: 'Error interno del servidor.', error: errorMessage });
+     return;
+      // next(error); 
     }
   }
 }
