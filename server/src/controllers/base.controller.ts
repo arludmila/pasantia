@@ -19,8 +19,10 @@ export class BaseController<T extends object> {
     try {
       const records = await this.repository.getAll();
       res.status(200).json(records);
+      return;
     } catch (error: unknown) {
       this.handleError(res, error, 'Error al obtener registros');
+      return;
     }
   }
 
@@ -28,22 +30,28 @@ export class BaseController<T extends object> {
     try {
       const id = parseInt(req.params.id);
       const record = await this.repository.findOne(id);
-      if (record) {
-        res.status(200).json(record);
-      } else {
-        res.status(404).json({ mensaje: 'Registro no encontrado' });
+      if (!record) {
+         res.status(404).json({ mensaje: 'Registro no encontrado' });
+         return;
       }
+       res.status(200).json(record);
+       return;
     } catch (error: unknown) {
-      this.handleError(res, error, 'Error al obtener el registro');
+       this.handleError(res, error, 'Error al obtener el registro');
+       return;
     }
   }
+  
+  
 
   public async create(req: Request, res: Response): Promise<void> {
     try {
       const newRecord = await this.repository.create(req.body);
       res.status(201).json(newRecord);
+      return;
     } catch (error: unknown) {
-      this.handleError(res, error, 'Error al crear el registro');
+       this.handleError(res, error, 'Error al crear el registro');
+       return;
     }
   }
 
@@ -51,9 +59,11 @@ export class BaseController<T extends object> {
     try {
       const id = parseInt(req.params.id);
       await this.repository.update(id, req.body);
-      res.status(200).json({ mensaje: 'Registro actualizado correctamente' });
+       res.status(200).json({ mensaje: 'Registro actualizado correctamente' });
+       return;
     } catch (error: unknown) {
-      this.handleError(res, error, 'Error al actualizar el registro');
+       this.handleError(res, error, 'Error al actualizar el registro');
+       return;
     }
   }
 
@@ -61,13 +71,15 @@ export class BaseController<T extends object> {
     try {
       const id = parseInt(req.params.id);
       await this.repository.delete(id);
-      res.status(200).json({ mensaje: 'Registro eliminado correctamente' });
+       res.status(200).json({ mensaje: 'Registro eliminado correctamente' });
+       return;
     } catch (error: unknown) {
-      this.handleError(res, error, 'Error al eliminar el registro');
+       this.handleError(res, error, 'Error al eliminar el registro');
+       return;
     }
   }
 
-  public handleError(res: Response, error: unknown, message: string): void {
+  public handleError(res: Response, error: unknown, message: string): Response {
     console.error(message, error);
   
     const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
@@ -77,7 +89,8 @@ export class BaseController<T extends object> {
       error: errorMessage,
     };
   
-    res.status(500).json(response);
+    return res.status(500).json(response);
   }
+  
   
 }

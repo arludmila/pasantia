@@ -3,15 +3,19 @@ import { AdministradorController } from '../controllers/administrador.controller
 import { createAdministradorSchema, validateLogin } from '../middlewares/validators/administradorValidator.middleware';
 import auth from '../middlewares/auth.middleware';
 import { Roles } from '../models/administrador.model';
+import { AdministradorRepository } from '../repositories/administrador.repository';
+import DBConnection from '../db/db_connection';
 
-const AdministradorRouter = Router();
-const administradorController = new AdministradorController();
+export default function AdministradorRouter(dbConnection: DBConnection) {
+  const router = Router();
+  const repository = new AdministradorRepository(dbConnection);
+  const controller = new AdministradorController(repository);
 
-AdministradorRouter.get('/', auth(Roles.SuperUser), administradorController.getAll);      
-AdministradorRouter.patch('/:id', auth(Roles.SuperUser), administradorController.update); 
-AdministradorRouter.post('/', auth(Roles.SuperUser), createAdministradorSchema, administradorController.create);  
-AdministradorRouter.delete('/:id', auth(Roles.SuperUser), administradorController.delete);
+  router.get('/', auth(dbConnection, Roles.SuperUser), controller.getAll);
+  router.patch('/:id', auth(dbConnection, Roles.SuperUser), controller.update);
+  router.post('/', auth(dbConnection, Roles.SuperUser), createAdministradorSchema, controller.create);
+  router.delete('/:id', auth(dbConnection, Roles.SuperUser), controller.delete);
+  router.post('/login', validateLogin, controller.administradorLogin);
 
-AdministradorRouter.post('/login', validateLogin, administradorController.administradorLogin);
-
-export default AdministradorRouter;
+  return router;
+}

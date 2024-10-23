@@ -3,12 +3,9 @@ import { BaseController } from './base.controller';
 import { CarreraRepository } from '../repositories/carrera.repository';
 import { Carrera } from '../models/carrera.model';
 export class CarreraController extends BaseController<Carrera> {
-  private carreraRepository: CarreraRepository;
 
-  constructor() {
-    const repository = new CarreraRepository();
-    super(repository);
-    this.carreraRepository = repository;
+  constructor(private carreraRepository: CarreraRepository) {
+    super(carreraRepository);
 
     this.getAll = this.getAll.bind(this);
     this.getCarrerasFromInstitucion = this.getCarrerasFromInstitucion.bind(this);
@@ -20,23 +17,25 @@ export class CarreraController extends BaseController<Carrera> {
   }
 
   public async getAll(req: Request, res: Response): Promise<void> {
-    await super.getAll(req, res);
+    return await super.getAll(req, res);
   }
 
   public async getCarrerasFromInstitucion(req: Request, res: Response): Promise<void> {
     const institucionId = parseInt(req.params.id);
   
     if (isNaN(institucionId)) {
-      res.status(400).json({ mensaje: 'ID de institución no válido.' });
-      return;
+       res.status(400).json({ mensaje: 'ID de institución no válido.' });
+       return;
     }
   
     try {
       const carreras = await this.carreraRepository.getCarrerasFromInstitucion(institucionId);
-      res.status(200).json(carreras);
+       res.status(200).json(carreras);
+       return;
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || 'Error desconocido';
-      res.status(500).json({ mensaje: 'Error al obtener carreras', error: errorMessage });
+       res.status(500).json({ mensaje: 'Error al obtener carreras', error: errorMessage });
+       return;
     }
   }
   
@@ -44,13 +43,15 @@ export class CarreraController extends BaseController<Carrera> {
     try {
         const carreras = await this.carreraRepository.getAllCarreras();
         res.status(200).json(carreras);
+        return;
     } catch (error: unknown) {
         const errorMessage = (error as Error).message || 'Error desconocido';
 
-        res.status(500).json({
+         res.status(500).json({
             mensaje: 'Error al obtener carreras',
             error: errorMessage,
         });
+        return;
     }
 }
 
@@ -63,27 +64,29 @@ public async getCarreraById(req: Request, res: Response): Promise<void> {
     const carrera = await this.carreraRepository.getCarreraById(carreraId);
 
     if (!carrera) {
-      res.status(404).json({ mensaje: 'Carrera no encontrada' });
-      return;
+       res.status(404).json({ mensaje: 'Carrera no encontrada' });
+       return;
     }
 
-    res.status(200).json(carrera);
+     res.status(200).json(carrera);
+     return;
   } catch (error: unknown) {
     const errorMessage = (error as Error).message || 'Error desconocido';
-    res.status(500).json({ mensaje: 'Error al obtener carrera', error: errorMessage });
+     res.status(500).json({ mensaje: 'Error al obtener carrera', error: errorMessage });
+     return;
   }
 }
 
 
   public async create(req: Request, res: Response): Promise<void> {
-    await super.create(req, res);
+    return await super.create(req, res);
   }
 
   public async update(req: Request, res: Response): Promise<void> {
-    await super.update(req, res);
+    return await super.update(req, res);
   }
 
   public async delete(req: Request, res: Response): Promise<void> {
-    await super.delete(req, res);
+    return await super.delete(req, res);
   }
 }

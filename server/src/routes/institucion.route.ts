@@ -6,8 +6,17 @@ import { Roles } from '../models/administrador.model';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
+import { InstitucionRepository } from '../repositories/institucion.repository';
+import DBConnection from '../db/db_connection';
 
-const storage = multer.diskStorage({
+export default function InstitucionRouter(dbConnection: DBConnection) {
+  const router = Router();
+  const repository = new InstitucionRepository(dbConnection);
+  const controller = new InstitucionController(repository);
+
+  //console.log("insti route", dbConnection);
+
+  const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       const dir = 'uploads/logos';
       if (!fs.existsSync(dir)) {
@@ -16,36 +25,16 @@ const storage = multer.diskStorage({
       cb(null, dir);
     },
     filename: (req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname)); 
+      cb(null, Date.now() + path.extname(file.originalname));
     },
   });
-  
-  
 
-const upload = multer({ storage: storage });
+  const upload = multer({ storage: storage });
 
+  router.get('/', controller.getAll);
+  router.patch('/:id', auth(dbConnection, Roles.SuperUser), upload.single('logo'), updateInstitucionSchema, controller.update);
+  router.post('/', auth(dbConnection, Roles.SuperUser), upload.single('logo'), createInstitucionSchema, controller.create);
+  router.delete('/:id', auth(dbConnection, Roles.SuperUser), controller.delete);
 
-const InstitucionRouter = Router();
-const institucionController = new InstitucionController();
-
-InstitucionRouter.get('/', institucionController.getAll);      
-InstitucionRouter.patch(
-  '/:id', 
-  auth(Roles.SuperUser), 
-  upload.single('logo'),  
-  updateInstitucionSchema, 
-  institucionController.update
-);
-
-InstitucionRouter.post(
-    '/',
-    auth(Roles.SuperUser),
-    upload.single('logo'), 
-    createInstitucionSchema,
-    institucionController.create
-  );
-  
-InstitucionRouter.delete('/:id', auth(Roles.SuperUser), institucionController.delete); 
-
-
-export default InstitucionRouter;
+  return router;
+}

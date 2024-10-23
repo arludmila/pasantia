@@ -6,12 +6,10 @@ import path from 'path';
 import fs from 'fs';
 
 export class InstitucionController extends BaseController<Institucion> {
-  private institucionRepository: InstitucionRepository;
+  
 
-  constructor() {
-    const repository = new InstitucionRepository();
-    super(repository);
-    this.institucionRepository = repository;
+  constructor(private institucionRepository: InstitucionRepository) {
+    super(institucionRepository);
     this.getAll = this.getAll.bind(this);
     this.create = this.create.bind(this);
     this.update = this.update.bind(this);
@@ -21,7 +19,7 @@ export class InstitucionController extends BaseController<Institucion> {
   }
 
   public async getAll(req: Request, res: Response): Promise<void> {
-    await super.getAll(req, res);
+    return await super.getAll(req, res);
   }
 
   public async create(req: Request, res: Response): Promise<void> {
@@ -35,7 +33,8 @@ export class InstitucionController extends BaseController<Institucion> {
       await this.institucionRepository.update(newInstitution.id, { logo: logoUrl }); 
     }
 
-    res.status(201).json(newInstitution); 
+     res.status(201).json(newInstitution); 
+     return;
 }
 
 
@@ -52,16 +51,18 @@ export class InstitucionController extends BaseController<Institucion> {
       req.body.logo = logoUrl;
     }
 
-    await super.update(req, res);
+    return await super.update(req, res);
   }
 
   public async delete(req: Request, res: Response): Promise<void> {
     try {
       const id = parseInt(req.params.id);
       await this.institucionRepository.deleteInstitucion(id);
-      res.status(200).json({ mensaje: 'Registro eliminado correctamente' });
+       res.status(200).json({ mensaje: 'Registro eliminado correctamente' });
+       return;
     } catch (error: unknown) {
-      this.handleError(res, error, 'Error al eliminar el registro');
+       this.handleError(res, error, 'Error al eliminar el registro');
+       return;
     }
   }
 

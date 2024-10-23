@@ -1,12 +1,16 @@
 import { Router } from 'express';
-import InstitucionRoutes from './institucion.route';
+
 import CarreraRouter from './carrera.route';
 import AdministradorRouter from './administrador.route';
+import InstitucionRouter from './institucion.route';
+import DBConnection from '../db/db_connection';
 
-const ApiRouter = Router();
 
-ApiRouter.use('/instituciones', InstitucionRoutes);
-ApiRouter.use('/carreras', CarreraRouter);
-ApiRouter.use('/administradores', AdministradorRouter);
-
-export default ApiRouter;
+export default function ApiRouter(dbConnection: DBConnection) {
+    const router = Router();
+    console.log('ApiRouter initialized');
+    router.use('/carreras', CarreraRouter(dbConnection));
+    router.use('/instituciones', InstitucionRouter(dbConnection));
+    router.use('/administradores', AdministradorRouter(dbConnection));
+    return router;
+  }

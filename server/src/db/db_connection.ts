@@ -4,17 +4,25 @@ import mysql2, { Pool, PoolConnection, RowDataPacket, ResultSetHeader } from 'my
 dotenv.config();
 
 class DBConnection {
+    private static instance: DBConnection; 
     private db: Pool;
 
-    constructor() {
+    private constructor() {
         this.db = mysql2.createPool({
             host: process.env.DB_HOST as string,
             user: process.env.DB_USER as string,
             password: process.env.DB_PASS as string,
             database: process.env.DB_DATABASE as string,
         });
-
+        this.query = this.query.bind(this);
         this.checkConnection();
+    }
+
+    public static getInstance(): DBConnection {
+        if (!DBConnection.instance) {
+            DBConnection.instance = new DBConnection();
+        }
+        return DBConnection.instance;
     }
 
     private async checkConnection(): Promise<void> {
@@ -51,7 +59,6 @@ const HttpStatusCodes: { [key: string]: number } = Object.freeze({
     ER_DUP_ENTRY: 409,
 });
 
-const DbConnection = new DBConnection();
-export default DbConnection; 
+export default DBConnection; 
 
 

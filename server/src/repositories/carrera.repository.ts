@@ -2,10 +2,11 @@ import { BaseRepository } from './base.repository';
 import { Carrera, CarreraCreate, CarreraUpdate } from '../models/carrera.model';
 import DbConnection from '../db/db_connection';
 import { RowDataPacket } from 'mysql2';
+import DBConnection from '../db/db_connection';
 
 export class CarreraRepository extends BaseRepository<Carrera> {
-  constructor() {
-    super('carreras'); 
+  constructor(dbConnection: DBConnection) {
+    super(dbConnection,'carreras'); 
   }
 
   public async getAll(): Promise<Carrera[]> {
@@ -26,7 +27,7 @@ export class CarreraRepository extends BaseRepository<Carrera> {
     `;
 
     try {
-      const result = await DbConnection.query(sql);
+      const result = await this.dbConnection.query(sql);
       return result as Carrera[];
     } catch (error) {
       console.error("Database Error:", error);
@@ -41,7 +42,7 @@ export class CarreraRepository extends BaseRepository<Carrera> {
     `;
     
     try {
-      const rows = await DbConnection.query(sql, [id]);
+      const rows = await this.dbConnection.query(sql, [id]);
       return rows as Carrera[];
     } catch (error) {
       console.error("Database Error:", error);
@@ -68,7 +69,7 @@ export class CarreraRepository extends BaseRepository<Carrera> {
     `;
 
     try {
-      const [rows] = await DbConnection.query<RowDataPacket[]>(sql, [id]);
+      const [rows] = await this.dbConnection.query<RowDataPacket[]>(sql, [id]);
 
       if (rows.length === 0) {
         return null;  

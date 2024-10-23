@@ -19,6 +19,8 @@ import InstitucionEditPage from './pages/dashboard/instituciones/InstitucionEdit
 import AdminEditPage from './pages/dashboard/administradores/AdminEditPage';
 import AdminsTablePage from './pages/dashboard/administradores/AdminsTablePage';
 
+// TODO: GENERAL: 1- Mapas; 2- Ordenar x prioridad carreras; 3- Manejo de errores (no mostrar msj feos)
+
 function App() {
   return (
     <ChakraProvider>

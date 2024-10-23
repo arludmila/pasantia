@@ -13,7 +13,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import {Institucion} from '../../../services/models/Institucion';
+import {Gestiones, Institucion} from '../../../services/models/Institucion';
 import SuperUserDashboard from '../SuperUserDashboard';
 import LogoFileInput from '../../../components/LogoFileInput';
 
@@ -31,6 +31,7 @@ const InstitucionEditPage = () => {
   const ubicacionLongRef = useRef<HTMLInputElement>(null);
   const telRef = useRef<HTMLInputElement>(null);
   const paginaRef = useRef<HTMLInputElement>(null);
+  const [gestion, setGestion] = useState<Gestiones>(Gestiones.Publica); 
   const gestionRef = useRef<HTMLSelectElement>(null);
   const logoRef = useRef<HTMLInputElement>(null);
 
@@ -63,7 +64,8 @@ const InstitucionEditPage = () => {
       formData.append('pagina', paginaRef.current.value);
     }
     
-    formData.append('gestion', gestionRef.current?.value || 'Publica');
+    formData.append('gestion', gestionRef.current?.value || Gestiones.Publica);
+
     
     if (logoFile) {
       formData.append('logo', logoFile);
@@ -154,9 +156,11 @@ const InstitucionEditPage = () => {
 
             <FormControl id="gestion" isRequired>
               <FormLabel>Gestión</FormLabel>
-              <Select ref={gestionRef} defaultValue={institucionToEdit.gestion || 'Publica'}>
-                <option value="Publica">Pública</option>
-                <option value="Privada">Privada</option>
+              <Select ref={gestionRef} value={gestion} onChange={(e)=>setGestion(e.target.value as Gestiones)} defaultValue={Gestiones.Publica}>
+                <option value={Gestiones.Publica}>Pública</option>
+                <option value={Gestiones.Privada}>Privada</option>
+                <option value={Gestiones.Mixta}>Mixta</option>
+
               </Select>
             </FormControl>
             <VStack align="center" spacing={0}> 
