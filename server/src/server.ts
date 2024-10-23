@@ -6,6 +6,8 @@ import DBConnection from './db/db_connection';
 
 dotenv.config();
 
+// TODO: GENERAL: 1- Mapas (verificacion? de req); 2- Manejo de errores (revisar, msjs?); 3- Revisar repo y controller base
+
 const app = express();
 const port = process.env.PORT || 3000;
 
