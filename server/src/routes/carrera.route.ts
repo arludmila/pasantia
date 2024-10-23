@@ -11,10 +11,7 @@ export default function CarreraRouter(dbConnection: DBConnection) {
   const repository = new CarreraRepository(dbConnection);
   const controller = new CarreraController(repository);
 
-  //console.log("carrera route", dbConnection);
-    console.log('test carreta routes')
     router.get('/', (req, res) => {
-        console.log('GET /api/carrera hit');
         controller.getAllCarreras(req, res);
     });
     

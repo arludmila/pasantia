@@ -14,8 +14,6 @@ export default function InstitucionRouter(dbConnection: DBConnection) {
   const repository = new InstitucionRepository(dbConnection);
   const controller = new InstitucionController(repository);
 
-  //console.log("insti route", dbConnection);
-
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       const dir = 'uploads/logos';
