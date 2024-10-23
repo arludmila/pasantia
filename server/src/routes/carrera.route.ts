@@ -13,7 +13,11 @@ export default function CarreraRouter(dbConnection: DBConnection) {
 
   //console.log("carrera route", dbConnection);
     console.log('test carreta routes')
-  router.get('/', controller.getAllCarreras);
+    router.get('/', (req, res) => {
+        console.log('GET /api/carrera hit');
+        controller.getAllCarreras(req, res);
+    });
+    
   router.get('/:id', controller.getCarreraById);
   router.patch('/:id', auth(dbConnection, Roles.Admin), updateCarreraSchema, controller.update);
   router.get('/institucion/:id', auth(dbConnection, Roles.Admin), controller.getCarrerasFromInstitucion);

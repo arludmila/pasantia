@@ -10,29 +10,25 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-
 app.use(express.static('public')); 
 app.use('/uploads/logos', express.static('uploads/logos'));
 
 const corsOptions = {
-  origin: 'http://localhost:3001', 
-  optionsSuccessStatus: 200 
+    origin: '*'
 };
 
 app.use(cors(corsOptions));
 
-app.options('*', cors(corsOptions));
+//app.options('*', cors(corsOptions));
+
 const dbConnection = DBConnection.getInstance();
-console.log("dbConnection:",dbConnection);
+console.log('dbConnection', dbConnection);
+
+
 
 app.use('/api', ApiRouter(dbConnection));
 
 
-// test 
-
-
 app.listen(port, () => {
-  console.log(`Server: http://localhost:${port}`);
+    console.log(`Server: http://localhost:${port}`);
 });
-
-export { dbConnection };
