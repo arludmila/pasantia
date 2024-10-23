@@ -15,7 +15,7 @@ import ApiResponse from '../../../services/ApiResponse';
 import SuperUserDashboard from '../SuperUserDashboard';
 import { LogoUploadResponse } from '../../../services/models/LogoUploadResponse';
 import LogoFileInput from '../../../components/LogoFileInput';
-import { Institucion, InstitucionCrear } from '../../../services/models/Institucion';
+import { Gestiones, Institucion, InstitucionCrear } from '../../../services/models/Institucion';
 
 const InstitucionAddPage = () => {
   // TODO: aca deberia poder dejarme elegir con un mapita? la direccion? para poner automaticamente la ubicacion lat y long
@@ -28,6 +28,7 @@ const InstitucionAddPage = () => {
   const ubicacionLongRef = useRef<HTMLInputElement>(null);
   const telRef = useRef<HTMLInputElement>(null);
   const paginaRef = useRef<HTMLInputElement>(null);
+  const [gestion, setGestion] = useState<Gestiones>(Gestiones.Publica); 
   const gestionRef = useRef<HTMLSelectElement>(null);
   const logoRef = useRef<HTMLInputElement>(null);
   const toast = useToast();
@@ -60,7 +61,7 @@ const InstitucionAddPage = () => {
         formData.append('pagina', paginaRef.current.value);
       }
 
-      formData.append('gestion', gestionRef.current?.value || 'Publica');
+      formData.append('gestion', gestionRef.current?.value || Gestiones.Publica);
 
     
     if (logoFile) {
@@ -152,9 +153,11 @@ const InstitucionAddPage = () => {
 
             <FormControl id="gestion" isRequired>
               <FormLabel>Gestión</FormLabel>
-              <Select ref={gestionRef} defaultValue="Publica">
-                <option value="Publica">Pública</option>
-                <option value="Privada">Privada</option>
+              <Select ref={gestionRef} value={gestion} onChange={(e)=>setGestion(e.target.value as Gestiones)} defaultValue={Gestiones.Publica}>
+                <option value={Gestiones.Publica}>Pública</option>
+                <option value={Gestiones.Privada}>Privada</option>
+                <option value={Gestiones.Mixta}>Mixta</option>
+
               </Select>
             </FormControl>
            

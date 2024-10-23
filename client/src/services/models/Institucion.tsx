@@ -1,4 +1,4 @@
-export enum Gestion {
+export enum Gestiones {
   Publica = 'Publica',
   Privada = 'Privada',
   Mixta = 'Mixta'
@@ -14,7 +14,7 @@ export interface Institucion {
   ubicacion_long?: number | null; 
   tel?: string | null;       
   pagina?: string | null;     
-  gestion: Gestion; 
+  gestion: Gestiones; 
   estado: number;           
   logo?: string | null; 
 }
@@ -30,6 +30,6 @@ export interface InstitucionUpdate {
   ubicacion_long?: number | null; 
   tel?: string | null;       
   pagina?: string | null;     
-  gestion?: Gestion; 
+  gestion?: Gestiones; 
   logo?: string | null; 
 }

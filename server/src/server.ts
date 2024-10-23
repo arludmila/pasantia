@@ -6,7 +6,7 @@ import DBConnection from './db/db_connection';
 
 dotenv.config();
 
-// TODO: GENERAL: 1- Mapas (verificacion? de req); 2- Manejo de errores (revisar, msjs?); 3- Revisar repo y controller base
+// TODO: GENERAL: 1- Mapas (validacion ? de req); 2- Manejo de errores (revisar, msjs?); 3- Revisar repo y controller base; 4- Validaciones de req para crear/update
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,11 +21,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-//app.options('*', cors(corsOptions));
-
 const dbConnection = DBConnection.getInstance();
-console.log('dbConnection', dbConnection);
-
 
 
 app.use('/api', ApiRouter(dbConnection));
