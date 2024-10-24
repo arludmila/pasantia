@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { InstitucionController } from '../controllers/institucion.controller';
-import { createInstitucionSchema, updateInstitucionSchema } from '../middlewares/validators/institucionValidator.middleware';
 import auth from '../middlewares/auth.middleware';
 import { Roles } from '../models/administrador.model'; 
 import multer from 'multer';
@@ -8,6 +7,8 @@ import fs from 'fs';
 import path from 'path';
 import { InstitucionRepository } from '../repositories/institucion.repository';
 import DBConnection from '../db/db_connection';
+import validateReqBody from '../middlewares/validation.middleware';
+import { CreateInstitucionDto, UpdateInstitucionDto } from '../middlewares/validators/institucion.validator';
 
 export default function InstitucionRouter(dbConnection: DBConnection) {
   const router = Router();
@@ -30,8 +31,8 @@ export default function InstitucionRouter(dbConnection: DBConnection) {
   const upload = multer({ storage: storage });
 
   router.get('/', controller.getAll);
-  router.patch('/:id', auth(dbConnection, Roles.SuperUser), upload.single('logo'), updateInstitucionSchema, controller.update);
-  router.post('/', auth(dbConnection, Roles.SuperUser), upload.single('logo'), createInstitucionSchema, controller.create);
+  router.patch('/:id', [auth(dbConnection, Roles.SuperUser), validateReqBody(UpdateInstitucionDto)], upload.single('logo'),  controller.update);
+  router.post('/', [auth(dbConnection, Roles.SuperUser), validateReqBody(CreateInstitucionDto)], upload.single('logo'),  controller.create);
   router.delete('/:id', auth(dbConnection, Roles.SuperUser), controller.delete);
 
   return router;

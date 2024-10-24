@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import { CarreraController } from '../controllers/carrera.controller';
-import { createCarreraSchema, updateCarreraSchema } from '../middlewares/validators/carreraValidator.middleware';
 import auth from '../middlewares/auth.middleware';
 import { Roles } from '../models/administrador.model'; 
 import { CarreraRepository } from '../repositories/carrera.repository';
 import DBConnection from '../db/db_connection';
+import validateReqBody from '../middlewares/validation.middleware';
+import { CreateCarreraDto, UpdateCarreraDto } from '../middlewares/validators/carrera.validator';
+
 
 export default function CarreraRouter(dbConnection: DBConnection) {
   const router = Router();
@@ -16,9 +18,9 @@ export default function CarreraRouter(dbConnection: DBConnection) {
     });
     
   router.get('/:id', controller.getCarreraById);
-  router.patch('/:id', auth(dbConnection, Roles.Admin), updateCarreraSchema, controller.update);
-  router.get('/institucion/:id', auth(dbConnection, Roles.Admin), controller.getCarrerasFromInstitucion);
-  router.post('/', auth(dbConnection, Roles.Admin), createCarreraSchema, controller.create);
+  router.patch('/:id', [auth(dbConnection, Roles.Admin), validateReqBody(CreateCarreraDto)], controller.update);
+  router.get('/institucion/:id', [auth(dbConnection, Roles.Admin), validateReqBody(UpdateCarreraDto)], controller.getCarrerasFromInstitucion);
+  router.post('/', auth(dbConnection, Roles.Admin),  controller.create);
   router.delete('/:id', auth(dbConnection, Roles.Admin), controller.delete);
 
   return router;
