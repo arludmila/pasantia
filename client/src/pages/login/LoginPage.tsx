@@ -18,7 +18,6 @@ import { useNavigate } from 'react-router-dom';
 import LoginRequest from '../../services/models/LoginRequest';
 import LoginResponse from '../../services/models/LoginResponse';
 import ApiResponse from '../../services/ApiResponse';
-import NavbarHome from '../../components/NavbarHome';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState<LoginRequest>({ correo: '', clave: '' });

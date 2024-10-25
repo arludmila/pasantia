@@ -14,7 +14,9 @@ import { useNavigate } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
 import AdminDashboard from '../AdminDashboard ';
 import { getDecodedToken } from '../../../services/Token';
-import { Carrera, CarreraCreate, Modalidad } from '../../../services/models/Carrera';
+import { Carrera, CarreraCreate, Modalidad, Prioridad } from '../../../services/models/Carrera';
+import handleApiError from '../../../utils/ApiErrorHandler';
+import { ApiValidationResponse } from '../../../services/models/ApiValidationResponse';
 
 const CarreraAddPage = () => {
   const navigate = useNavigate();
@@ -33,8 +35,9 @@ const CarreraAddPage = () => {
   const fechaInscripcionRef = useRef<HTMLInputElement>(null);
   const horaInscripcionRef = useRef<HTMLInputElement>(null);
   const observacionRef = useRef<HTMLInputElement>(null);
-  const prioridadRef = useRef<HTMLInputElement>(null);
+  const prioridadRef = useRef<HTMLSelectElement>(null);
 
+  const [prioridad, setPrioridad] = useState<Prioridad>(Prioridad.Alta);
   const [modalidad, setModalidad] = useState<Modalidad>(Modalidad.Presencial);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -89,13 +92,17 @@ const CarreraAddPage = () => {
       });
       navigate('/dashboard/carreras');
     } else {
-      toast({
-        title: 'Error al crear la carrera.',
-        description: apiResponse.error || 'Ocurrió un problema al crear la carrera.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      if (typeof apiResponse.error === 'object' && apiResponse.error !== null && 'errors' in apiResponse.error) {
+        handleApiError(apiResponse.error as ApiValidationResponse, toast);
+      } else {
+        toast({
+          title: 'Error al actualizar la carrera.',
+          description: apiResponse.error || 'Ocurrió un problema al actualizar la carrera.',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -132,7 +139,6 @@ const CarreraAddPage = () => {
               <Select 
               ref={modalidadRef} 
               value={modalidad} 
-              defaultValue={Modalidad.Presencial} 
               onChange={(e) => setModalidad(e.target.value as Modalidad)}>
                 <option value={Modalidad.Presencial}>Presencial</option>
                 <option value={Modalidad.Virtual}>Virtual</option>
@@ -178,9 +184,16 @@ const CarreraAddPage = () => {
               <Input ref={observacionRef} defaultValue="" />
             </FormControl>
 
-            <FormControl id="prioridad">
+            <FormControl id="prioridad" isRequired>
               <FormLabel>Prioridad</FormLabel>
-              <Input type="number" ref={prioridadRef} />
+              <Select 
+              ref={prioridadRef} 
+              value={prioridad} 
+              onChange={(e) => setPrioridad(parseInt(e.target.value) as Prioridad)}>
+                <option value={Prioridad.Alta}>Alta</option>
+                <option value={Prioridad.Media}>Media</option>
+                <option value={Prioridad.Baja}>Baja</option>
+              </Select>
             </FormControl>
 
             <Button type="submit" colorScheme="teal" size="lg" width="full">

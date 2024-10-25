@@ -14,7 +14,7 @@ class DBConnection {
             password: process.env.DB_PASS as string,
             database: process.env.DB_DATABASE as string,
         });
-        this.query = this.query.bind(this);
+        //this.query = this.query.bind(this);
         this.checkConnection();
     }
 

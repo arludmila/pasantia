@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -13,7 +13,9 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
 import AdminDashboard from '../AdminDashboard ';
-import { Carrera } from '../../../services/models/Carrera';
+import { Carrera, Modalidad, Prioridad } from '../../../services/models/Carrera';
+import handleApiError from '../../../utils/ApiErrorHandler';
+import { ApiValidationResponse } from '../../../services/models/ApiValidationResponse';
 
 const CarreraEditPage = () => {
   const navigate = useNavigate();
@@ -32,8 +34,11 @@ const CarreraEditPage = () => {
   const duracionMesesRef = useRef<HTMLInputElement>(null);
   const fechaInscripcionRef = useRef<HTMLInputElement>(null);
   const observacionRef = useRef<HTMLInputElement>(null);
-  const prioridadRef = useRef<HTMLInputElement>(null);
+  const prioridadRef = useRef<HTMLSelectElement>(null);
 
+  const [prioridad, setPrioridad] = useState<Prioridad>(Prioridad.Alta);
+  const [modalidad, setModalidad] = useState<Modalidad>(Modalidad.Presencial);
+  console.log('ca', carreraToEdit.prioridad)
   const storedDate = carreraToEdit.fecha_inscripcion
   ? carreraToEdit.fecha_inscripcion.split('T')[0]
   : ''; 
@@ -73,7 +78,7 @@ const storedTime = carreraToEdit.fecha_inscripcion
       descripcion: descripcionRef.current?.value || '',
       plan_de_estudio: planDeEstudioRef.current?.value || '',
       modalidad: modalidadRef.current?.value || '',
-      cupo: cupoRef.current?.value || '',
+      cupo: Number(cupoRef.current?.value) || 0,
       duracion_anios: Number(duracionAniosRef.current?.value) || 0,
       duracion_meses: Number(duracionMesesRef.current?.value) || 0,
       fecha_inscripcion: formattedFechaHora,
@@ -94,13 +99,17 @@ const storedTime = carreraToEdit.fecha_inscripcion
       });
       navigate('/dashboard/carreras');
     } else {
-      toast({
-        title: 'Error al guardar',
-        description: `Ocurrió un error: ${apiResponse.error}`,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+      if (typeof apiResponse.error === 'object' && apiResponse.error !== null && 'errors' in apiResponse.error) {
+        handleApiError(apiResponse.error as ApiValidationResponse, toast);
+      } else {
+        toast({
+          title: 'Error al actualizar la carrera.',
+          description: apiResponse.error || 'Ocurrió un problema al actualizar la carrera.',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -134,17 +143,21 @@ const storedTime = carreraToEdit.fecha_inscripcion
 
             <FormControl id="modalidad" isRequired>
               <FormLabel>Modalidad</FormLabel>
-              <Select ref={modalidadRef} defaultValue={carreraToEdit.modalidad}>
-                <option value="Presencial">Presencial</option>
-                <option value="Virtual">Virtual</option>
-                <option value="Semipresencial">Semipresencial</option>
+              <Select 
+              ref={modalidadRef} 
+              value={carreraToEdit.modalidad} 
+              onChange={(e) => setModalidad(e.target.value as Modalidad)}>
+                <option value={Modalidad.Presencial}>Presencial</option>
+                <option value={Modalidad.Virtual}>Virtual</option>
+                <option value={Modalidad.Semipresencial}>Semipresencial</option>
               </Select>
             </FormControl>
 
-            <FormControl id="cupo">
+            <FormControl id="cupo" isRequired>
               <FormLabel>Cupo</FormLabel>
-              <Input type="text" ref={cupoRef} defaultValue={carreraToEdit.cupo} />
+              <Input type="number" ref={cupoRef} defaultValue={carreraToEdit.cupo} />
             </FormControl>
+
 
             <FormControl id="duracion_anios" isRequired>
               <FormLabel>Duración en Años</FormLabel>
@@ -178,9 +191,16 @@ const storedTime = carreraToEdit.fecha_inscripcion
               <Input type="text" ref={observacionRef} defaultValue={carreraToEdit.observacion} />
             </FormControl>
 
-            <FormControl id="prioridad">
+            <FormControl id="prioridad" isRequired>
               <FormLabel>Prioridad</FormLabel>
-              <Input type="number" ref={prioridadRef} defaultValue={carreraToEdit.prioridad} />
+              <Select 
+              ref={prioridadRef} 
+              value={carreraToEdit.prioridad} 
+              onChange={(e) => setPrioridad(parseInt(e.target.value) as Prioridad)}>
+                <option value={Prioridad.Alta}>Alta</option>
+                <option value={Prioridad.Media}>Media</option>
+                <option value={Prioridad.Baja}>Baja</option>
+              </Select>
             </FormControl>
 
             <Button type="submit" colorScheme="teal" size="lg" width="full">

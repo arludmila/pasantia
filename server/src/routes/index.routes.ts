@@ -8,7 +8,6 @@ import DBConnection from '../db/db_connection';
 
 export default function ApiRouter(dbConnection: DBConnection) {
     const router = Router();
-    console.log('ApiRouter initialized');
     router.use('/carreras', CarreraRouter(dbConnection));
     router.use('/instituciones', InstitucionRouter(dbConnection));
     router.use('/administradores', AdministradorRouter(dbConnection));

@@ -4,6 +4,13 @@ export enum Modalidad {
   Semipresencial = 'Semipresencial',
 }
 
+export enum Prioridad {
+  Alta = 1,
+  Media = 2,
+  Baja = 3,
+}
+
+
 export interface Carrera {
   id: number;                       
   nombre: string;                  
@@ -18,7 +25,7 @@ export interface Carrera {
   observacion?: string;           
   institucion_id: number;        
   estado: number;                  
-  prioridad: number;              
+  prioridad: Prioridad;              
   institucion_nombre?: string;    
   institucion_direccion?: string; 
   institucion_tel?: string;      
@@ -39,5 +46,5 @@ export interface CarreraUpdate {
   duracion_meses?: number;          
   fecha_inscripcion?: Date;        
   observacion?: string;           
-  prioridad?: number;              
+  prioridad?: Prioridad;              
 }

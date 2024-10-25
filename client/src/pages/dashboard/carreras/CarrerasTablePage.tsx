@@ -7,7 +7,8 @@ import { Flex, Spinner } from '@chakra-ui/react';
 import { Carrera } from '../../../services/models/Carrera';
 
 function CarrerasTablePage() {
-  const headers = ['ID', 'Nombre', 'Tipo', 'Descripción', 'Plan de Estudio', 'Modalidad', 'Cupo', 'Duración Años', 'Duración Meses', 'Fecha de Inscripción', 'Observación', 'ID Institucion', 'Estado', 'Prioridad'];
+  const headers = ['ID', 'Nombre', 'Tipo', 'Descripción', 'Plan de Estudio', 'Modalidad', 'Cupo', 'Duración Años', 'Duración Meses', 'Fecha de Inscripción', 'Observación', 'Prioridad'];
+  // TODO: revisar --> no muestra la prioridad
   const [response, setResponse] = useState(new ApiResponse<Carrera[]>());
   const decoded = getDecodedToken();
   useEffect(() => {

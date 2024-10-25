@@ -9,7 +9,6 @@ dotenv.config();
 const auth = (dbConnection: DBConnection, ...roles: Administrador['rol'][]) => {
     return async function (req: Request, res: Response, next: NextFunction) {
         try {
-            console.log('req', req)
             const authHeader = req.headers.authorization;
             const bearer = 'Bearer ';
 

@@ -18,6 +18,8 @@ import { Administrador, AdministradorUpdate, Roles } from '../../../services/mod
 import SuperUserDashboard from '../SuperUserDashboard';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
 import { Institucion } from '../../../services/models/Institucion';
+import { ApiValidationResponse } from '../../../services/models/ApiValidationResponse';
+import handleApiError from '../../../utils/ApiErrorHandler';
 const AdminEditPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -75,24 +77,50 @@ const AdminEditPage = () => {
     const apiPatchResponse = new ApiResponse<Administrador>();
     await apiPatchResponse.useFetch(`administradores/${administradorToEdit.id}`, 'PATCH', formData);
 
-    if (apiPatchResponse.error == null) {
+if (apiPatchResponse.error == null) {
+  toast({
+    title: 'Guardado correctamente',
+    description: 'El administrador fue actualizado con éxito.',
+    status: 'success',
+    duration: 3000,
+    isClosable: true,
+  });
+  navigate('/dashboard/administradores');
+} else {
+  if (typeof apiPatchResponse.error === 'object' && apiPatchResponse.error !== null) {
+    if ('errors' in apiPatchResponse.error) {
+      handleApiError(apiPatchResponse.error as ApiValidationResponse, toast);
+    } 
+    else if ('message' in apiPatchResponse.error && 'error' in apiPatchResponse.error) {
+      const { message, error } = apiPatchResponse.error;
       toast({
-        title: 'Guardado correctamente',
-        description: 'El administrador fue actualizado con éxito.',
-        status: 'success',
-        duration: 3000,
+        title: message,
+        description: error,
+        status: 'error',
+        duration: 5000,
         isClosable: true,
       });
-      navigate('/dashboard/administradores');
-    } else {
+    } 
+    else {
       toast({
-        title: 'Error al guardar',
-        description: `Ocurrió un error: ${apiPatchResponse.error}`,
+        title: 'Error desconocido',
+        description: 'Ocurrió un problema inesperado.',
         status: 'error',
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
     }
+  } else {
+    toast({
+      title: 'Error al actualizar el administrador.',
+      description: apiPatchResponse.error || 'Ocurrió un problema al actualizar el administrador.',
+      status: 'error',
+      duration: 5000,
+      isClosable: true,
+    });
+  }
+}
+
   };
 
   return (

@@ -19,6 +19,8 @@ import { Administrador, AdministradorCreate, Roles } from '../../../services/mod
 import SuperUserDashboard from '../SuperUserDashboard';
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { Institucion } from '../../../services/models/Institucion';
+import handleApiError from '../../../utils/ApiErrorHandler';
+import { ApiValidationResponse } from '../../../services/models/ApiValidationResponse';
 
 const AdminAddPage = () => {
   const navigate = useNavigate();
@@ -76,24 +78,50 @@ const AdminAddPage = () => {
     const apiPostResponse = new ApiResponse<Administrador>();
     await apiPostResponse.useFetch('administradores', 'POST', formData);
 
-    if (apiPostResponse.error == null) {
-      toast({
-        title: 'Administrador creado',
-        description: 'El administrador fue creado con éxito.',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
-      navigate('/dashboard/administradores');
-    } else {
-      toast({
-        title: 'Error',
-        description: `Ocurrió un error: ${apiPostResponse.error}`,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-    }
+      if (apiPostResponse.error == null) {
+        toast({
+          title: 'Administrador creado',
+          description: 'El administrador fue creado con éxito.',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+        navigate('/dashboard/administradores');
+      } else {
+        if (typeof apiPostResponse.error === 'object' && apiPostResponse.error !== null) {
+          if ('errors' in apiPostResponse.error) {
+            handleApiError(apiPostResponse.error as ApiValidationResponse, toast);
+          } 
+          else if ('message' in apiPostResponse.error && 'error' in apiPostResponse.error) {
+            const { message, error } = apiPostResponse.error;
+            toast({
+              title: message,
+              description: error,
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+            });
+          } 
+          else {
+            toast({
+              title: 'Error desconocido',
+              description: 'Ocurrió un problema inesperado.',
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+            });
+          }
+        } else {
+          toast({
+            title: 'Error al actualizar la carrera.',
+            description: apiPostResponse.error || 'Ocurrió un problema al actualizar la carrera.',
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+      }
+
   };
 
   return (
@@ -121,7 +149,6 @@ const AdminAddPage = () => {
                 ref={rolRef}
                 value={rol}
                 onChange={(e) => setRol(e.target.value as Roles)} 
-                defaultValue={Roles.Admin}
               >
                 <option value={Roles.Admin}>Admin</option>
                 <option value={Roles.SuperUser}>SuperUser</option>

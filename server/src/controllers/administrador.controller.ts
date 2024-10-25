@@ -27,7 +27,7 @@ export class AdministradorController extends BaseController<Administrador> {
        return;
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || 'Error desconocido';
-       res.status(500).json({ mensaje: 'Error al obtener administradores', error: errorMessage });
+       res.status(500).json({ message: 'Error al obtener administradores', error: errorMessage });
        return;
     }
   }
@@ -61,20 +61,21 @@ export class AdministradorController extends BaseController<Administrador> {
       const { correo, clave } = req.body;
   
       if (typeof correo !== 'string' || !validator.isEmail(correo)) {
-        res.status(400).json({ mensaje: 'Correo electrónico inválido.' });
+        res.status(400).json({ message: 'Correo electrónico inválido.' });
         return;
       }
   
       const administrador = await this.administradorRepository.findAdministrador(correo);
   
       if (!administrador) {
-        res.status(401).json({ mensaje: 'No se pudo iniciar sesión.' });
+        res.status(401).json({ message: 'No existe usuario con ese correo electrónico.' });
         return;
-      }
+    }
+    
   
       const isMatch = await bcrypt.compare(clave, administrador.clave);
       if (!isMatch) {
-       res.status(401).json({ mensaje: 'Contraseña incorrecta.' });
+       res.status(401).json({ message: 'Contraseña incorrecta.' });
        return;
       }
   
@@ -96,7 +97,7 @@ export class AdministradorController extends BaseController<Administrador> {
       return;
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || 'Error interno del servidor.';
-     res.status(500).json({ mensaje: 'Error interno del servidor.', error: errorMessage });
+     res.status(500).json({ message: 'Error interno del servidor.', error: errorMessage });
      return;
       // next(error); 
     }

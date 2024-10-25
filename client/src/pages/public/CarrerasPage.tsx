@@ -45,21 +45,33 @@ const CarrerasPage = () => {
       const filtered = response.data?.filter(carrera =>
         normalizeText(carrera.nombre).includes(searchTerm) &&
         (selectedModalidad ? carrera.modalidad === selectedModalidad : true)
-      ) || [];
+      ).sort((a, b) => {
+        if (a.prioridad === b.prioridad) {
+          return a.nombre.localeCompare(b.nombre);
+        }
+        return a.prioridad - b.prioridad; 
+      }) || []; 
       setFilteredCarreras(filtered);
       setCurrentPage(1); 
     }
   };
+  
 
   useEffect(() => {
     const searchTerm = searchInputRef.current ? normalizeText(searchInputRef.current.value) : '';
     const filtered = response.data?.filter(carrera =>
       normalizeText(carrera.nombre).includes(searchTerm) &&
       (selectedModalidad ? carrera.modalidad === selectedModalidad : true)
-    ) || [];
+    ).sort((a, b) => {
+      if (a.prioridad === b.prioridad) {
+        return a.nombre.localeCompare(b.nombre);
+      }
+      return a.prioridad - b.prioridad; 
+    }) || []; 
     setFilteredCarreras(filtered);
     setCurrentPage(1); 
   }, [selectedModalidad, response.data]);
+  
 
   const indexOfLastCarrera = currentPage * resultsPerPage;
   const indexOfFirstCarrera = indexOfLastCarrera - resultsPerPage;

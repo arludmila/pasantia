@@ -24,7 +24,7 @@ export class CarreraController extends BaseController<Carrera> {
     const institucionId = parseInt(req.params.id);
   
     if (isNaN(institucionId)) {
-       res.status(400).json({ mensaje: 'ID de institución no válido.' });
+       res.status(400).json({ message: 'ID de institución no válido.' });
        return;
     }
   
@@ -34,7 +34,7 @@ export class CarreraController extends BaseController<Carrera> {
        return;
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || 'Error desconocido';
-       res.status(500).json({ mensaje: 'Error al obtener carreras', error: errorMessage });
+       res.status(500).json({ message: 'Error al obtener carreras', error: errorMessage });
        return;
     }
   }
@@ -48,7 +48,7 @@ export class CarreraController extends BaseController<Carrera> {
         const errorMessage = (error as Error).message || 'Error desconocido';
 
          res.status(500).json({
-            mensaje: 'Error al obtener carreras',
+          message: 'Error al obtener carreras',
             error: errorMessage,
         });
         return;
@@ -64,7 +64,7 @@ public async getCarreraById(req: Request, res: Response): Promise<void> {
     const carrera = await this.carreraRepository.getCarreraById(carreraId);
 
     if (!carrera) {
-       res.status(404).json({ mensaje: 'Carrera no encontrada' });
+       res.status(404).json({ message: 'Carrera no encontrada' });
        return;
     }
 
@@ -72,7 +72,7 @@ public async getCarreraById(req: Request, res: Response): Promise<void> {
      return;
   } catch (error: unknown) {
     const errorMessage = (error as Error).message || 'Error desconocido';
-     res.status(500).json({ mensaje: 'Error al obtener carrera', error: errorMessage });
+     res.status(500).json({ message: 'Error al obtener carrera', error: errorMessage });
      return;
   }
 }

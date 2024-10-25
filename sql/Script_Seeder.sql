@@ -1,14 +1,14 @@
 INSERT INTO institucion (cue, cueanexo, nombre, direccion, ubicacion_lat, ubicacion_long, tel, pagina, gestion, estado, logo) VALUES
-(123456, 789, 'Instituto Tecnológico', 'Calle Falsa 123', -31.425, -64.184, '351-1234567', 'www.tecnologico1.com', 'Publica', 1, '/uploads/logos/ph.png'),
-(223456, 780, 'Colegio Privado', 'Av. Siempre Viva 456', -31.4255, -64.185, '351-2345678', 'www.colegioprivado2.com', 'Privada', 1, '/uploads/logos/ph.png'),
-(323456, 781, 'Escuela Secundaria', 'Calle del Sol 789', -31.426, -64.186, '351-3456789', 'www.escuelasecundaria3.com', 'Publica', 1, '/uploads/logos/ph.png'),
-(423456, 782, 'Colegio Internacional', 'Av. Libertador 321', -31.4265, -64.187, '351-4567890', 'www.colegiopublico4.com', 'Privada', 1, '/uploads/logos/ph.png'),
-(523456, 783, 'Instituto de Educación Superior', 'Calle Nueva 654', -31.427, -64.188, '351-5678901', 'www.institutopublico5.com', 'Publica', 1, '/uploads/logos/ph.png'),
-(623456, 784, 'Colegio Técnico', 'Av. de los Estudiantes 987', -31.4275, -64.189, '351-6789012', 'www.colegiotecnico6.com', 'Privada', 1, '/uploads/logos/ph.png'),
-(723456, 785, 'Centro Educativo', 'Calle 24 de Septiembre 135', -31.428, -64.190, '351-7890123', 'www.centroseducativo7.com', 'Publica', 1, '/uploads/logos/ph.png'),
-(823456, 786, 'Universidad Cuenca', 'Av. Universitaria 456', -31.4285, -64.191, '351-8901234', 'www.universidad8.com', 'Privada', 1, '/uploads/logos/ph.png'),
-(923456, 787, 'Instituto de Formación', 'Calle de la Educación 789', -31.429, -64.192, '351-9012345', 'www.institutodeformacion9.com', 'Publica', 1, '/uploads/logos/ph.png'),
-(1023456, 788, 'Escuela de Artes', 'Calle del Arte 159', -31.4295, -64.193, '351-0123456', 'www.escueladeartes10.com', 'Privada', 1, '/uploads/logos/ph.png');
+(123456, 789, 'Instituto Tecnológico', 'Calle Falsa 123', -31.425, -64.184, '351-1234567', 'http://www.tecnologico1.com', 'Publica', 1, '/uploads/logos/ph.png'),
+(223456, 780, 'Colegio Privado', 'Av. Siempre Viva 456', -31.4255, -64.185, '351-2345678', 'http://www.colegioprivado2.com', 'Privada', 1, '/uploads/logos/ph.png'),
+(323456, 781, 'Escuela Secundaria', 'Calle del Sol 789', -31.426, -64.186, '351-3456789', 'http://www.escuelasecundaria3.com', 'Publica', 1, '/uploads/logos/ph.png'),
+(423456, 782, 'Colegio Internacional', 'Av. Libertador 321', -31.4265, -64.187, '351-4567890', 'http://www.colegiopublico4.com', 'Privada', 1, '/uploads/logos/ph.png'),
+(523456, 783, 'Instituto de Educación Superior', 'Calle Nueva 654', -31.427, -64.188, '351-5678901', 'http://www.institutopublico5.com', 'Publica', 1, '/uploads/logos/ph.png'),
+(623456, 784, 'Colegio Técnico', 'Av. de los Estudiantes 987', -31.4275, -64.189, '351-6789012', 'http://www.colegiotecnico6.com', 'Privada', 1, '/uploads/logos/ph.png'),
+(723456, 785, 'Centro Educativo', 'Calle 24 de Septiembre 135', -31.428, -64.190, '351-7890123', 'http://www.centroseducativo7.com', 'Publica', 1, '/uploads/logos/ph.png'),
+(823456, 786, 'Universidad Cuenca', 'Av. Universitaria 456', -31.4285, -64.191, '351-8901234', 'http://www.universidad8.com', 'Privada', 1, '/uploads/logos/ph.png'),
+(923456, 787, 'Instituto de Formación', 'Calle de la Educación 789', -31.429, -64.192, '351-9012345', 'http://www.institutodeformacion9.com', 'Publica', 1, '/uploads/logos/ph.png'),
+(1023456, 788, 'Escuela de Artes', 'Calle del Arte 159', -31.4295, -64.193, '351-0123456', 'http://www.escueladeartes10.com', 'Privada', 1, '/uploads/logos/ph.png');
 
 INSERT INTO administrador (rol, nombre, correo, id_institucion, clave, estado) VALUES
 ('SuperUser', 'SuperUser', 'super@example.com', null, '$2b$08$aAaX6eVQjjKR57s/1qczl.uYi0BsWBLN1cu.vh630rQf/5MHhrkm.', 1),
