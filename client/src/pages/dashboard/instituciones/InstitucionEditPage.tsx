@@ -16,6 +16,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {Gestiones, Institucion} from '../../../services/models/Institucion';
 import SuperUserDashboard from '../SuperUserDashboard';
 import LogoFileInput from '../../../components/LogoFileInput';
+import PhoneNumberInputArg from '../../../components/PhoneNumberInputArg';
+import UrlInput from '../../../components/UrlInput';
 
 const InstitucionEditPage = () => {
   const navigate = useNavigate();
@@ -81,7 +83,7 @@ const InstitucionEditPage = () => {
       });
   
       if (!response.ok) {
-        throw new Error('Error updating institution');
+        throw new Error('Error al guardar los cambios');
       }
   
       toast({
@@ -144,19 +146,13 @@ const InstitucionEditPage = () => {
               <Input type="number" step="any" ref={ubicacionLongRef} defaultValue={institucionToEdit.ubicacion_long || undefined} />
             </FormControl>
 
-            <FormControl id="tel">
-              <FormLabel>Teléfono</FormLabel>
-              <Input type="text" ref={telRef} defaultValue={institucionToEdit.tel || ''} />
-            </FormControl>
+            <PhoneNumberInputArg telRef={telRef}></PhoneNumberInputArg>
 
-            <FormControl id="pagina">
-              <FormLabel>Página Web</FormLabel>
-              <Input type="text" ref={paginaRef} defaultValue={institucionToEdit.pagina || ''} />
-            </FormControl>
+            <UrlInput paginaRef={paginaRef}></UrlInput>
 
             <FormControl id="gestion" isRequired>
               <FormLabel>Gestión</FormLabel>
-              <Select ref={gestionRef} value={gestion} onChange={(e)=>setGestion(e.target.value as Gestiones)} defaultValue={Gestiones.Publica}>
+              <Select ref={gestionRef} value={gestion} onChange={(e)=>setGestion(e.target.value as Gestiones)} >
                 <option value={Gestiones.Publica}>Pública</option>
                 <option value={Gestiones.Privada}>Privada</option>
                 <option value={Gestiones.Mixta}>Mixta</option>

@@ -16,6 +16,8 @@ import SuperUserDashboard from '../SuperUserDashboard';
 import { LogoUploadResponse } from '../../../services/models/LogoUploadResponse';
 import LogoFileInput from '../../../components/LogoFileInput';
 import { Gestiones, Institucion, InstitucionCrear } from '../../../services/models/Institucion';
+import PhoneNumberInputArg from '../../../components/PhoneNumberInputArg';
+import UrlInput from '../../../components/UrlInput';
 
 const InstitucionAddPage = () => {
   // TODO: aca deberia poder dejarme elegir con un mapita? la direccion? para poner automaticamente la ubicacion lat y long
@@ -39,7 +41,7 @@ const InstitucionAddPage = () => {
     const logoFile = logoRef.current?.files?.[0];
     const token = localStorage.getItem('token');
   
-   
+    
     const formData = new FormData();
       formData.append('cue', cueRef.current?.value || '0');
 
@@ -67,6 +69,7 @@ const InstitucionAddPage = () => {
     if (logoFile) {
       formData.append('logo', logoFile);
     }
+    
     try {
       const response = await fetch('http://localhost:3000/api/instituciones', {
         method: 'POST',
@@ -77,7 +80,7 @@ const InstitucionAddPage = () => {
       });
   
       if (!response.ok) {
-        throw new Error('Error creating institution');
+        throw new Error('Error al crear la institución');
       }
   
       toast({
@@ -90,6 +93,7 @@ const InstitucionAddPage = () => {
   
       navigate('/dashboard/instituciones');
     } catch (error) {
+      // TODO: aca y en update, lo de los errores (validaciones), handler?
       toast({
         title: 'Error al crear',
         description: `Ocurrió un error: ${error}`,
@@ -141,19 +145,13 @@ const InstitucionAddPage = () => {
               <Input type="number" step="any" ref={ubicacionLongRef} defaultValue={undefined} />
             </FormControl>
 
-            <FormControl id="tel">
-              <FormLabel>Teléfono</FormLabel>
-              <Input type="text" ref={telRef} defaultValue="" />
-            </FormControl>
+            <PhoneNumberInputArg telRef={telRef}></PhoneNumberInputArg>
 
-            <FormControl id="pagina">
-              <FormLabel>Página Web</FormLabel>
-              <Input type="text" ref={paginaRef} defaultValue="" />
-            </FormControl>
+            <UrlInput paginaRef={paginaRef}></UrlInput>
 
             <FormControl id="gestion" isRequired>
               <FormLabel>Gestión</FormLabel>
-              <Select ref={gestionRef} value={gestion} onChange={(e)=>setGestion(e.target.value as Gestiones)} defaultValue={Gestiones.Publica}>
+              <Select ref={gestionRef} value={gestion} onChange={(e)=>setGestion(e.target.value as Gestiones)} >
                 <option value={Gestiones.Publica}>Pública</option>
                 <option value={Gestiones.Privada}>Privada</option>
                 <option value={Gestiones.Mixta}>Mixta</option>

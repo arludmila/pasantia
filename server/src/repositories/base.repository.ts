@@ -32,14 +32,13 @@ export class BaseRepository<T extends object> {
       throw new DatabaseError("Error al obtener los registros.");
     }
   }
-
   public async create(item: Partial<T>): Promise<T> {
     try {
         const columns = Object.keys(item).join(', ');
         const placeholders = Object.keys(item).map(() => '?').join(', ');
         const sql = `INSERT INTO ${this.tableName} (${columns}) VALUES (${placeholders})`;
         const values = Object.values(item);
-        
+
         const result = await this.dbConnection.query(sql, values);
 
         if (result && 'insertId' in result) {
@@ -49,8 +48,18 @@ export class BaseRepository<T extends object> {
         }
     } catch (error) {
       console.error("Database Error:", error);
-        throw new DatabaseError("Error al crear el elemento.");
-    }
+
+      if (isDatabaseError(error)) {
+          if (error.code === 'ER_DUP_ENTRY') {
+              const duplicateField = extractDuplicateField(error.message);
+              throw new DatabaseError(`Error: entrada duplicada en el campo '${duplicateField}'. Verifica los datos y vuelve a intentarlo.`);
+          } else {
+              throw new DatabaseError("Error al crear el elemento: " + error.message);
+          }
+      } else {
+          throw new DatabaseError("Error desconocido al crear el elemento.");
+      }
+  }
 }
 
 
@@ -92,4 +101,17 @@ export class BaseRepository<T extends object> {
       throw new DatabaseError("Error al encontrar el elemento.");
     }
   }
+}
+function isDatabaseError(error: unknown): error is { code: string; message: string } {
+  return typeof error === 'object' && error !== null && 'code' in error && 'message' in error;
+}
+function extractDuplicateField(errorMessage: string): string {
+  const match = errorMessage.match(/Duplicate entry '.*' for key '(.*)'/);
+  if (match) {
+    const fieldName = match[1]; 
+    const parts = fieldName.split('.'); 
+    return parts.length > 1 ? parts[parts.length - 1] : fieldName; 
+}
+
+return 'campo desconocido';
 }

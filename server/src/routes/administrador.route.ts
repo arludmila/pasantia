@@ -4,7 +4,7 @@ import auth from '../middlewares/auth.middleware';
 import { Roles } from '../models/administrador.model';
 import { AdministradorRepository } from '../repositories/administrador.repository';
 import DBConnection from '../db/db_connection';
-import validateReqBody from '../middlewares/validation.middleware';
+import validateReqBody from '../middlewares/body.validation.middleware';
 import { CreateAdministradorDto, LoginDto, UpdateAdministradorDto } from '../middlewares/validators/administrador.validator';
 
 export default function AdministradorRouter(dbConnection: DBConnection) {

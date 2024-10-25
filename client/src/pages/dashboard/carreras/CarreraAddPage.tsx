@@ -15,6 +15,8 @@ import ApiResponse from '../../../services/ApiResponse';
 import AdminDashboard from '../AdminDashboard ';
 import { getDecodedToken } from '../../../services/Token';
 import { Carrera, CarreraCreate, Modalidad, Prioridad } from '../../../services/models/Carrera';
+import handleApiError from '../../../utils/ApiErrorHandler';
+import { ApiValidationResponse } from '../../../services/models/ApiValidationResponse';
 
 const CarreraAddPage = () => {
   const navigate = useNavigate();
@@ -90,13 +92,17 @@ const CarreraAddPage = () => {
       });
       navigate('/dashboard/carreras');
     } else {
-      toast({
-        title: 'Error al crear la carrera.',
-        description: apiResponse.error || 'Ocurrió un problema al crear la carrera.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      if (typeof apiResponse.error === 'object' && apiResponse.error !== null && 'errors' in apiResponse.error) {
+        handleApiError(apiResponse.error as ApiValidationResponse, toast);
+      } else {
+        toast({
+          title: 'Error al actualizar la carrera.',
+          description: apiResponse.error || 'Ocurrió un problema al actualizar la carrera.',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -133,7 +139,6 @@ const CarreraAddPage = () => {
               <Select 
               ref={modalidadRef} 
               value={modalidad} 
-              defaultValue={Modalidad.Presencial} 
               onChange={(e) => setModalidad(e.target.value as Modalidad)}>
                 <option value={Modalidad.Presencial}>Presencial</option>
                 <option value={Modalidad.Virtual}>Virtual</option>
@@ -184,7 +189,6 @@ const CarreraAddPage = () => {
               <Select 
               ref={prioridadRef} 
               value={prioridad} 
-              defaultValue={Prioridad.Alta} 
               onChange={(e) => setPrioridad(parseInt(e.target.value) as Prioridad)}>
                 <option value={Prioridad.Alta}>Alta</option>
                 <option value={Prioridad.Media}>Media</option>

@@ -7,8 +7,8 @@ import fs from 'fs';
 import path from 'path';
 import { InstitucionRepository } from '../repositories/institucion.repository';
 import DBConnection from '../db/db_connection';
-import validateReqBody from '../middlewares/validation.middleware';
 import { CreateInstitucionDto, UpdateInstitucionDto } from '../middlewares/validators/institucion.validator';
+import validateFormData from '../middlewares/formData.validation.middleware';
 
 export default function InstitucionRouter(dbConnection: DBConnection) {
   const router = Router();
@@ -31,9 +31,19 @@ export default function InstitucionRouter(dbConnection: DBConnection) {
   const upload = multer({ storage: storage });
 
   router.get('/', controller.getAll);
-  router.patch('/:id', [auth(dbConnection, Roles.SuperUser), validateReqBody(UpdateInstitucionDto)], upload.single('logo'),  controller.update);
-  router.post('/', [auth(dbConnection, Roles.SuperUser), validateReqBody(CreateInstitucionDto)], upload.single('logo'),  controller.create);
-  router.delete('/:id', auth(dbConnection, Roles.SuperUser), controller.delete);
+  //TODO: borrar logo si no se uso? queda subido el original (sin cambiar nombre)
+  router.patch('/:id', [
+    auth(dbConnection, Roles.SuperUser), 
+    upload.single('logo'), 
+    validateFormData(UpdateInstitucionDto, 'logo', false), 
+    controller.update
+  ]);
+  router.post('/', [
+    auth(dbConnection, Roles.SuperUser), 
+    upload.single('logo'), 
+    validateFormData(CreateInstitucionDto, 'logo', false), 
+    controller.create
+  ]);  router.delete('/:id', auth(dbConnection, Roles.SuperUser), controller.delete);
 
   return router;
 }

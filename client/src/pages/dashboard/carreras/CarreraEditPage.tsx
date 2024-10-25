@@ -16,7 +16,6 @@ import AdminDashboard from '../AdminDashboard ';
 import { Carrera, Modalidad, Prioridad } from '../../../services/models/Carrera';
 import handleApiError from '../../../utils/ApiErrorHandler';
 import { ApiValidationResponse } from '../../../services/models/ApiValidationResponse';
-import { createLogicalAnd } from 'typescript';
 
 const CarreraEditPage = () => {
   const navigate = useNavigate();
@@ -124,30 +123,29 @@ const storedTime = carreraToEdit.fecha_inscripcion
           <VStack spacing={5}>
             <FormControl id="nombre" isRequired>
               <FormLabel>Nombre</FormLabel>
-              <Input type="text" ref={nombreRef} value={carreraToEdit.nombre} />
+              <Input type="text" ref={nombreRef} defaultValue={carreraToEdit.nombre} />
             </FormControl>
 
             <FormControl id="tipo" isRequired>
               <FormLabel>Tipo</FormLabel>
-              <Input type="text" ref={tipoRef} value={carreraToEdit.tipo} />
+              <Input type="text" ref={tipoRef} defaultValue={carreraToEdit.tipo} />
             </FormControl>
 
             <FormControl id="descripcion">
               <FormLabel>Descripción</FormLabel>
-              <Input type="text" ref={descripcionRef} value={carreraToEdit.descripcion} />
+              <Input type="text" ref={descripcionRef} defaultValue={carreraToEdit.descripcion} />
             </FormControl>
 
             <FormControl id="plan_de_estudio">
               <FormLabel>Plan de Estudio</FormLabel>
-              <Input type="text" ref={planDeEstudioRef} value={carreraToEdit.plan_de_estudio} />
+              <Input type="text" ref={planDeEstudioRef} defaultValue={carreraToEdit.plan_de_estudio} />
             </FormControl>
 
             <FormControl id="modalidad" isRequired>
               <FormLabel>Modalidad</FormLabel>
               <Select 
               ref={modalidadRef} 
-              value={modalidad} 
-              defaultValue={carreraToEdit.modalidad} 
+              value={carreraToEdit.modalidad} 
               onChange={(e) => setModalidad(e.target.value as Modalidad)}>
                 <option value={Modalidad.Presencial}>Presencial</option>
                 <option value={Modalidad.Virtual}>Virtual</option>
@@ -157,18 +155,18 @@ const storedTime = carreraToEdit.fecha_inscripcion
 
             <FormControl id="cupo" isRequired>
               <FormLabel>Cupo</FormLabel>
-              <Input type="number" ref={cupoRef} value={carreraToEdit.cupo} />
+              <Input type="number" ref={cupoRef} defaultValue={carreraToEdit.cupo} />
             </FormControl>
 
 
             <FormControl id="duracion_anios" isRequired>
               <FormLabel>Duración en Años</FormLabel>
-              <Input type="number" ref={duracionAniosRef} value={carreraToEdit.duracion_anios} />
+              <Input type="number" ref={duracionAniosRef} defaultValue={carreraToEdit.duracion_anios} />
             </FormControl>
 
             <FormControl id="duracion_meses" isRequired>
               <FormLabel>Duración en Meses</FormLabel>
-              <Input type="number" ref={duracionMesesRef} value={carreraToEdit.duracion_meses} />
+              <Input type="number" ref={duracionMesesRef} defaultValue={carreraToEdit.duracion_meses} />
             </FormControl>
 
             <FormControl id="fecha_inscripcion" isRequired>
@@ -177,12 +175,12 @@ const storedTime = carreraToEdit.fecha_inscripcion
                 <Input 
                   type="date" 
                   ref={fechaInscripcionRef} 
-                  value={storedDate} 
+                  defaultValue={storedDate} 
                   min={new Date().toISOString().split('T')[0]} 
                 />
                 <Input 
                   type="time" 
-                  value={storedTime} 
+                  defaultValue={storedTime} 
                   ref={horaInscripcionRef} 
                 />
               </VStack>
@@ -190,7 +188,7 @@ const storedTime = carreraToEdit.fecha_inscripcion
 
             <FormControl id="observacion">
               <FormLabel>Observación</FormLabel>
-              <Input type="text" ref={observacionRef} value={carreraToEdit.observacion} />
+              <Input type="text" ref={observacionRef} defaultValue={carreraToEdit.observacion} />
             </FormControl>
 
             <FormControl id="prioridad" isRequired>

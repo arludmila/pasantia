@@ -48,7 +48,7 @@ class ApiResponse<T> {
     this.loading = false;
   }
 
-  setError(error: string) {
+  setError(error: any) {
     this.error = error;
     this.loading = false;
   }
