@@ -65,7 +65,17 @@ export class BaseRepository<T extends object> {
       await this.dbConnection.query(sql, values);
     } catch (error) {
       console.error("Database Error:", error);
+      if (isError(error)) {
+        if (error.code === 'ER_DUP_ENTRY') {
+            const duplicateField = extractDuplicateField(error.message);
+            throw new Error(`Error: Ya está en uso ese dato en el campo '${duplicateField}'. Verifica los datos y vuelve a intentarlo.`);
+        } else {
+            throw new Error("Error al actualizar el elemento: " + error.message);
+        }
+    } else {
       throw new Error("Error al actualizar el elemento.");
+    }
+      
     }
   }
 

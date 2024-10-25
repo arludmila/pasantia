@@ -67,13 +67,14 @@ const AdminEditPage = () => {
 
 
 
-    const formData: AdministradorUpdate  = {
+   const formData: AdministradorUpdate = {
       nombre: nombreRef.current?.value || '',
       correo: correoRef.current?.value || '',
       id_institucion: Number(idInstitucionRef.current?.value) || undefined,
-      clave: claveRef.current?.value || '',
+      ...(claveRef.current?.value ? { clave: claveRef.current.value } : {}),
       rol: rolRef.current?.value as Roles,
     };
+
     const apiPatchResponse = new ApiResponse<Administrador>();
     await apiPatchResponse.useFetch(`administradores/${administradorToEdit.id}`, 'PATCH', formData);
 
