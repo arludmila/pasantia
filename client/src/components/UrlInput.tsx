@@ -10,10 +10,12 @@ const UrlInput = ({ paginaRef }: UrlInputProps) => {
 
   const handleValidation = (e: React.FocusEvent<HTMLInputElement>) => {
     const input = e.target as HTMLInputElement;
-    const url = input.value;
+    const url = input.value.trim(); 
     const regex = /^(http|https):\/\/[^ "]+$/;
 
-    if (!regex.test(url)) {
+    if (url === '') {
+      setUrlError(''); 
+    } else if (!regex.test(url)) {
       setUrlError('La URL debe comenzar con http:// o https:// y ser válida.');
     } else {
       setUrlError('');
@@ -24,12 +26,12 @@ const UrlInput = ({ paginaRef }: UrlInputProps) => {
     <FormControl id="pagina" isInvalid={!!urlError}>
       <FormLabel>Página Web</FormLabel>
       <Input
-        type="url" 
+        type="url"
         ref={paginaRef}
         defaultValue=""
-        onBlur={handleValidation} 
+        onBlur={handleValidation}
       />
-      {urlError && <FormErrorMessage>{urlError}</FormErrorMessage>} 
+      {urlError && <FormErrorMessage>{urlError}</FormErrorMessage>}
     </FormControl>
   );
 };
