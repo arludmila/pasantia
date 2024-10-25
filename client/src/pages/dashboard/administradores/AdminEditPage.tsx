@@ -67,13 +67,14 @@ const AdminEditPage = () => {
 
 
 
-    const formData: AdministradorUpdate  = {
+   const formData: AdministradorUpdate = {
       nombre: nombreRef.current?.value || '',
       correo: correoRef.current?.value || '',
       id_institucion: Number(idInstitucionRef.current?.value) || undefined,
-      clave: claveRef.current?.value || '',
+      ...(claveRef.current?.value ? { clave: claveRef.current.value } : {}),
       rol: rolRef.current?.value as Roles,
     };
+
     const apiPatchResponse = new ApiResponse<Administrador>();
     await apiPatchResponse.useFetch(`administradores/${administradorToEdit.id}`, 'PATCH', formData);
 
@@ -91,11 +92,11 @@ if (apiPatchResponse.error == null) {
     if ('errors' in apiPatchResponse.error) {
       handleApiError(apiPatchResponse.error as ApiValidationResponse, toast);
     } 
-    else if ('message' in apiPatchResponse.error && 'error' in apiPatchResponse.error) {
-      const { message, error } = apiPatchResponse.error;
+    else if ('message' in apiPatchResponse.error) {
+      const { message } = apiPatchResponse.error;
       toast({
-        title: message,
-        description: error,
+        title: 'Error',
+        description: message,
         status: 'error',
         duration: 5000,
         isClosable: true,

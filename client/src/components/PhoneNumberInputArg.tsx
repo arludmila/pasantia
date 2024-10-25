@@ -9,11 +9,14 @@ const PhoneNumberInputArg = ({ telRef }: PhoneNumberInputArgProps) => {
   const [telError, setTelError] = useState<string>('');
 
   const handleValidation = () => {
-    if (telRef.current) { 
-      const phoneNumber = telRef.current.value;
+    if (telRef.current) {
+      const phoneNumber = telRef.current.value.trim(); 
       const regex = /^\+54[0-9]{10}$/;
 
-      if (!regex.test(phoneNumber)) {
+      
+      if (phoneNumber === '') {
+        setTelError(''); 
+      } else if (!regex.test(phoneNumber)) {
         setTelError('El teléfono debe tener el formato +54XXXXXXXXXX (número argentino).');
       } else {
         setTelError('');
@@ -22,13 +25,13 @@ const PhoneNumberInputArg = ({ telRef }: PhoneNumberInputArgProps) => {
   };
 
   return (
-    <FormControl id="tel" isInvalid={!!telError}> 
+    <FormControl id="tel" isInvalid={!!telError}>
       <FormLabel>Teléfono</FormLabel>
       <Input
         type="text"
         ref={telRef}
         defaultValue=""
-        onBlur={handleValidation} 
+        onBlur={handleValidation}
       />
       {telError && <FormErrorMessage>{telError}</FormErrorMessage>}
     </FormControl>

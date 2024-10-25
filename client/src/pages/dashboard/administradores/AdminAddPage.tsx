@@ -92,11 +92,11 @@ const AdminAddPage = () => {
           if ('errors' in apiPostResponse.error) {
             handleApiError(apiPostResponse.error as ApiValidationResponse, toast);
           } 
-          else if ('message' in apiPostResponse.error && 'error' in apiPostResponse.error) {
-            const { message, error } = apiPostResponse.error;
+          else if ('message' in apiPostResponse.error) {
+            const { message } = apiPostResponse.error;
             toast({
-              title: message,
-              description: error,
+              title: 'Error',
+              description: message,
               status: 'error',
               duration: 5000,
               isClosable: true,

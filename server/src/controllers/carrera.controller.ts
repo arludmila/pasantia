@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { BaseController } from './base.controller';
 import { CarreraRepository } from '../repositories/carrera.repository';
 import { Carrera } from '../models/carrera.model';
+import { handleError } from '../utils/errorHandler';
 export class CarreraController extends BaseController<Carrera> {
 
   constructor(private carreraRepository: CarreraRepository) {
@@ -32,9 +33,8 @@ export class CarreraController extends BaseController<Carrera> {
       const carreras = await this.carreraRepository.getCarrerasFromInstitucion(institucionId);
        res.status(200).json(carreras);
        return;
-    } catch (error: unknown) {
-      const errorMessage = (error as Error).message || 'Error desconocido';
-       res.status(500).json({ message: 'Error al obtener carreras', error: errorMessage });
+    } catch (error) {
+      handleError(error as Error, res);
        return;
     }
   }
@@ -44,13 +44,8 @@ export class CarreraController extends BaseController<Carrera> {
         const carreras = await this.carreraRepository.getAllCarreras();
         res.status(200).json(carreras);
         return;
-    } catch (error: unknown) {
-        const errorMessage = (error as Error).message || 'Error desconocido';
-
-         res.status(500).json({
-          message: 'Error al obtener carreras',
-            error: errorMessage,
-        });
+    } catch (error) {
+      handleError(error as Error, res);
         return;
     }
 }
@@ -70,9 +65,8 @@ public async getCarreraById(req: Request, res: Response): Promise<void> {
 
      res.status(200).json(carrera);
      return;
-  } catch (error: unknown) {
-    const errorMessage = (error as Error).message || 'Error desconocido';
-     res.status(500).json({ message: 'Error al obtener carrera', error: errorMessage });
+  } catch (error) {
+    handleError(error as Error, res);
      return;
   }
 }
