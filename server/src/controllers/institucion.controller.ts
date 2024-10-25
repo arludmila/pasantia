@@ -58,7 +58,7 @@ export class InstitucionController extends BaseController<Institucion> {
     try {
       const id = parseInt(req.params.id);
       await this.institucionRepository.deleteInstitucion(id);
-       res.status(200).json({ mensaje: 'Registro eliminado correctamente' });
+       res.status(200).json({ message: 'Registro eliminado correctamente' });
        return;
     } catch (error: unknown) {
        this.handleError(res, error, 'Error al eliminar el registro');

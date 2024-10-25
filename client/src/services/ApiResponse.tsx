@@ -29,7 +29,10 @@ class ApiResponse<T> {
       });
   
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json();
+        console.log('errorData', errorData)
+        this.setError(errorData);
+        return ;
       }
   
       const data: T = await response.json();

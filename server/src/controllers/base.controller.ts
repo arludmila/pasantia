@@ -31,7 +31,7 @@ export class BaseController<T extends object> {
       const id = parseInt(req.params.id);
       const record = await this.repository.findOne(id);
       if (!record) {
-         res.status(404).json({ mensaje: 'Registro no encontrado' });
+         res.status(404).json({ message: 'Registro no encontrado' });
          return;
       }
        res.status(200).json(record);
@@ -59,7 +59,7 @@ export class BaseController<T extends object> {
     try {
       const id = parseInt(req.params.id);
       await this.repository.update(id, req.body);
-       res.status(200).json({ mensaje: 'Registro actualizado correctamente' });
+       res.status(200).json({ message: 'Registro actualizado correctamente' });
        return;
     } catch (error: unknown) {
        this.handleError(res, error, 'Error al actualizar el registro');
@@ -71,7 +71,7 @@ export class BaseController<T extends object> {
     try {
       const id = parseInt(req.params.id);
       await this.repository.delete(id);
-       res.status(200).json({ mensaje: 'Registro eliminado correctamente' });
+       res.status(200).json({ message: 'Registro eliminado correctamente' });
        return;
     } catch (error: unknown) {
        this.handleError(res, error, 'Error al eliminar el registro');
@@ -85,7 +85,7 @@ export class BaseController<T extends object> {
     const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
   
     const response = {
-      mensaje: message,
+      message,
       error: errorMessage,
     };
   

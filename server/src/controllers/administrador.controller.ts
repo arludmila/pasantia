@@ -27,7 +27,7 @@ export class AdministradorController extends BaseController<Administrador> {
        return;
     } catch (error: unknown) {
       const errorMessage = (error as Error).message || 'Error desconocido';
-       res.status(500).json({ mensaje: 'Error al obtener administradores', error: errorMessage });
+       res.status(500).json({ message: 'Error al obtener administradores', error: errorMessage });
        return;
     }
   }

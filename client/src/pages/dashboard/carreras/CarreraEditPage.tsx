@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -13,7 +13,10 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
 import AdminDashboard from '../AdminDashboard ';
-import { Carrera } from '../../../services/models/Carrera';
+import { Carrera, Modalidad, Prioridad } from '../../../services/models/Carrera';
+import handleApiError from '../../../utils/ApiErrorHandler';
+import { ApiValidationResponse } from '../../../services/models/ApiValidationResponse';
+import { createLogicalAnd } from 'typescript';
 
 const CarreraEditPage = () => {
   const navigate = useNavigate();
@@ -32,8 +35,11 @@ const CarreraEditPage = () => {
   const duracionMesesRef = useRef<HTMLInputElement>(null);
   const fechaInscripcionRef = useRef<HTMLInputElement>(null);
   const observacionRef = useRef<HTMLInputElement>(null);
-  const prioridadRef = useRef<HTMLInputElement>(null);
+  const prioridadRef = useRef<HTMLSelectElement>(null);
 
+  const [prioridad, setPrioridad] = useState<Prioridad>(Prioridad.Alta);
+  const [modalidad, setModalidad] = useState<Modalidad>(Modalidad.Presencial);
+  console.log('ca', carreraToEdit.prioridad)
   const storedDate = carreraToEdit.fecha_inscripcion
   ? carreraToEdit.fecha_inscripcion.split('T')[0]
   : ''; 
@@ -73,7 +79,7 @@ const storedTime = carreraToEdit.fecha_inscripcion
       descripcion: descripcionRef.current?.value || '',
       plan_de_estudio: planDeEstudioRef.current?.value || '',
       modalidad: modalidadRef.current?.value || '',
-      cupo: cupoRef.current?.value || '',
+      cupo: Number(cupoRef.current?.value) || 0,
       duracion_anios: Number(duracionAniosRef.current?.value) || 0,
       duracion_meses: Number(duracionMesesRef.current?.value) || 0,
       fecha_inscripcion: formattedFechaHora,
@@ -94,13 +100,17 @@ const storedTime = carreraToEdit.fecha_inscripcion
       });
       navigate('/dashboard/carreras');
     } else {
-      toast({
-        title: 'Error al guardar',
-        description: `Ocurrió un error: ${apiResponse.error}`,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+      if (typeof apiResponse.error === 'object' && apiResponse.error !== null && 'errors' in apiResponse.error) {
+        handleApiError(apiResponse.error as ApiValidationResponse, toast);
+      } else {
+        toast({
+          title: 'Error al actualizar la carrera.',
+          description: apiResponse.error || 'Ocurrió un problema al actualizar la carrera.',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -114,46 +124,51 @@ const storedTime = carreraToEdit.fecha_inscripcion
           <VStack spacing={5}>
             <FormControl id="nombre" isRequired>
               <FormLabel>Nombre</FormLabel>
-              <Input type="text" ref={nombreRef} defaultValue={carreraToEdit.nombre} />
+              <Input type="text" ref={nombreRef} value={carreraToEdit.nombre} />
             </FormControl>
 
             <FormControl id="tipo" isRequired>
               <FormLabel>Tipo</FormLabel>
-              <Input type="text" ref={tipoRef} defaultValue={carreraToEdit.tipo} />
+              <Input type="text" ref={tipoRef} value={carreraToEdit.tipo} />
             </FormControl>
 
             <FormControl id="descripcion">
               <FormLabel>Descripción</FormLabel>
-              <Input type="text" ref={descripcionRef} defaultValue={carreraToEdit.descripcion} />
+              <Input type="text" ref={descripcionRef} value={carreraToEdit.descripcion} />
             </FormControl>
 
             <FormControl id="plan_de_estudio">
               <FormLabel>Plan de Estudio</FormLabel>
-              <Input type="text" ref={planDeEstudioRef} defaultValue={carreraToEdit.plan_de_estudio} />
+              <Input type="text" ref={planDeEstudioRef} value={carreraToEdit.plan_de_estudio} />
             </FormControl>
 
             <FormControl id="modalidad" isRequired>
               <FormLabel>Modalidad</FormLabel>
-              <Select ref={modalidadRef} defaultValue={carreraToEdit.modalidad}>
-                <option value="Presencial">Presencial</option>
-                <option value="Virtual">Virtual</option>
-                <option value="Semipresencial">Semipresencial</option>
+              <Select 
+              ref={modalidadRef} 
+              value={modalidad} 
+              defaultValue={carreraToEdit.modalidad} 
+              onChange={(e) => setModalidad(e.target.value as Modalidad)}>
+                <option value={Modalidad.Presencial}>Presencial</option>
+                <option value={Modalidad.Virtual}>Virtual</option>
+                <option value={Modalidad.Semipresencial}>Semipresencial</option>
               </Select>
             </FormControl>
 
-            <FormControl id="cupo">
+            <FormControl id="cupo" isRequired>
               <FormLabel>Cupo</FormLabel>
-              <Input type="text" ref={cupoRef} defaultValue={carreraToEdit.cupo} />
+              <Input type="number" ref={cupoRef} value={carreraToEdit.cupo} />
             </FormControl>
+
 
             <FormControl id="duracion_anios" isRequired>
               <FormLabel>Duración en Años</FormLabel>
-              <Input type="number" ref={duracionAniosRef} defaultValue={carreraToEdit.duracion_anios} />
+              <Input type="number" ref={duracionAniosRef} value={carreraToEdit.duracion_anios} />
             </FormControl>
 
             <FormControl id="duracion_meses" isRequired>
               <FormLabel>Duración en Meses</FormLabel>
-              <Input type="number" ref={duracionMesesRef} defaultValue={carreraToEdit.duracion_meses} />
+              <Input type="number" ref={duracionMesesRef} value={carreraToEdit.duracion_meses} />
             </FormControl>
 
             <FormControl id="fecha_inscripcion" isRequired>
@@ -162,12 +177,12 @@ const storedTime = carreraToEdit.fecha_inscripcion
                 <Input 
                   type="date" 
                   ref={fechaInscripcionRef} 
-                  defaultValue={storedDate} 
+                  value={storedDate} 
                   min={new Date().toISOString().split('T')[0]} 
                 />
                 <Input 
                   type="time" 
-                  defaultValue={storedTime} 
+                  value={storedTime} 
                   ref={horaInscripcionRef} 
                 />
               </VStack>
@@ -175,12 +190,19 @@ const storedTime = carreraToEdit.fecha_inscripcion
 
             <FormControl id="observacion">
               <FormLabel>Observación</FormLabel>
-              <Input type="text" ref={observacionRef} defaultValue={carreraToEdit.observacion} />
+              <Input type="text" ref={observacionRef} value={carreraToEdit.observacion} />
             </FormControl>
 
-            <FormControl id="prioridad">
+            <FormControl id="prioridad" isRequired>
               <FormLabel>Prioridad</FormLabel>
-              <Input type="number" ref={prioridadRef} defaultValue={carreraToEdit.prioridad} />
+              <Select 
+              ref={prioridadRef} 
+              value={carreraToEdit.prioridad} 
+              onChange={(e) => setPrioridad(parseInt(e.target.value) as Prioridad)}>
+                <option value={Prioridad.Alta}>Alta</option>
+                <option value={Prioridad.Media}>Media</option>
+                <option value={Prioridad.Baja}>Baja</option>
+              </Select>
             </FormControl>
 
             <Button type="submit" colorScheme="teal" size="lg" width="full">

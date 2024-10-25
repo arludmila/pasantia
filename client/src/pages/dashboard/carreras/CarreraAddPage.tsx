@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import ApiResponse from '../../../services/ApiResponse';
 import AdminDashboard from '../AdminDashboard ';
 import { getDecodedToken } from '../../../services/Token';
-import { Carrera, CarreraCreate, Modalidad } from '../../../services/models/Carrera';
+import { Carrera, CarreraCreate, Modalidad, Prioridad } from '../../../services/models/Carrera';
 
 const CarreraAddPage = () => {
   const navigate = useNavigate();
@@ -33,8 +33,9 @@ const CarreraAddPage = () => {
   const fechaInscripcionRef = useRef<HTMLInputElement>(null);
   const horaInscripcionRef = useRef<HTMLInputElement>(null);
   const observacionRef = useRef<HTMLInputElement>(null);
-  const prioridadRef = useRef<HTMLInputElement>(null);
+  const prioridadRef = useRef<HTMLSelectElement>(null);
 
+  const [prioridad, setPrioridad] = useState<Prioridad>(Prioridad.Alta);
   const [modalidad, setModalidad] = useState<Modalidad>(Modalidad.Presencial);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -178,9 +179,17 @@ const CarreraAddPage = () => {
               <Input ref={observacionRef} defaultValue="" />
             </FormControl>
 
-            <FormControl id="prioridad">
+            <FormControl id="prioridad" isRequired>
               <FormLabel>Prioridad</FormLabel>
-              <Input type="number" ref={prioridadRef} />
+              <Select 
+              ref={prioridadRef} 
+              value={prioridad} 
+              defaultValue={Prioridad.Alta} 
+              onChange={(e) => setPrioridad(parseInt(e.target.value) as Prioridad)}>
+                <option value={Prioridad.Alta}>Alta</option>
+                <option value={Prioridad.Media}>Media</option>
+                <option value={Prioridad.Baja}>Baja</option>
+              </Select>
             </FormControl>
 
             <Button type="submit" colorScheme="teal" size="lg" width="full">

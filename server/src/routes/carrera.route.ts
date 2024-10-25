@@ -18,9 +18,9 @@ export default function CarreraRouter(dbConnection: DBConnection) {
     });
     
   router.get('/:id', controller.getCarreraById);
-  router.patch('/:id', [auth(dbConnection, Roles.Admin), validateReqBody(CreateCarreraDto)], controller.update);
-  router.get('/institucion/:id', [auth(dbConnection, Roles.Admin), validateReqBody(UpdateCarreraDto)], controller.getCarrerasFromInstitucion);
-  router.post('/', auth(dbConnection, Roles.Admin),  controller.create);
+  router.patch('/:id', [auth(dbConnection, Roles.Admin), validateReqBody(UpdateCarreraDto)], controller.update);
+  router.get('/institucion/:id', auth(dbConnection, Roles.Admin), controller.getCarrerasFromInstitucion);
+  router.post('/', [auth(dbConnection, Roles.Admin), validateReqBody(CreateCarreraDto)],  controller.create);
   router.delete('/:id', auth(dbConnection, Roles.Admin), controller.delete);
 
   return router;
