@@ -91,11 +91,11 @@ if (apiPatchResponse.error == null) {
     if ('errors' in apiPatchResponse.error) {
       handleApiError(apiPatchResponse.error as ApiValidationResponse, toast);
     } 
-    else if ('message' in apiPatchResponse.error && 'error' in apiPatchResponse.error) {
-      const { message, error } = apiPatchResponse.error;
+    else if ('message' in apiPatchResponse.error) {
+      const { message } = apiPatchResponse.error;
       toast({
-        title: message,
-        description: error,
+        title: 'Error',
+        description: message,
         status: 'error',
         duration: 5000,
         isClosable: true,

@@ -1,6 +1,5 @@
 import { BaseRepository } from './base.repository'; 
 import { Administrador, AdministradorCreate, AdministradorSinClave, AdministradorUpdate } from '../models/administrador.model';
-import { DatabaseError } from './base.repository';
 import DBConnection from '../db/db_connection';
 
 export class AdministradorRepository extends BaseRepository<Administrador> {
@@ -30,7 +29,7 @@ export class AdministradorRepository extends BaseRepository<Administrador> {
       return result as AdministradorSinClave[];
     } catch (error) {
       console.error("Database Error:", error);
-      throw new DatabaseError("Error al obtener los administradores.");
+      throw new Error("Error al obtener los administradores.");
     }
   }
 
@@ -46,7 +45,7 @@ export class AdministradorRepository extends BaseRepository<Administrador> {
       } 
     } catch (error) {
       console.error("Database Error:", error);
-      throw new DatabaseError("Error al encontrar el administrador.");
+      throw new Error("Error al encontrar el administrador.");
     }
   }
 

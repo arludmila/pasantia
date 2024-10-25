@@ -5,6 +5,7 @@ import { AdministradorRepository } from '../repositories/administrador.repositor
 import bcrypt from 'bcrypt';
 import validator from 'validator';
 import jwt from 'jsonwebtoken';
+import { handleError } from '../utils/errorHandler';
 
 export class AdministradorController extends BaseController<Administrador> {
   
@@ -25,9 +26,8 @@ export class AdministradorController extends BaseController<Administrador> {
       const administradores = await this.administradorRepository.getAllWithoutClave();
        res.status(200).json(administradores);
        return;
-    } catch (error: unknown) {
-      const errorMessage = (error as Error).message || 'Error desconocido';
-       res.status(500).json({ message: 'Error al obtener administradores', error: errorMessage });
+    } catch (error) {
+      handleError( error as Error,res);
        return;
     }
   }
@@ -95,7 +95,7 @@ export class AdministradorController extends BaseController<Administrador> {
   
       res.send({ token });
       return;
-    } catch (error: unknown) {
+    } catch (error) {
       const errorMessage = (error as Error).message || 'Error interno del servidor.';
      res.status(500).json({ message: 'Error interno del servidor.', error: errorMessage });
      return;

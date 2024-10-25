@@ -4,6 +4,7 @@ import { InstitucionRepository } from '../repositories/institucion.repository';
 import { BaseController } from './base.controller';
 import path from 'path';
 import fs from 'fs';
+import { handleError } from '../utils/errorHandler';
 
 export class InstitucionController extends BaseController<Institucion> {
   
@@ -60,8 +61,8 @@ export class InstitucionController extends BaseController<Institucion> {
       await this.institucionRepository.deleteInstitucion(id);
        res.status(200).json({ message: 'Registro eliminado correctamente' });
        return;
-    } catch (error: unknown) {
-       this.handleError(res, error, 'Error al eliminar el registro');
+    } catch (error) {
+      handleError(error as Error, res);
        return;
     }
   }

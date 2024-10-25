@@ -1,11 +1,5 @@
 import DBConnection from '../db/db_connection';
 
-export class DatabaseError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "DatabaseError";
-  }
-}
 
 export class BaseRepository<T extends object> {
   private tableName: string;
@@ -13,7 +7,7 @@ export class BaseRepository<T extends object> {
   constructor(dbConnection: DBConnection, tableName: string) {
     const allowedTables = ['institucion', 'carreras', 'administrador'];
     if (!allowedTables.includes(tableName)) {
-      throw new DatabaseError('Nombre de tabla no valido.');
+      throw new Error('Nombre de tabla no valido.');
     }
     this.tableName = tableName;
     this.dbConnection = dbConnection;
@@ -29,7 +23,7 @@ export class BaseRepository<T extends object> {
       return result as T[];
     } catch (error) {
       console.error("Database Error:", error);
-      throw new DatabaseError("Error al obtener los registros.");
+      throw new Error("Error al obtener los registros.");
     }
   }
   public async create(item: Partial<T>): Promise<T> {
@@ -44,20 +38,20 @@ export class BaseRepository<T extends object> {
         if (result && 'insertId' in result) {
             return { id: result.insertId, ...item } as T; 
         } else {
-            throw new DatabaseError("Error al obtener el id de la inserción");
+            throw new Error("Error al obtener el id de la inserción");
         }
     } catch (error) {
       console.error("Database Error:", error);
 
-      if (isDatabaseError(error)) {
+      if (isError(error)) {
           if (error.code === 'ER_DUP_ENTRY') {
               const duplicateField = extractDuplicateField(error.message);
-              throw new DatabaseError(`Error: entrada duplicada en el campo '${duplicateField}'. Verifica los datos y vuelve a intentarlo.`);
+              throw new Error(`Error: Ya está en uso ese dato en el campo '${duplicateField}'. Verifica los datos y vuelve a intentarlo.`);
           } else {
-              throw new DatabaseError("Error al crear el elemento: " + error.message);
+              throw new Error("Error al crear el elemento: " + error.message);
           }
       } else {
-          throw new DatabaseError("Error desconocido al crear el elemento.");
+          throw new Error("Error desconocido al crear el elemento.");
       }
   }
 }
@@ -71,7 +65,7 @@ export class BaseRepository<T extends object> {
       await this.dbConnection.query(sql, values);
     } catch (error) {
       console.error("Database Error:", error);
-      throw new DatabaseError("Error al actualizar el elemento.");
+      throw new Error("Error al actualizar el elemento.");
     }
   }
 
@@ -82,7 +76,7 @@ export class BaseRepository<T extends object> {
       await this.dbConnection.query(sql, values);
     } catch (error) {
       console.error("Database Error:", error);
-      throw new DatabaseError("Error al eliminar el elemento.");
+      throw new Error("Error al eliminar el elemento.");
     }
   }
 
@@ -98,11 +92,11 @@ export class BaseRepository<T extends object> {
       }
     } catch (error) {
       console.error("Database Error:", error);
-      throw new DatabaseError("Error al encontrar el elemento.");
+      throw new Error("Error al encontrar el elemento.");
     }
   }
 }
-function isDatabaseError(error: unknown): error is { code: string; message: string } {
+function isError(error: unknown): error is { code: string; message: string } {
   return typeof error === 'object' && error !== null && 'code' in error && 'message' in error;
 }
 function extractDuplicateField(errorMessage: string): string {

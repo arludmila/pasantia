@@ -1,4 +1,4 @@
-import { BaseRepository, DatabaseError } from './base.repository'; 
+import { BaseRepository } from './base.repository'; 
 import { Institucion, InstitucionCrear, InstitucionUpdate } from '../models/institucion.model';
 import DBConnection from '../db/db_connection';
 
@@ -29,7 +29,7 @@ export class InstitucionRepository extends BaseRepository<Institucion> {
 
     } catch (error) {
       console.error("Database Error:", error);
-        throw new DatabaseError("Error al borrar la institución.");
+        throw new Error("Error al borrar la institución.");
     } 
 }
 

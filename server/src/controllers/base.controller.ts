@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { BaseRepository } from '../repositories/base.repository';
+import { handleError } from '../utils/errorHandler';
 
 export class BaseController<T extends object> {
   private repository: BaseRepository<T>;
@@ -12,7 +13,6 @@ export class BaseController<T extends object> {
     this.update = this.update.bind(this);
     this.delete = this.delete.bind(this);
     this.findOne = this.findOne.bind(this);
-    this.handleError = this.handleError.bind(this);
   }
 
   public async getAll(req: Request, res: Response): Promise<void> {
@@ -20,8 +20,8 @@ export class BaseController<T extends object> {
       const records = await this.repository.getAll();
       res.status(200).json(records);
       return;
-    } catch (error: unknown) {
-      this.handleError(res, error, 'Error al obtener registros');
+    } catch (error) {
+      handleError(error as Error, res);
       return;
     }
   }
@@ -36,8 +36,8 @@ export class BaseController<T extends object> {
       }
        res.status(200).json(record);
        return;
-    } catch (error: unknown) {
-       this.handleError(res, error, 'Error al obtener el registro');
+    } catch (error) {
+      handleError(error as Error, res);
        return;
     }
   }
@@ -49,8 +49,8 @@ export class BaseController<T extends object> {
       const newRecord = await this.repository.create(req.body);
       res.status(201).json(newRecord);
       return;
-    } catch (error: unknown) {
-       this.handleError(res, error, 'Error al crear el registro');
+    } catch (error) {
+      handleError(error as Error, res);
        return;
     }
   }
@@ -61,9 +61,9 @@ export class BaseController<T extends object> {
       await this.repository.update(id, req.body);
        res.status(200).json({ message: 'Registro actualizado correctamente' });
        return;
-    } catch (error: unknown) {
-       this.handleError(res, error, 'Error al actualizar el registro');
-       return;
+    } catch (error) {
+      handleError(error as Error, res);
+      return;
     }
   }
 
@@ -73,24 +73,12 @@ export class BaseController<T extends object> {
       await this.repository.delete(id);
        res.status(200).json({ message: 'Registro eliminado correctamente' });
        return;
-    } catch (error: unknown) {
-       this.handleError(res, error, 'Error al eliminar el registro');
+    } catch (error) {
+      handleError(error as Error, res);
        return;
     }
   }
 
-  public handleError(res: Response, error: unknown, message: string): Response {
-    console.error(message, error);
-  
-    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-  
-    const response = {
-      message,
-      error: errorMessage,
-    };
-  
-    return res.status(500).json(response);
-  }
   
   
 }
